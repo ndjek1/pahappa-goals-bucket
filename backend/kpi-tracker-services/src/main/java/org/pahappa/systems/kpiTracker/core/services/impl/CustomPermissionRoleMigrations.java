@@ -31,7 +31,7 @@ public class CustomPermissionRoleMigrations {
 	PermissionService permissionService;
 
 	@Migration(orderNumber = 1)
-	public void savePermissions() {
+	public void savePermissions2() {
 
 		//Migrating Permissions
 		for (Permission permission : PermissionInterpreter.reflectivelyGetPermissions()) {
