@@ -1,0 +1,73 @@
+package org.pahappa.systems.kpiTracker.models.systemSetup;
+
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleType;
+import org.sers.webutils.model.BaseEntity;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "review_cycles")
+public class ReviewCycle extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+    private ReviewCycleType type;
+    private Date startDate;
+    private Date endDate;
+    private ReviewCycleStatus status;
+    public  ReviewCycle() {
+        this.status = ReviewCycleStatus.ACTIVE;
+    }
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(
+            name = "review_cycle_type",
+            nullable = true
+    )
+    public ReviewCycleType getType() {
+        return type;
+    }
+
+    public void setType(ReviewCycleType type) {
+        this.type = type;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(
+            name = "start_date",
+            nullable = true
+    )
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(
+            name = "end_date",
+            nullable = true
+    )
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(
+            name = "review_cycle_status",
+            nullable = true
+    )
+    public ReviewCycleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReviewCycleStatus status) {
+        this.status = status;
+    }
+}
