@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <title>Manage Global weight </title>
+        <h:form id="globalWeightDialog" styleClass="card" style="height: 450px;">
+            <div class="p-grid ui-fluid">
+
+                <!-- Business Goal Weight -->
+                <div class="p-col-12 p-md-3">
+                    <h5>Business goal weight</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{globalWeightsForm.model.mboWeight}" required="true"
+                        />
+                    </div>
+                </div>
+
+                <!-- Organizational Fit Weight -->
+                <div class="p-col-12 p-md-3">
+                    <h5>Organizational fit weight</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{globalWeightsForm.model.orgFitWeight}" required="true" />
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="p-col-12" style="margin-top: 60px;">
+                    <div class="p-grid p-justify-center p-align-center">
+                        <div class="p-col-12 p-md-3">
+                            <p:commandButton value="Cancel"
+                                             validateClient="false"
+                                             process="@this"
+                                             action="#{globalWeightsForm.hide}"
+                                             styleClass="ui-button-outlined ui-button-help"
+                                             style="width: 100%;" />
+                        </div>
+                        <div class="p-col-12 p-md-3">
+                            <p:commandButton value="Save"
+                                             process="@form"
+                                             actionListener="#{globalWeightsForm.persist}"
+                                             update="@form"
+                                             validateClient="true"
+                                             style="width: 100%;" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
