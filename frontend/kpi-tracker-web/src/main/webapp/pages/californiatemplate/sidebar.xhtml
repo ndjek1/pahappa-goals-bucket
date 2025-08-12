@@ -42,6 +42,17 @@
                         <p:menuitem id="demo" value="Demo" icon="fa fa-wrench"
                                     outcome="/pages/registerUser/RegisterUser"/>
                     </p:submenu>
+
+                    <p:submenu id="systemSetup" label="System Setup" icon="pi pi-fw pi-cog">
+                        <p:menuitem id="globalWeight" value="Global weight config" icon="fa fa-wrench"
+                                    outcome="/pages/systemSetup/GlobalWeghtTable"/>
+
+                        <p:menuitem id="orgfit" value="Org Fit Categories" icon="fa fa-wrench"
+                                    outcome="/pages/systemSetup/OrgFitCategoryTable"/>
+                        <p:menuitem id="reviewCycle" value="ReviewCycles" icon="fa fa-wrench"
+                                    outcome="/pages/systemSetup/ReviewCycleTable"/>
+                    </p:submenu>
+
                     <p:menuitem id="logout" value="Logout" icon="fa fa-fw fa-sign-out"
                                 url="#{request.contextPath}/ServiceLogout"/>
                 </pc:menu>
