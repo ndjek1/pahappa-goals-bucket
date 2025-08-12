@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized { text-transform: capitalize; }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <title>Add Review Cycle</title>
+        <h:form id="reviewCycleDialog" style="height: 450px" styleClass="card">
+
+            <!-- 1. ADDED GROWL TO DISPLAY MESSAGES -->
+            <p:growl id="growl" showDetail="true" life="4000" />
+
+            <div class="p-grid ui-fluid" style="display:flex; flex-wrap: wrap;">
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Type</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{reviewCycleForm.model.type}">
+                            <f:selectItems value="#{reviewCycleForm.reviewCycleTypes}" />
+                            <p:ajax event="change" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Start day</h5>
+                    <div class="ui-inputgroup">
+                        <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}">
+                            <p:ajax event="dateSelect" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                        </p:datePicker>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>End Date</h5>
+                    <div class="ui-inputgroup">
+                        <p:datePicker id="endDate" value="#{reviewCycleForm.model.endDate}" readonlyInput="true" disabled="true" />
+
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">
+                    <div class="p-grid p-justify-end">
+                        <div class="p-col-2">
+                            <p:commandButton value="Cancel"
+                                             immediate="true"
+                                             action="#{reviewCycleForm.hide}"
+                                             styleClass="ui-button-outlined ui-button-help" />
+                        </div>
+                        <div class="p-col-2">
+                            <!-- 2. REMOVED the nested <p:ajax> tag -->
+                            <p:commandButton value="Save Review cycle"
+                                             process="@form"
+                                             actionListener="#{reviewCycleForm.save}"
+                                             update="@form"
+                                             
+                           />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
