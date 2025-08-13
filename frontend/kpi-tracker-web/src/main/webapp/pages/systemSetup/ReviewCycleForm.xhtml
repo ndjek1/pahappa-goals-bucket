@@ -5,66 +5,61 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
 
-    <ui:define name="head">
-        <style type="text/css">
-            .capitalized { text-transform: capitalize; }
-        </style>
-    </ui:define>
-
     <ui:define name="content">
-        <title>Add Review Cycle</title>
-        <h:form id="reviewCycleDialog" style="height: 450px" styleClass="card">
+        <h:form id="reviewCycleDialogForm">
 
-            <!-- 1. ADDED GROWL TO DISPLAY MESSAGES -->
             <p:growl id="growl" showDetail="true" life="4000" />
 
-            <div class="p-grid ui-fluid" style="display:flex; flex-wrap: wrap;">
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Type</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{reviewCycleForm.model.type}">
-                            <f:selectItems value="#{reviewCycleForm.reviewCycleTypes}" />
-                            <p:ajax event="change" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
-                        </p:selectOneMenu>
-                    </div>
+            <h3 class="p-m-4">Add Review Cycle</h3>
+
+            <div class="ui-fluid formgrid grid p-m-4">
+
+                <!-- Type -->
+                <div class="field col-12 p-m-4">
+
+                    <p:selectOneMenu id="type" value="#{reviewCycleForm.model.type}">
+                        <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{reviewCycleForm.reviewCycleTypes}" />
+                        <p:ajax event="change" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Start day</h5>
-                    <div class="ui-inputgroup">
-                        <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}">
-                            <p:ajax event="dateSelect" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
-                        </p:datePicker>
-                    </div>
+                <!-- Start Date -->
+                <div class="field col-12 md:col-6 p-m-4">
+
+                    <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}" placeholder="Start Date" showIcon="true">
+                        <p:ajax event="dateSelect" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                    </p:datePicker>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>End Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:datePicker id="endDate" value="#{reviewCycleForm.model.endDate}" readonlyInput="true" disabled="true" />
-
-                    </div>
+                <!-- End Date -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:datePicker id="endDate" value="#{reviewCycleForm.model.endDate}" placeholder="End Date" readonlyInput="true" disabled="true" showIcon="true" />
                 </div>
 
-                <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">
-                    <div class="p-grid p-justify-end">
-                        <div class="p-col-2">
-                            <p:commandButton value="Cancel"
-                                             immediate="true"
-                                             action="#{reviewCycleForm.hide}"
-                                             styleClass="ui-button-outlined ui-button-help" />
-                        </div>
-                        <div class="p-col-2">
-                            <!-- 2. REMOVED the nested <p:ajax> tag -->
-                            <p:commandButton value="Save Review cycle"
-                                             process="@form"
-                                             actionListener="#{reviewCycleForm.save}"
-                                             update="@form"
-                                             
-                           />
-                        </div>
-                    </div>
+                <!-- Status -->
+                <div class="field col-12 p-m-4">
+
+                    <p:selectOneMenu id="status" value="#{reviewCycleForm.model.status}">
+                        <f:selectItem itemLabel="Select Status" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{reviewCycleForm.reviewCycleStatusList}" />
+                    </p:selectOneMenu>
                 </div>
+
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between">
+                    <p:commandButton value="Cancel"
+                                     immediate="true"
+                                     action="#{reviewCycleForm.hide}"
+                                     styleClass="ui-button-danger p-mx-5" />
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     actionListener="#{reviewCycleForm.save}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" />
+                </div>
+
             </div>
         </h:form>
     </ui:define>

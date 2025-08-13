@@ -43,14 +43,10 @@
                                     outcome="/pages/registerUser/RegisterUser"/>
                     </p:submenu>
 
-                    <p:submenu id="systemSetup" label="System Setup" icon="pi pi-fw pi-cog">
-                        <p:menuitem id="globalWeight" value="Global weight config" icon="fa fa-wrench"
-                                    outcome="/pages/systemSetup/GlobalWeghtTable"/>
-
-                        <p:menuitem id="orgfit" value="Org Fit Categories" icon="fa fa-wrench"
-                                    outcome="/pages/systemSetup/OrgFitCategoryTable"/>
-                        <p:menuitem id="reviewCycle" value="ReviewCycles" icon="fa fa-wrench"
-                                    outcome="/pages/systemSetup/ReviewCycleTable"/>
+                    <p:submenu label="System Setup" icon="pi pi-fw pi-cog">
+                        <p:menuitem value="Global weight config" icon="pi pi-fw pi-sliders-h" outcome="/pages/systemSetup/GlobalWeightTable" />
+                        <p:menuitem value="Org Fit Categories" icon="pi pi-fw pi-list" outcome="/pages/systemSetup/OrgFitCategoryTable" />
+                        <p:menuitem value="Review Cycles" icon="pi pi-fw pi-refresh" outcome="/pages/systemSetup/ReviewCycleTable" />
                     </p:submenu>
 
                     <p:menuitem id="logout" value="Logout" icon="fa fa-fw fa-sign-out"

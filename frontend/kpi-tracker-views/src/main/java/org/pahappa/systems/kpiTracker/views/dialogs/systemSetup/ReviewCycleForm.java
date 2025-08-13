@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
@@ -29,15 +30,17 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
     private static final long serialVersionUID = 1L;
     private ReviewCycleService reviewCycleService;
     private List<ReviewCycleType> reviewCycleTypes = new ArrayList<>();
+    private List<ReviewCycleStatus> reviewCycleStatusList = new ArrayList<>();
 
     public ReviewCycleForm() {
-        super(HyperLinks.REVIEW_CYCLE_DIALOG, 700, 800);
+        super(HyperLinks.REVIEW_CYCLE_DIALOG, 500, 400);
     }
 
     @PostConstruct
     public void init() {
         this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         this.reviewCycleTypes = Arrays.asList(ReviewCycleType.values());
+        this.reviewCycleStatusList = Arrays.asList(ReviewCycleStatus.values());
     }
 
     @Override
@@ -54,6 +57,7 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
         model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
 
         reviewCycleService.saveInstance(super.model);
+
     }
 
 
