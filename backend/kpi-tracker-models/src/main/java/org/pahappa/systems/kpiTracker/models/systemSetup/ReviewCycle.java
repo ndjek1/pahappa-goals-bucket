@@ -70,4 +70,18 @@ public class ReviewCycle extends BaseEntity {
     public void setStatus(ReviewCycleStatus status) {
         this.status = status;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReviewCycle)) return false;
+        ReviewCycle that = (ReviewCycle) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
 }

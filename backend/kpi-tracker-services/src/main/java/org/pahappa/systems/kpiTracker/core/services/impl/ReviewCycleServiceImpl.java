@@ -22,8 +22,7 @@ public class ReviewCycleServiceImpl extends GenericServiceImpl<ReviewCycle> impl
         return true;
     }
 
-
-
+    @Override
     public Object getObjectById(String id) {
         return super.getInstanceByID(id);
     }
