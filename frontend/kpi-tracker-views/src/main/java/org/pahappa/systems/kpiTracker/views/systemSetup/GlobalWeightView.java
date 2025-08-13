@@ -68,6 +68,7 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
     public void deleteClient(GlobalWeight globalWeight) {
         try {
             globalWeightService.deleteInstance(globalWeight);
+            reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }

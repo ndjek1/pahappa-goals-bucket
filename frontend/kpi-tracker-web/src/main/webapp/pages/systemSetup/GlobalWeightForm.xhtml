@@ -4,60 +4,66 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
-    <ui:define name="head">
-        <style type="text/css">
-            .capitalized {
-                text-transform: capitalize;
-            }
-        </style>
-    </ui:define>
+
     <ui:define name="content">
-        <title>Manage Global weight </title>
-        <h:form id="globalWeightDialog" styleClass="card" style="height: 450px;">
-            <div class="p-grid ui-fluid">
+        <h:form id="globalWeightDialog" styleClass="ui-fluid formgrid grid" >
 
-                <!-- Business Goal Weight -->
-                <div class="p-col-12 p-md-3">
-                    <h5>Business goal weight</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{globalWeightsForm.model.mboWeight}" required="true"
-                        />
-                    </div>
-                </div>
+            <h3 class="form-title p-mx-4">Manage Global Weight</h3>
+            <p:growl id="growl" showDetail="true" life="4000" />
 
-                <!-- Organizational Fit Weight -->
-                <div class="p-col-12 p-md-3">
-                    <h5>Organizational fit weight</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{globalWeightsForm.model.orgFitWeight}" required="true" />
-                    </div>
-                </div>
+            <div class="field col-12 p-m-4">
 
-                <!-- Buttons -->
-                <div class="p-col-12" style="margin-top: 60px;">
-                    <div class="p-grid p-justify-center p-align-center">
-                        <div class="p-col-12 p-md-3">
-                            <p:commandButton value="Cancel"
-                                             validateClient="false"
-                                             process="@this"
-                                             action="#{globalWeightsForm.hide}"
-                                             styleClass="ui-button-outlined ui-button-help"
-                                             style="width: 100%;" />
-                        </div>
-                        <div class="p-col-12 p-md-3">
-                            <p:commandButton value="Save"
-                                             process="@form"
-                                             actionListener="#{globalWeightsForm.persist}"
-                                             update="@form"
-                                             validateClient="true"
-                                             style="width: 100%;" />
-                        </div>
-                    </div>
-                </div>
-
+                <p:selectOneMenu id="reviewCycle" value="#{globalWeightsForm.model.reviewCycle}" converter="reviewCycleConverter" >
+                    <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{globalWeightsForm.reviewCycleList}" var="review"  itemLabel="#{review.startDate} #{review.endDate}" itemValue="#{review}"/>
+                </p:selectOneMenu>
             </div>
+
+            <!-- Business Goal Weight -->
+            <div class="field col-12 p-mx-4 p-mb-2">
+                <p:outputLabel for="mboWeightInput" value="Business goal weight" />
+                <p:inputText id="mboWeightInput"
+                             value="#{globalWeightsForm.model.mboWeight}"
+                             required="true">
+                    <p:ajax event="keyup"
+                            listener="#{globalWeightsForm.updateOrgFitWeight}"
+                            process="@this"
+                            update="orgFitWeightInput" />
+                </p:inputText>
+            </div>
+
+            <!-- Organizational Fit Weight -->
+            <div class="field col-12 p-mx-4">
+                <p:outputLabel for="orgFitWeightInput" value="Organizational fit weight" />
+                <p:inputText id="orgFitWeightInput"
+                             value="#{globalWeightsForm.model.orgFitWeight}"
+                             required="true">
+                    <p:ajax event="keyup"
+                            listener="#{globalWeightsForm.updateMboWeight}"
+                            process="@this"
+                            update="mboWeightInput" />
+                </p:inputText>
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-12 p-mx-4" style="margin-top: 2rem; display: flex; justify-content: space-between; gap: 1rem;">
+                <p:commandButton value="Cancel"
+                                 validateClient="false"
+                                 process="@this"
+                                 action="#{globalWeightsForm.hide}"
+                                 styleClass="ui-button-danger p-mx-5"
+                                 style="flex: 1;" />
+
+                <p:commandButton value="Save"
+                                 process="@form"
+                                 actionListener="#{globalWeightsForm.save}"
+                                 update="@form growl"
+                                 validateClient="true"
+                                 style="flex: 1;"
+                                 styleClass="ui-button-primary p-mx-5"
+                />
+            </div>
+
         </h:form>
-
-
     </ui:define>
 </ui:composition>

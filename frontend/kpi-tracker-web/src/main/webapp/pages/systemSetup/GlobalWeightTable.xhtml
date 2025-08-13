@@ -79,7 +79,8 @@
 
 
                         <p:commandButton icon="fa fa-edit" title="Edit"
-                                         styleClass="ui-button-help" immediate="true"
+                                         styleClass="ui-button-text-icon-primary" immediate="true"
+                                         style="margin-right: 5px"
                                          actionListener="#{globalWeightsForm.show}">
                            <f:setPropertyActionListener value="#{model}"
                                                         target="#{globalWeightsForm.model}" />
@@ -87,8 +88,8 @@
                            <p:ajax event="dialogReturn" update="globalWeightTable" />
                         </p:commandButton>
 
-                        <p:commandButton icon="fa fa-times" title="Delete"
-                                         styleClass="ui-button-help" immediate="true"
+                        <p:commandButton icon="fa fa-trash" title="Delete"
+                                         styleClass="ui-button-danger" immediate="true"
                                          actionListener="#{globalWeightView.deleteClient(model)}" >
                            <p:confirm header="Confirmation"
                                       message="Are you sure you want to delete this record?"
