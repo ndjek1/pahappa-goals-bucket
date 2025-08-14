@@ -44,7 +44,7 @@
                             <div class="p-col-12 p-md-6 p-lg-2">
                                 <p:inputText id="searchTerm" required="false"
                                              value="#{usersView.searchTerm}" placeholder="Search ..."
-                                             onkeyup="#{staffView.reloadFilterReset()}">
+                                             onkeyup="#{usersView.reloadFilterReset()}">
 
                                     <p:ajax event="keyup"
                                             update="usersView"
