@@ -27,12 +27,14 @@ import java.util.Map;
 public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFitCategoryService,OrgFitCategoryService> {
     private OrgFitCategoryService orgFitService;
     private Search search;
+    private double totalWeight;
 
 
     @PostConstruct
     public void init(){
         orgFitService = ApplicationContextProvider.getBean(OrgFitCategoryService.class);
         reloadFilterReset();
+        loadTotalWeight();
     }
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
@@ -65,11 +67,25 @@ public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFi
 
     }
 
+    public void loadTotalWeight(){
+
+        List<OrgFitCategory> categories = orgFitService.getAllInstances();
+        totalWeight = categories.stream().mapToDouble(OrgFitCategory::getWeight).sum();
+    }
+
     public void deleteClient(OrgFitCategory orgFitCategory) {
         try {
             orgFitService.deleteInstance(orgFitCategory);
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
+    }
+
+    public String manageItems() {
+        // The f:setPropertyActionListener has already set the selected category
+        // on the orgFitCategoryItemView bean. Now we just navigate.
+
+        // Replace "yourTargetPage.xhtml" with the actual filename.
+        return "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
     }
 }

@@ -18,8 +18,10 @@ public class HyperLinks {
 
     public static final String NAME_DIALOG = "/pages/registerUser/DemoDialog.xhtml";
     public static final String GLOBAL_WEIGHT_DIALOG = "/pages/systemSetup/GlobalWeightForm.xhtml";
-    public static final String GLOBAL_WEIGHT_TABLE = "/pages/systemSetup/GlobalWeghtTable.xhtml?faces-redirect=true";
+    public static final String GLOBAL_WEIGHT_TABLE = "/pages/systemSetup/GlobalWeightTable.xhtml?faces-redirect=true";
     public static final String ORG_FIT_CATEGORY_DIALOG = "/pages/systemSetup/OrgFitCategoryForm.xhtml";
     public static final String REVIEW_CYCLE_DIALOG = "/pages/systemSetup/ReviewCycleForm.xhtml";
+    public static final String ORG_FIT_CATEGORY_ITEM_DIALOG = "/pages/systemSetup/OrgFitCategoryItemForm.xhtml";
+    public static final String ORG_FIT_CATEGORY_ITEM_TABLE = "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
 
 }
