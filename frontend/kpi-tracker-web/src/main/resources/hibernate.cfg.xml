@@ -47,6 +47,9 @@
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle" />
-		
+
+		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
+
 	</session-factory>
 </hibernate-configuration>

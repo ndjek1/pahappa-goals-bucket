@@ -14,6 +14,8 @@ public class HyperLinks {
     public static final String ROLE_FORM_DIALOG = "/pages/users/RoleFormDialog.xhtml";
     public static final String LOGIN_FORM = "/ExternalViews/Login.xhtml?faces-redirect=true";
 
+    public static final String ORGANIZATION_STRUCTURE = "pages/organizationstructure/OrganizationStructure.xhtml?faces-redirect=true";
+
     public static final String NAME_DIALOG = "/pages/registerUser/DemoDialog.xhtml";
     public static final String GLOBAL_WEIGHT_DIALOG = "/pages/systemSetup/GlobalWeightForm.xhtml";
     public static final String GLOBAL_WEIGHT_TABLE = "/pages/systemSetup/GlobalWeghtTable.xhtml?faces-redirect=true";
