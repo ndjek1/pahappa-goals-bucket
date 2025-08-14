@@ -24,9 +24,10 @@ public class OrgFitCategoryServiceImpl extends GenericServiceImpl<OrgFitCategory
         return true;
     }
 
-
-
+    @Override
     public Object getObjectById(String id) {
         return super.getInstanceByID(id);
     }
+
+
 }
