@@ -1,6 +1,7 @@
 package org.pahappa.systems.kpiTracker.core.services.impl;
 
 import org.hibernate.SessionFactory;
+import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
 import org.sers.webutils.server.core.dao.MigrationDao;
 import org.sers.webutils.server.core.service.migrations.MigrationTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,11 @@ public class CustomMigrationService extends MigrationTemplate {
     CustomPermissionRoleMigrations permissionRoleMigrations;
     @Autowired
     GlobalWeightMigration globalWeightMigration;
+    @Autowired
+    OrgFitCategoryMigration orgFitCategoryMigration;
 
     private final List<Class<?>> migrationClasses = Arrays
-            .asList(new Class<?>[]{CustomPermissionRoleMigrations.class, GlobalWeightMigration.class});
+            .asList(new Class<?>[]{CustomPermissionRoleMigrations.class, GlobalWeightMigration.class, OrgFitCategoryMigration.class});
 
     public static boolean EXECUTED_MIGRATIONS = false;
 
