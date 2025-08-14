@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+   <ui:define name="content">
+      <h:form id="thresholdDialog">
+
+         <p:growl id="growl" showDetail="true" life="4000" />
+
+         <h3 class="p-m-4">Add THreshold</h3>
+
+         <div class="ui-fluid formgrid grid p-m-4">
+
+            <!-- Type -->
+            <div class="field col-12 p-m-4">
+
+               <p:selectOneMenu id="type" value="#{thresholdForm.model.level}">
+                  <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
+                  <f:selectItems value="#{thresholdForm.thresholdLevels}" />
+               </p:selectOneMenu>
+            </div>
+
+            <div class="field col-12 p-m-4">
+
+               <p:inputText value="#{thresholdForm.model.minScore}"
+                            required="true"
+                            placeholder="Name"
+                            styleClass="p-inputtext-sm w-full"/>
+            </div>
+
+
+            <div class="field col-12 md:col-6 p-m-4">
+
+               <p:inputText value="#{thresholdForm.model.redFlagScore}"
+                            required="true"
+                            placeholder="Description"
+                            styleClass="p-inputtext-sm w-full"/>
+            </div>
+
+            <!-- Buttons -->
+            <div class="field col-12 p-d-flex p-jc-between">
+               <p:commandButton value="Cancel"
+                                immediate="true"
+                                action="#{thresholdForm.hide}"
+                                styleClass="ui-button-danger p-mx-5" />
+
+               <p:commandButton value="Save"
+                                process="@form"
+                                actionListener="#{thresholdForm.save}"
+                                update="@form growl"
+                                styleClass="ui-button-primary p-mx-5" />
+            </div>
+
+         </div>
+      </h:form>
+   </ui:define>
+</ui:composition>
