@@ -17,7 +17,7 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
     private OrgFitCategoryService orgFitCategoryService;
 
     public OrgFitCategoryForm() {
-        super(HyperLinks.ORG_FIT_CATEGORY_DIALOG, 700, 800);
+        super(HyperLinks.ORG_FIT_CATEGORY_DIALOG, 500, 300);
     }
 
     @PostConstruct

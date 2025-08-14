@@ -12,48 +12,53 @@
         </style>
     </ui:define>
     <ui:define name="content">
-        <title>Add department </title>
-        <h:form id="departmentDialog" style="height: 450px" styleClass="card">
-            <div class="p-grid ui-fluid" style="display:flex">
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Name</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{orgFitCategoryForm.model.name}" required="true" />
-                    </div>
+        <title>Add Category</title>
+
+        <h:form id="orgFitCategoryItem" styleClass="dialog-card">
+            <p:growl id="growl" showDetail="true" life="4000" />
+
+            <div class="ui-fluid formgrid grid p-m-4">
+
+                <!-- Type -->
+                <div class="field col-12 p-m-4">
+
+                    <p:inputText value="#{orgFitCategoryForm.model.name}"
+                                 required="true"
+                                 placeholder="Name"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
 
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Description</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{orgFitCategoryForm.model.description}" required="true" />
-                    </div>
+                <div class="field col-12 md:col-6 p-m-4">
+
+                    <p:inputText value="#{orgFitCategoryForm.model.description}"
+                                 required="true"
+                                 placeholder="Description"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Weight</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{orgFitCategoryForm.model.weight}" required="true" />
-                    </div>
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:inputText value="#{orgFitCategoryForm.model.weight}" required="true"
+                                 placeholder="Weight"
+                                 styleClass="p-inputtext-sm w-full"
+                    />
                 </div>
 
-                <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">
-                    <div class="p-grid p-justify-end">
-                        <div class="p-col-2">
-                            <p:commandButton value="Cancel"
-                                             validateClient="false"
-                                             process="@this"
-                                             action="#{orgFitCategoryForm.hide}"
-                                             styleClass="ui-button-outlined ui-button-help" />
-                        </div>
-                        <div class="p-col-2" >
-                            <p:commandButton value="Save User"
-                                             process="@form"
-                                             actionListener="#{orgFitCategoryForm.save}"
-                                             update="@form" validateClient="true" />
-                        </div>
-                    </div>
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between">
+                    <p:commandButton value="Cancel"
+                                     immediate="true"
+                                     action="#{orgFitCategoryForm.hide}"
+                                     styleClass="ui-button-danger p-mx-5" />
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     actionListener="#{orgFitCategoryForm.save}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" />
                 </div>
+
             </div>
+
         </h:form>
     </ui:define>
 </ui:composition>
