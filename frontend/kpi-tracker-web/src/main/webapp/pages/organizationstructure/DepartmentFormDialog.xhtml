@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="content">
+        <h:form id="departmentFormDialog" styleClass="card">
+            <div class="p-grid ui-fluid">
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Department Name</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{departmentFormDialog.model.departmentName}" required="true" />
+                    </div>
+                </div>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Department Description</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{departmentFormDialog.model.departmentDescription}" />
+                    </div>
+                </div>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Department Head</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{departmentFormDialog.model.departmentHead}" />
+                    </div>
+                </div>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Status</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{departmentFormDialog.model.departmentStatus}" required="true">
+                            <f:selectItem itemLabel="Select Status" itemValue="" />
+                            <f:selectItem itemLabel="Active" itemValue="ACTIVE" />
+                            <f:selectItem itemLabel="Inactive" itemValue="INACTIVE" />
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="ui-col-12 ui-md-12" style="margin-top: 60px;">
+                    <div class="p-grid p-justify-end">
+                        <div class="p-col-2">
+                            <p:commandButton value="Cancel"
+                                             process="@this"
+                                             action="#{departmentFormDialog.hide}"
+                                             styleClass="ui-button-outlined ui-button-help" />
+                        </div>
+                        <div class="p-col-2">
+                            <p:commandButton value="Save"
+                                             process="@form"
+                                             actionListener="#{departmentFormDialog.save}"
+                                             update="@form" validateClient="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
