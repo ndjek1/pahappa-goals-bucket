@@ -23,5 +23,6 @@ public class HyperLinks {
     public static final String REVIEW_CYCLE_DIALOG = "/pages/systemSetup/ReviewCycleForm.xhtml";
     public static final String ORG_FIT_CATEGORY_ITEM_DIALOG = "/pages/systemSetup/OrgFitCategoryItemForm.xhtml";
     public static final String ORG_FIT_CATEGORY_ITEM_TABLE = "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
+    public static final String THRESHOLD_DIALOG = "/pages/systemSetup/ThresholdForm.xhtml";
 
 }
