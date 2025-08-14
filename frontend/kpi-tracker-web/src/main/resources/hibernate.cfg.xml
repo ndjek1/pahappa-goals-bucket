@@ -48,7 +48,7 @@
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem" />
-
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.Threshold" />
 
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
