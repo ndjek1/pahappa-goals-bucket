@@ -27,6 +27,7 @@ public class OrgFitCategoryItemForm extends DialogForm<OrgFitCategoryItem> {
     private OrgFitCategoryItemService orgFitCategoryItemService;
     private OrgFitCategoryService orgFitCategoryService;
     private OrgFitCategory selectedOrgFitCategory;
+    private boolean edit;
 
 
     private List<OrgFitCategory> orgFitCategoryList;
@@ -48,11 +49,31 @@ public class OrgFitCategoryItemForm extends DialogForm<OrgFitCategoryItem> {
         orgFitCategoryItemService.saveInstance(super.model);
     }
 
+    public void update(){
+        orgFitCategoryItemService.merge(this.model);
+        hide();
+    }
+
 
     @Override
     public void resetModal() {
         super.resetModal();
         super.model = new OrgFitCategoryItem();
+        setEdit(false);
+    }
+    @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        if(super.model != null)
+            setEdit(true);
+    }
+
+    public void handleAction() throws Exception {
+        if (edit) {
+            update();
+        } else {
+            save();
+        }
     }
 
     private void loadOrgFitCategoryList() {

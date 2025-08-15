@@ -53,11 +53,12 @@
                                 action="#{orgFitCategoryItemForm.hide}"
                                 styleClass="ui-button-danger p-mx-5" />
 
-               <p:commandButton value="Save"
-                                process="@form"
-                                actionListener="#{orgFitCategoryItemForm.save}"
-                                update="@form growl"
-                                styleClass="ui-button-primary p-mx-5" />
+                <p:commandButton value="#{orgFitCategoryItemForm.edit ? 'Update' : 'Save'}"
+                                 process="@form"
+                                 actionListener="#{orgFitCategoryItemForm.save}"
+                                 update="@form growl"
+                                 styleClass="ui-button-primary p-mx-5" />
+
             </div>
 
          </div>
