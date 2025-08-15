@@ -11,7 +11,6 @@ public class OrgFitCategory extends BaseEntity {
     private String name;
     private String description;
     private double weight;
-    private OrgFitCategoryType type;
 
     @Column(nullable = false)
     public String getName() {
@@ -40,15 +39,4 @@ public class OrgFitCategory extends BaseEntity {
         this.weight = weight;
     }
 
-    @Column(
-            name = "org_fit_category_type",
-            updatable = false)
-    @Enumerated(EnumType.STRING)
-    public OrgFitCategoryType getType() {
-        return type;
-    }
-
-    public void setType(OrgFitCategoryType type) {
-        this.type = type;
-    }
 }

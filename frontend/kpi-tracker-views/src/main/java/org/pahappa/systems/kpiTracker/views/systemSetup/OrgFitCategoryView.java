@@ -4,9 +4,14 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
 import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
 import org.sers.webutils.model.RecordStatus;
@@ -17,22 +22,27 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import java.util.List;
 import java.util.Map;
 
 @ManagedBean(name = "orgFitCategoryView")
 @Setter
 @Getter
-@SessionScoped
+@ViewScoped
 public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFitCategoryService,OrgFitCategoryService> {
     private OrgFitCategoryService orgFitService;
     private Search search;
     private double totalWeight;
+    private GlobalWeightService globalWeightService;
+    private ReviewCycleService reviewCycleService;
 
 
     @PostConstruct
     public void init(){
         orgFitService = ApplicationContextProvider.getBean(OrgFitCategoryService.class);
+        globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
+        reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         reloadFilterReset();
         loadTotalWeight();
     }
@@ -61,6 +71,7 @@ public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFi
         super.setTotalRecords(orgFitService.countInstances(new Search()));
         try{
             super.reloadFilterReset();
+            loadTotalWeight();
         }catch(Exception e){
             UiUtils.ComposeFailure("Error",e.getLocalizedMessage());
         }
@@ -70,22 +81,21 @@ public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFi
     public void loadTotalWeight(){
 
         List<OrgFitCategory> categories = orgFitService.getAllInstances();
-        totalWeight = categories.stream().mapToDouble(OrgFitCategory::getWeight).sum();
+        GlobalWeight globalWeight =this.getGlobalWeightForActiveCycle();
+        totalWeight = (categories.stream().mapToDouble(OrgFitCategory::getWeight).sum()*100)/globalWeight.getOrgFitWeight();
     }
 
     public void deleteClient(OrgFitCategory orgFitCategory) {
         try {
             orgFitService.deleteInstance(orgFitCategory);
+            reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
     }
 
-    public String manageItems() {
-        // The f:setPropertyActionListener has already set the selected category
-        // on the orgFitCategoryItemView bean. Now we just navigate.
-
-        // Replace "yourTargetPage.xhtml" with the actual filename.
-        return "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
+    public GlobalWeight getGlobalWeightForActiveCycle() {
+        ReviewCycle activeReviewCycle = this.reviewCycleService.searchUniqueByPropertyEqual("status", ReviewCycleStatus.ACTIVE);
+        return this.globalWeightService.searchUniqueByPropertyEqual("reviewCycle", activeReviewCycle);
     }
 }
