@@ -11,6 +11,7 @@ import org.primefaces.model.SortMeta;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
 import org.sers.webutils.client.views.presenters.ViewPath;
 import org.sers.webutils.model.Gender;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.security.Role;
 import org.sers.webutils.model.security.User;
@@ -19,6 +20,7 @@ import org.sers.webutils.server.core.service.RoleService;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
+import org.sers.webutils.server.shared.CustomLogger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -55,6 +57,7 @@ public class UsersView extends PaginatedTableView<User, UsersView, UsersView> {
     private List<Role> rolesList = new ArrayList<>();
     private Set<Role> selectedRolesList = new HashSet<>();
     private List<SearchField> searchFields, selectedSearchFields;
+    private List<User> inactiveUsers;
 
     @PostConstruct
     public void init() {
@@ -64,6 +67,7 @@ public class UsersView extends PaginatedTableView<User, UsersView, UsersView> {
         this.rolesList = roleService.getRoles();
         this.genders = Arrays.asList(Gender.values());
         this.reloadFilterReset();
+
     }
 
     @Override
@@ -90,6 +94,7 @@ public class UsersView extends PaginatedTableView<User, UsersView, UsersView> {
         this.noUnknown = userService.countUsers(this.search.copy().addFilterEqual("gender", Gender.UNKNOWN));
         try {
             super.reloadFilterReset();
+            this.loadInactiveUsers();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,6 +108,12 @@ public class UsersView extends PaginatedTableView<User, UsersView, UsersView> {
             UiUtils.ComposeFailure("Action failed", ex.getLocalizedMessage());
             Logger.getLogger(UsersView.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void loadInactiveUsers() {
+        Search search1  = new Search();
+        search1.addFilterEqual("recordStatus", RecordStatus.ACTIVE_LOCKED);
+        this.inactiveUsers = userService.getUsers(search1,0,0);
     }
 
     @Override
