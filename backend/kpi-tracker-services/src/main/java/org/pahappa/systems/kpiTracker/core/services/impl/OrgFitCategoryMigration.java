@@ -21,16 +21,15 @@ public class OrgFitCategoryMigration {
     private OrgFitCategoryService orgFitCategory;
 
     @Migration(orderNumber = 2)
-    public void initializeDefaultOrgFitCategories() {
-        createIfNotExists(OrgFitCategoryType.TEAM_RATING, "Team Rating", "Collaboration, Communication, etc.", 5.0);
-        createIfNotExists(OrgFitCategoryType.COMPANY_VALUES, "Company Values", "Self-management, Resource management, etc.", 20.0);
-        createIfNotExists(OrgFitCategoryType.KEEPER_TEST, "Keeper Test", "Competence, Growth, Innovation", 15.0);
+    public void initializeDefaultOrgFitCategories1() {
+        createIfNotExists("Team Rating", "Collaboration, Communication, etc.", 5.0);
+        createIfNotExists("Company Values", "Self-management, Resource management, etc.", 20.0);
+        createIfNotExists( "Keeper Test", "Competence, Growth, Innovation", 15.0);
     }
 
-    private void createIfNotExists(OrgFitCategoryType type, String name, String description, double weight) {
+    private void createIfNotExists(String name, String description, double weight) {
         if (orgFitCategory.getAllInstances().isEmpty()) {
             OrgFitCategory category = new OrgFitCategory();
-            category.setType(type);
             category.setName(name);
             category.setDescription(description);
             category.setWeight(weight);
