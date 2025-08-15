@@ -4,6 +4,20 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
+    <h:outputStylesheet>
+        <style>
+            .progress-red .ui-progressbar-value {
+                background-color: #dc3545 !important; /* red */
+            }
+            .progress-yellow .ui-progressbar-value {
+                background-color: #ffc107 !important; /* yellow */
+            }
+            .progress-green .ui-progressbar-value {
+                background-color: #28a745 !important; /* green */
+            }
+        </style>
+
+    </h:outputStylesheet>
 
     <ui:define name="content">
         <div class="card">
@@ -29,6 +43,7 @@
                 </div>
 
                 <!-- 2. CONTENT LIST: Using ui:repeat to create custom cards -->
+                <p:outputPanel id="categoryListPanel">
                 <ui:repeat value="#{orgFitCategoryView.dataModels}" var="category">
                     <div class="p-card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 6px;">
 
@@ -60,6 +75,7 @@
 
                                 <p:commandButton value="Delete" icon="pi pi-trash"
                                                  styleClass="p-button-text ui-button-danger"
+                                                 update=":orgFitForm:categoryListPanel :orgFitForm:weightPanel"
                                                  actionListener="#{orgFitCategoryView.deleteClient(category)}">
                                     <p:confirm header="Confirmation"
                                                message="Are you sure you want to delete '#{category.name}'?"
@@ -69,7 +85,7 @@
                         </div>
                     </div>
                 </ui:repeat>
-
+                </p:outputPanel>
                 <!-- Check if the list is empty -->
                 <p:outputPanel rendered="#{empty orgFitCategoryView.dataModels}">
                     <div class="p-text-center p-p-4" style="border: 1px dashed #ced4da; border-radius: 6px;">
@@ -77,13 +93,19 @@
                     </div>
                 </p:outputPanel>
 
-                <!-- 3. FOOTER: Total Weight Progress Bar -->
-                <div class="p-d-flex p-jc-end p-ai-center p-mt-4">
-                    <h:outputText value="Total weight" style="font-weight: bold; margin-right: 1rem;" />
-                    <!-- You will need a 'totalWeight' property in your backing bean -->
-                    <p:progressBar value="#{orgFitCategoryView.totalWeight}" style="width: 300px; height: 12px; margin-right: 1rem;" />
-                    <h:outputText value="#{orgFitCategoryView.totalWeight}%" style="font-weight: bold;" />
-                </div>
+                <p:outputPanel id="weightPanel">
+                    <div class="p-d-flex p-jc-end p-ai-center p-mt-4">
+                        <h:outputText value="Total weight" style="font-weight: bold; margin-right: 1rem;" />
+
+                        <p:progressBar value="#{orgFitCategoryView.totalWeight}"
+                                       style="width: 300px; height: 14px; margin-right: 1rem;"
+                                       styleClass="#{orgFitCategoryView.totalWeight lt 50 ? 'progress-red' :
+                             (orgFitCategoryView.totalWeight lt 100 ? 'progress-yellow' : 'progress-green')}" />
+
+
+                        <h:outputText value="#{orgFitCategoryView.totalWeight}%" style="font-weight: bold;" />
+                    </div>
+                </p:outputPanel>
 
                 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
                     <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
