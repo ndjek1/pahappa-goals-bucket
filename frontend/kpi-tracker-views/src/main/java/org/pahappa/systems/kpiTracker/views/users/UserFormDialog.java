@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -12,8 +13,11 @@ import javax.faces.bean.SessionScoped;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.Gender;
+import org.sers.webutils.model.RecordStatus;
+import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.model.security.Role;
 import org.sers.webutils.model.security.User;
@@ -68,5 +72,26 @@ public class UserFormDialog extends DialogForm<User> {
         if(super.model != null)
             setEdit(true);
         this.userRoles = new HashSet<>(userService.getRoles(super.model, 0, 0));
+    }
+
+    public void activateSelectedUser(User user) throws ValidationFailedException {
+        try {
+            user.setRecordStatus(RecordStatus.ACTIVE);
+            userService.saveUser(user);
+            UiUtils.showMessageBox("Action successful", "User has been activated.");
+        } catch (ValidationFailedException ex) {
+            UiUtils.ComposeFailure("Action failed", ex.getLocalizedMessage());
+            Logger.getLogger(UsersView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void rejectSignUp(User user) throws ValidationFailedException {
+        try {
+            user.setRecordStatus(RecordStatus.PERMANENTLY_DELETED);
+            userService.saveUser(user);
+            UiUtils.showMessageBox("Action successful", "User has been rejected.");
+        } catch (ValidationFailedException ex) {
+            UiUtils.ComposeFailure("Action failed", ex.getLocalizedMessage());
+            Logger.getLogger(UsersView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

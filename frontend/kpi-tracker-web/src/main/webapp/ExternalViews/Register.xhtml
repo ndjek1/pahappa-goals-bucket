@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Registration Form</title>
+    <f:facet name="first">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </f:facet>
+
+    <h:outputStylesheet>
+        /* Reset and base styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #3a47d5, #6cbe47);
+            color: #495057;
+        }
+
+        /* Main Container */
+        .form-container {
+            display: flex;
+            padding: 50px;
+            width: 100%;
+            height: 100%;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        /* Left panel styling */
+        .left-panel {
+            flex-basis: 40%;
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h2 {
+            font-size: 2.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .left-panel p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 300px;
+        }
+
+        /* Right panel styling */
+        .right-panel {
+            flex-basis: 60%;
+            padding: 40px 50px;
+            background: #ffffff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel::before {
+            content: &apos;&apos;;
+            position: absolute;
+            top: 0;
+            left: -100px;
+            width: 200px;
+            height: 100%;
+            background: #ffffff;
+            border-top-left-radius: 50%;
+            border-bottom-left-radius: 50%;
+            z-index: 1;
+        }
+
+        .right-panel &gt; form {
+            position: relative;
+            z-index: 2;
+        }
+
+        .right-panel h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* PrimeFaces field spacing */
+        .p-field {
+            margin-bottom: 1.25rem;
+        }
+
+        .p-field &gt; label,
+        .p-field &gt; .ui-outputlabel {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Inputs */
+        .ui-inputfield,
+        .ui-password,
+        .ui-selectonemenu {
+            width: 100% !important;
+            border: 1px solid #ced4da !important;
+            border-radius: 6px !important;
+            padding: 0.6rem !important;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .ui-inputfield:focus,
+        .ui-password:focus,
+        .ui-selectonemenu:focus {
+            border-color: #3a47d5 !important;
+            box-shadow: 0 0 0 0.2rem rgba(58, 71, 213, 0.25) !important;
+        }
+
+        .ui-selectonemenu .ui-selectonemenu-label {
+            line-height: 2.25rem;
+        }
+
+        /* Gender options */
+        .gender-options {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .gender-options .ui-radiobutton {
+            margin-right: 8px;
+        }
+
+        .gender-options label {
+            margin-right: 25px;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .ui-button {
+            border: none !important;
+            border-radius: 50px !important;
+            padding: 12px 30px !important;
+            font-weight: bold !important;
+            font-size: 1em !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ui-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .create-account-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .create-account-link a {
+            color:#2196F3;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+
+        /* Register button */
+        .register-button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .register-btn.ui-button {
+            background: #007bff !important;
+            color: white !important;
+        }
+
+        .login-btn.ui-button {
+            background-color: #ffffff !important;
+            color: #3a47d5 !important;
+            width: 180px;
+        }
+
+
+        .register-btn.ui-button:hover {
+            background: #0056b3 !important;
+        }
+
+        /* Custom PrimeFaces-like grid system */
+        .p-grid {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -0.5rem;
+        }
+
+        .p-grid &gt; [class*=&quot;p-col-&quot;] {
+            padding: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        /* Full width on small screens */
+        .p-col-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Half width from medium screens (768px) and up */
+        @media (min-width: 768px) {
+            .p-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+
+    </h:outputStylesheet>
+</h:head>
+
+<h:body>
+    <div class="form-container">
+        <!-- Left Welcome Panel -->
+        <div class="left-panel">
+            <h2>Welcome</h2>
+            <p>You are 30 seconds away from earning your own money!</p>
+            <p:button value="Login" outcome="/ExternalViews/Login" styleClass="login-btn"/>
+        </div>
+
+        <!-- Right Registration Form Panel -->
+        <div class="right-panel">
+            <h:form id="registerForm">
+                <p:growl id="growl" showDetail="true" life="4000"/>
+                <h3>Create Account</h3>
+
+                <!-- Two-column form -->
+                <div class="p-grid p-fluid">
+                    <!-- Left Column -->
+                    <div class="p-col-12 p-md-6">
+                        <div class="p-field">
+                            <p:outputLabel for="firstname" value="First Name"/>
+                            <p:inputText id="firstname" required="true" value="#{registrationView.user.firstName}" requiredMessage="First name is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="lastname" value="Last Name"/>
+                            <p:inputText id="lastname" required="true" value="#{registrationView.user.lastName}" requiredMessage="Last name is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="username" value="Username"/>
+                            <p:inputText id="username" required="true" value="#{registrationView.user.username}" requiredMessage="Username is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="password1" value="Password"/>
+                            <p:password id="password1" feedback="false" required="true" match="confirmPassword" value="#{registrationView.user.clearTextPassword}" requiredMessage="Password is required."/>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="p-col-12 p-md-6">
+                        <div class="p-field">
+                            <p:outputLabel for="email" value="Your Email"/>
+                            <p:inputText id="email" required="true" value="#{registrationView.user.emailAddress}" requiredMessage="Email is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="phone" value="Your Phone"/>
+                            <p:inputText id="phone" required="true" value="#{registrationView.user.phoneNumber}" requiredMessage="Phone is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="confirmPassword" value="Confirm Password"/>
+                            <p:password id="confirmPassword" feedback="false" required="true" value="#{registrationView.user.clearTextPassword}" requiredMessage="Password confirmation is required."/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel value="Gender"/>
+                            <div class="gender-options">
+
+                                <p:selectOneRadio id="city2" value="#{registrationView.user.gender}" layout="responsive" columns="3" unselectable="true">
+                                    <f:selectItems value="#{registrationView.listOfGenders}" var="gender" itemLabel="#{gender}" itemValue="#{gender}"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="p-grid p-fluid">
+                    <div class="p-col-12">
+                        <p:commandButton value="Register" action="#{registrationView.save}" styleClass="p-button-success"
+                        update="registerForm"
+                        />
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+
+    </div>
+</h:body>
+</html>
