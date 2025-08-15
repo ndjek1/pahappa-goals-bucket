@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrgFitCategoryItemService extends GenericService<OrgFitCategoryItem> {
 
+    public OrgFitCategoryItem merge(OrgFitCategoryItem entity);
 }

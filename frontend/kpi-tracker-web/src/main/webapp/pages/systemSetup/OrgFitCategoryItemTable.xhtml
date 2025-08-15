@@ -62,6 +62,7 @@
                                                  actionListener="#{orgFitCategoryItemForm.show}"
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{item}" target="#{orgFitCategoryItemForm.model}" />
+                                    <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.reloadFilterReset}" update="orgFitItemView" />
                                 </p:commandButton>
 
                                 <p:commandButton value="Delete" icon="pi pi-trash"
