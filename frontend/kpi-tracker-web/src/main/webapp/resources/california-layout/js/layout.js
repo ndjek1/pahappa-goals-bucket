@@ -58,10 +58,16 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
             $this.sidebarMenuClick = true;
 
             if ($this.isDesktop()) {
-                if ($this.isOverlay())
+                if ($this.isSlimMenu()) {
+                    // If already slim → expand back
+                    $this.wrapper.removeClass('layout-wrapper-slim-sidebar');
+                }
+                else if ($this.isOverlay()) {
                     $this.wrapper.toggleClass('layout-wrapper-overlay-sidebar-active');
-                else
-                    $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+                }
+                else {
+                    $this.wrapper.toggleClass('layout-wrapper-slim-sidebar'); // shrink to slim
+                }
             }
             else {
                 $this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
@@ -69,6 +75,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
 
             e.preventDefault();
         });
+
 
         $this.megaMenuButton.off('click.megamenu').on('click.megamenu', function (e) {
             $this.megaMenuClick = true;
