@@ -1,148 +1,37 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:po="http://primefaces.org/california">
 
-    <div class="layout-topbar">
-        <h:link outcome="/dashboard" styleClass="logo">
-            <p:graphicImage name="images/logo.png" library="california-layout"/>
-        </h:link>
+    <div class="layout-topbar p-d-flex p-ai-center p-jc-between p-px-3" style="background-color: #2155A3; color: white;">
 
-        <a id="menu-button" href="#">
-            <i class="pi pi-align-left"/>
-        </a>
+        <!-- Left side: logo (optional, you can remove if you don’t want it) -->
+        <div class="p-d-flex p-ai-center">
+            <p:commandLink style="color: white; text-decoration: none;display: inline-flex !important;"
+                           id="menu-button" href="#"
+            >
+                <i class="pi pi-align-left p-mr-2" style="font-size: 2rem;"></i>
+            </p:commandLink>
+        </div>
 
-        <a id="layout-megamenu-button" href="#">
-            <i class="pi pi-angle-down"/>
-            <span class="mega-menu-title">Mega Menu</span>
-        </a>
-        <h:form id="topbarProfileForm">
-            <ui:fragment rendered="#{guestPreferences.profileMode == 'topbar' ? true : false}">
-                <a id="topbar-menu-button" href="#">
-                    <p:graphicImage name="images/avatar.png" library="california-layout"/>
-                    <span>Pauline Harrell</span>
-                </a>
+        <!-- Center: App Title -->
+        <h2 style="margin: 0; font-weight: bold; color: white; text-align: center;">
+            Pahappa Goal Bucket
+        </h2>
 
-                <ul id="topbar-usermenu" class="usermenu usermenu-overlay">
-                    <li>
-                        <a href="#">
-                            <i class="pi pi-fw pi-user"/>
-                            <span class="topbar-item-name">Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="pi pi-fw pi-cog"/>
-                            <span class="topbar-item-name">Settings</span>
-                            <i class="layout-menuitem-toggler pi pi-fw pi-angle-down"/>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-palette"/>
-                                    <span>Change</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-star"/>
-                                    <span>Favorites</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-lock"/>
-                                    <span>Lock Screen</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-image"/>
-                                    <span>Wallpaper</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="pi pi-fw pi-envelope"/>
-                            <span class="topbar-item-name">Messages</span>
-                            <i class="layout-menuitem-toggler pi pi-fw pi-angle-down"/>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar1.png" library="california-layout" width="25"/>
-                                    <span>Give me a call</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="california-layout" width="25"/>
-                                    <span>Reports attached</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar3.png" library="california-layout" width="25"/>
-                                    <span>About your invoice</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="california-layout" width="25"/>
-                                    <span>Meeting today</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar4.png" library="california-layout" width="25"/>
-                                    <span>Out of office</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="pi pi-fw pi-bell"/>
-                            <span class="topbar-item-name">Notifications</span>
-                            <i class="layout-menuitem-toggler pi pi-fw pi-angle-down"/>
-                        </a>
-                        <ul>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-sliders-h"/>
-                                    <span>Pending tasks</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-calendar"/>
-                                    <span>Meeting today</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-download"/>
-                                    <span>Download</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#">
-                                    <i class="pi pi-fw pi-ticket"/>
-                                    <span>Book flight</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </ui:fragment>
-        </h:form>
-        <a id="right-sidebar-button" href="#">
-            <i class="pi pi-ellipsis-v"/>
-        </a>
+        <!-- Right side: Notification + User -->
+        <div class="p-d-flex p-ai-center">
+            <p:commandLink action="#" style="color: white; text-decoration: none;" title="Notifications">
+                <i class="pi pi-bell" style="font-size: 1.3rem;"></i>
+            </p:commandLink>
+
+            <p:commandLink action="#{profileView.getViewPath}" style="color: white; margin-left: 1.5rem; text-decoration: none;"
+                           id="sidebar-profile-button" href="#"
+                           title="Profile">
+                <i class="pi pi-user" style="font-size: 1.3rem;"></i>
+            </p:commandLink>
+        </div>
+
     </div>
-
 </ui:composition>
