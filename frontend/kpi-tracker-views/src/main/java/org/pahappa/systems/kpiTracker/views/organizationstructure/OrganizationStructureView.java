@@ -93,6 +93,12 @@ public class OrganizationStructureView implements Serializable {
 
         // Filter and load dataModels based on search/filter criteria
         this.departmentModels = departmentService.getInstances(departmentSearch, 0, 1000);
+
+        // Setting the teamsCount for each department
+        for (Department department : this.departmentModels) {
+            int count = teamService.getTeamsByDepartment(department).size();
+            department.setTeamsCount(count);
+        }
     }
 
     public void deleteSelectedDepartment(Department department) {
@@ -104,6 +110,11 @@ public class OrganizationStructureView implements Serializable {
             // Handle exception (e.g., log or show error message)
             e.printStackTrace();
         }
+    }
+
+
+    public int getTeamsCount(Department department) {
+        return teamService.getTeamsByDepartment(department).size();
     }
 
     public List<ExcelReport> getExcelReportModels() {

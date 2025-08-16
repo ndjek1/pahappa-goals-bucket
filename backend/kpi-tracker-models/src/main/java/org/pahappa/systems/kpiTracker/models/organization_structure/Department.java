@@ -16,6 +16,8 @@ public class Department extends BaseEntity {
     private RecordStatus departmentStatus;
 
 
+    @Transient
+    private int teamsCount;
 
     // CONSTRUCTORS
     public Department() {
@@ -62,6 +64,14 @@ public class Department extends BaseEntity {
     }
     public void setDepartmentStatus(RecordStatus departmentStatus) {
         this.departmentStatus = departmentStatus;
+    }
+
+
+    public int getTeamsCount() {
+        return teamsCount;
+    }
+    public void setTeamsCount(int teamsCount) {
+        this.teamsCount = teamsCount;
     }
 
 }
