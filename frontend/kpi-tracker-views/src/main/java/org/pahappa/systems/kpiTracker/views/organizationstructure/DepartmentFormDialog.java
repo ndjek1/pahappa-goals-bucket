@@ -5,12 +5,19 @@ import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.sers.webutils.model.security.User;
+import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import java.util.List;
 import java.util.logging.Logger;
 
 @ManagedBean(name = "departmentFormDialog")
@@ -23,10 +30,15 @@ public class DepartmentFormDialog extends DialogForm<Department> {
     private static final Logger LOGGER = Logger.getLogger(DepartmentFormDialog.class.getSimpleName());
     private DepartmentService departmentService;
 
+    private UserService userService;
+
+
 
     @PostConstruct
     public void init() {
+
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
+        this.userService = ApplicationContextProvider.getBean(UserService.class);
     }
 
     public DepartmentFormDialog() {
@@ -63,6 +75,29 @@ public class DepartmentFormDialog extends DialogForm<Department> {
     }
     public void setModel(Department model) {
         this.department = model != null ? model : new Department();
+    }
+
+
+    public List<User> completeUsers(String query) {
+        List<User> allUsers;
+        try {
+            allUsers = departmentsView.getUserService().getUsers();
+        } catch (org.sers.webutils.model.exception.OperationFailedException e) {
+            e.printStackTrace();
+            return java.util.Collections.emptyList();
+        }
+        return allUsers.stream()
+                .filter(user -> user.getFullName() != null && user.getFullName().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getCompleteUsers() {
+        try {
+            return userService.getUsers();
+        } catch (org.sers.webutils.model.exception.OperationFailedException e) {
+            e.printStackTrace();
+            return java.util.Collections.emptyList();
+        }
     }
 
 
