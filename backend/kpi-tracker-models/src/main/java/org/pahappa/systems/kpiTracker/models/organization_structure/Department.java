@@ -1,7 +1,6 @@
 package org.pahappa.systems.kpiTracker.models.organization_structure;
 
 import org.sers.webutils.model.BaseEntity;
-import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.security.User;
 
 import javax.persistence.*;
@@ -13,22 +12,26 @@ public class Department extends BaseEntity {
     private String departmentName;
     private String departmentDescription;
     private User departmentHead;
-    private RecordStatus departmentStatus;
+
 
 
     @Transient
     private int teamsCount;
+
+    @Transient
+    private int memberCount;
 
     // CONSTRUCTORS
     public Department() {
         super();
     }
 
-    public Department(String departmentName, String departmentDescription, RecordStatus departmentStatus) {
+    public Department(String departmentName, String departmentDescription, User departmentHead) {
         this.departmentName = departmentName;
         this.departmentDescription = departmentDescription;
-        this.departmentStatus = departmentStatus;
+        this.departmentHead = departmentHead;
     }
+
 
 
     // GETTERS AND SETTERS
@@ -58,20 +61,19 @@ public class Department extends BaseEntity {
     }
 
 
-    @Enumerated(EnumType.STRING)
-    public RecordStatus getDepartmentStatus() {
-        return departmentStatus;
-    }
-    public void setDepartmentStatus(RecordStatus departmentStatus) {
-        this.departmentStatus = departmentStatus;
-    }
-
 
     public int getTeamsCount() {
         return teamsCount;
     }
     public void setTeamsCount(int teamsCount) {
         this.teamsCount = teamsCount;
+    }
+
+    public int getMemberCount() {
+        return memberCount;
+    }
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
     }
 
 }

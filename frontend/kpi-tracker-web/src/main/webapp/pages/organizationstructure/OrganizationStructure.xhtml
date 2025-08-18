@@ -4,211 +4,155 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
-
     <ui:define name="content">
-        <div class="ui-g ui-fluid">
-            <div class="ui-g-12">
 
-                <p:dialog id="addDepartmentDialog" widgetVar="addDepartmentDialogWidget" modal="true" header="Add Department" resizable="false">
-                    <ui:include src="DepartmentFormDialog.xhtml" />
-                </p:dialog>
 
-                <h:form id="departmentsView" enctype="multipart/form-data">
 
-                    <div class="p-grid overlay-demo">
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Total Departments" />
-                                <h2 class="p-text-right">#{departmentsView.totalDepartments}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Total Teams" />
-                                <h2 class="p-text-right">#{departmentsView.totalTeams}</h2>
-                            </div>
-                        </div>
-<!--                        <div class="p-col-12 p-md-3">-->
-<!--                            <div class="card">-->
-<!--                                <h:outputText value="Total Members" />-->
-<!--&lt;!&ndash;                                <h2 class="p-text-right">#{departmentsView.totalMembers}</h2>&ndash;&gt;-->
-<!--                            </div>-->
-<!--                        </div>-->
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Active Departments" />
-                                <h2 class="p-text-right">#{departmentsView.activeDepartments}</h2>
-                            </div>
-                        </div>
+        <div class="card">
+
+            <h:form id="departmentsView" enctype="multipart/form-data">
+                <p:growl id="messages" showDetail="true" life="4000"/>
+
+                <!-- 1. HEADER: Title (with search space under it) and Add Department Button -->
+                <div class="p-d-flex p-jc-between p-ai-start p-mb-4">
+                    <div>
+                        <h1 style="margin: 0; color: #6c757d;">Departments</h1>
+                        <br />
+                        <p:inputText id="searchTerm" required="false"
+                                     value="#{departmentsView.searchTerm}"
+                                     placeholder="Search department"
+                                     style="border-radius: 6px; padding: 10px 14px; font-size: 14px; min-width: 250px; border: 1px solid #ddd;">
+                            <p:ajax event="keyup" listener="#{departmentsView.reloadFilterReset()}" />
+                        </p:inputText>
                     </div>
-
-                    <!-- Header Section -->
-                    <div class="card">
-                        <div class="p-d-flex p-jc-between p-ai-center" style="margin-bottom: 20px;">
-                            <h2 style="margin: 0; color: #666; font-weight: normal;">Departments</h2>
-                            <p:commandButton value="+ Add Departments" process="@this"
-                                             styleClass="ui-button-success" immediate="true"
-                                             style="background-color: #4CAF50; border-color: #4CAF50; font-weight: 500;"
-                                             ajax="false"
-                                             actionListener="#{departmentFormDialog.show}">
-                                <f:setPropertyActionListener value="#{null}" target="#{departmentFormDialog.model}" />
-                                <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView" />
-                            </p:commandButton>
-                        </div>
-
-                        <!-- Search Section -->
-                        <div class="p-grid" style="margin-bottom: 20px;">
-                            <div class="p-col-12 p-md-6">
-                                <p:inputText id="searchTerm" required="false"
-                                             value="#{departmentsView.searchTerm}" placeholder="Search department"
-                                             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
-                                             onkeyup="#{departmentsView.reloadFilterReset()}">
-                                    <p:ajax event="keyup"
-
-                                            listener="#{departmentsView.reloadFilterReset()}" />
-                                </p:inputText>
-                            </div>
-                            <div class="p-col-12 p-md-3">
-                                <p:selectOneMenu id="statusFilter" label="Filter by Status"
-                                                 title="Filter by Status" value="#{departmentsView.selectedStatus}"
-                                                 style="width: 100%; height: 42px;">
-                                    <f:selectItem itemLabel="All Statuses" itemValue="#{null}" />
-                                    <f:selectItems value="#{departmentsView.recordStatusList}" var="status" />
-                                    <p:ajax event="change"
-                                            listener="#{departmentsView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
-                            </div>
-                        </div>
-
-                        <p:growl id="messages" showDetail="true" />
+                    <div>
+                        <p:commandButton value="Add Departments" process="@this"
+                                         styleClass="p-button-success" immediate="true"
+                                         style="background-color: #5cb85c; font-size: 1rem; padding: 0.5rem 2rem; min-width: 150px; font-weight: 600;"
+                                         ajax="false"
+                                         actionListener="#{departmentFormDialog.show}">
+                            <f:setPropertyActionListener value="#{null}" target="#{departmentFormDialog.model}" />
+                            <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView" />
+                        </p:commandButton>
                     </div>
+                </div>
 
-                    <!-- Departments List as Cards -->
-                    <h:panelGroup id="departmentsList">
-                        <ui:repeat value="#{departmentsView.departmentModels}" var="model">
-                            <div class="card" style="margin-bottom: 15px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background: white;">
-                                <div class="p-grid p-ai-center">
-                                    <!-- Department Info Section -->
-                                    <div class="p-col-12 p-md-4">
-                                        <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #333;">
-                                            #{model.departmentName}
-                                        </h3>
-                                        <div style="color: #666; font-size: 14px; margin-bottom: 4px;">
-                                            Department Lead
-                                        </div>
-                                        <div style="color: #2196F3; font-weight: 500; font-size: 16px;">
-                                            #{model.departmentHead}
-                                        </div>
-                                    </div>
 
-                                    <!-- Stats Section -->
-                                    <div class="p-col-12 p-md-2">
-                                        <div style="text-align: center; padding: 10px;">
-                                            <div style="color: #666; font-size: 14px; margin-bottom: 4px;">Teams Count</div>
-                                            <div style="font-size: 20px; font-weight: bold; color: #2196F3;">
-                                                #{model.teamsCount != null ? model.teamsCount : 3}
-                                            </div>
-                                        </div>
-                                    </div>
+                <!-- 2. CONTENT LIST: department name, lead name, team and member count plus action buttons (manage members, view teams, edit and delete) -->
+                <p:outputPanel id="departmentsList">
 
-                                    <!-- Actions Section -->
-                                    <div class="p-col-12 p-md-4">
-                                        <div class="p-d-flex p-flex-wrap p-jc-end" style="gap: 10px;">
-                                            <!-- First row of buttons -->
-                                            <div style="display: flex; gap: 10px; margin-bottom: 10px; width: 100%; justify-content: flex-end;">
-                                                <p:commandButton value="Manage Members" process="@this"
-                                                                 styleClass="ui-button-primary" immediate="true"
-                                                                 style="background-color: #1976D2; border-color: #1976D2; font-size: 14px; padding: 8px 16px;"
-                                                                 actionListener="#{departmentTeamsView.show(model)}">
-                                                    <f:setPropertyActionListener value="#{model}"
-                                                                                 target="#{departmentTeamsView.selectedDepartment}" />
-                                                </p:commandButton>
+                    <ui:repeat value="#{departmentsView.departmentModels}" var="department"
+                               varStatus="status">
+                        <div class="p-card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 6px;">
 
-                                                <p:commandButton value="View Teams" process="@this"
-                                                                 styleClass="ui-button-secondary" immediate="true"
-                                                                 style="background-color: white; color: #1976D2; border: 1px solid #1976D2; font-size: 14px; padding: 8px 16px;"
-                                                                 actionListener="#{departmentTeamsView.show(model)}">
-                                                    <f:setPropertyActionListener value="#{model}"
-                                                                                 target="#{departmentTeamsView.selectedDepartment}" />
-                                                </p:commandButton>
-                                            </div>
+                            <!-- Row 1: Department Name -->
+                            <div class="p-d-flex p-jc-between p-ai-start">
+                               <div>
+                                   <h3 style="margin-top: 0; margin-bottom: 0.5rem;">#{department.departmentName != null ? department.departmentName : 'Department Name'}</h3>
+                                   <h:outputText value="#{department.departmentDescription}" style="color: #6c757d;" />
+                               </div>
+                                <p:tag value="#{department.recordStatus}" style="background-color: #5cb85c" styleClass="p-mr-2" severity="info" rounded="true" />
+                            </div>
 
-                                            <!-- Second row of buttons -->
-                                            <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
-                                                <p:commandButton process="@this" icon="fa fa-edit" title="Edit"
-                                                                 styleClass="ui-button-secondary" immediate="true"
-                                                                 style="background-color: white; color: #2196F3; border: 1px solid #2196F3; width: 40px; height: 36px;"
-                                                                 ajax="false"
-                                                                 actionListener="#{departmentFormDialog.show}">
-                                                    <f:setPropertyActionListener value="#{model}"
-                                                                                 target="#{departmentFormDialog.model}" />
-                                                    <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" />
-                                                </p:commandButton>
+                            <hr class="p-my-3"/>
 
-                                                <span style="color: #2196F3; font-size: 14px; margin: 0 5px;">Edit</span>
+                            <!-- Row 2: Department Lead(title), lead name, Team Count, Member Count -->
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                <!-- Column 1: Department Lead -->
+                                <div class="department-lead" style="padding-right: 20px;">
+                                    <h:outputText value="Department Lead" style="color: #6c757d;" />
+                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff;">#{department.departmentHead != null ? department.departmentHead : '[dept_head]'}</h5>
+                                </div>
 
-                                                <p:commandButton icon="fa fa-trash" title="Delete"
-                                                                 styleClass="ui-button-secondary"
-                                                                 style="background-color: white; color: #f44336; border: 1px solid #f44336; width: 40px; height: 36px;"
-                                                                 actionListener="#{departmentsView.deleteSelectedDepartment(model)}"
-                                                                >
-                                                    <p:confirm header="Confirmation"
-                                                               message="You are about to delete this department and all its teams. Do you wish to continue?"
-                                                               icon="ui-icon-alert" />
-                                                </p:commandButton>
+                                <!-- Column 2: Teams Count -->
+                                <div class="teams-count" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
+                                    <h:outputText value="Teams Count" style="color: #6c757d;" />
+                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{department.teamsCount != null ? department.teamsCount : '0'}</h5>
+                                </div>
 
-                                                <span style="color: #f44336; font-size: 14px; margin-left: 5px;">Delete</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <!-- Column 3: Members Count -->
+                                <div class="member-count" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
+                                    <h:outputText value="Member Count" style="color: #6c757d;" />
+                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{department.memberCount != null ? department.memberCount : '0'}</h5>
                                 </div>
                             </div>
-                        </ui:repeat>
-                    </h:panelGroup>
 
-                    <p:blockUI block="departmentsView">
-                        <p:graphicImage value="/resources/images/workingicon.png" />
-                    </p:blockUI>
+                            <hr class="p-my-3"/>
 
-                    <p:confirmDialog global="true">
-                        <p:commandButton value="Yes" type="button"
-                                         styleClass="ui-confirmdialog-yes" icon="fa fa-thumbs-up" />
-                        <p:commandButton value="No" type="button"
-                                         styleClass="ui-confirmdialog-no" icon="fa fa-thumbs-down" />
-                    </p:confirmDialog>
+                            <!-- Bottom part of the card: Manage members, view teams, and Edit/Delete actions -->
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                <p:commandButton value="Manage Members" process="@this"
+                                                 styleClass="ui-button-primary p-mr-2" immediate="true"
+                                                 style="background-color: #0a9dff; border: 1px solid #337ab7; border-radius: 4px;"
+                                                 actionListener="#{departmentTeamsView}" >
+                                    <f:setPropertyActionListener value="#{department}"
+                                                                 target="#{departmentMembersView.selectedDepartment}" />
+                                </p:commandButton>
+
+                                <div>
+                                    <p:commandButton value="View Teams" process="@this"
+                                                     styleClass="ui-button-secondary" immediate="true"
+                                                     style="background-color: white; color: #337ab7; border: 1px solid #337ab7; border-radius: 4px;"
+                                                     actionListener="#{departmentTeamsView.show(department)}">
+                                        <f:setPropertyActionListener value="#{department}"
+                                                                     target="#{departmentTeamsView.selectedDepartment}" />
+                                    </p:commandButton>
+                                </div>
+
+                                <div>
+                                    <p:commandButton process="@this" title="Edit" icon="pi pi-pencil"
+                                                     update="departmentsView"
+                                                     styleClass=" p-button-text p-mr-2" immediate="true"
+                                                     style="color: #337ab7; padding: 4px; background: none !important; border: none !important;"
+                                                     ajax="false"
+                                                     actionListener="#{departmentFormDialog.show}">
+                                        <f:setPropertyActionListener value="#{department}"
+                                                                     target="#{departmentFormDialog.department}" />                                    </p:commandButton>
+
+                                    <p:commandButton process="@this" title="Delete" icon="pi pi-trash"
+                                                     styleClass="p-button-text p-mr-2"
+                                                     update="departmentsView"
+                                                     actionListener="#{departmentsView.deleteSelectedDepartment(department)}">
+                                        <p:confirm header="Confirmation"
+                                                   message="Are you sure you want to delete '#{department.departmentName}'?"
+                                                   icon="pi pi-exclamation-triangle" />
+                                    </p:commandButton>
+                                </div>
+
+                            </div>
+
+                        </div>
 
 
-                    <p:dialog id="teamsDialog" header="Teams"
-                              widgetVar="teamsDialogWidget" modal="true"
-                              visible="#{departmentTeamsView.teamsDialogVisible}">
-                        <h:panelGroup rendered="#{not empty departmentTeamsView.teams}">
-                            <p:dataTable value="#{departmentTeamsView.teams}" var="team">
-                                <p:column headerText="Team Name">
-                                    #{team.teamName}
-                                </p:column>
+                    </ui:repeat>
+
+                </p:outputPanel>
 
 
-                                <!-- i will add more columns , later -->
+            </h:form>
 
-
-                            </p:dataTable>
-                        </h:panelGroup>
-                        <h:outputText value="No teams found." rendered="#{empty departmentTeamsView.teams}" />
-                    </p:dialog>
-
-
-                </h:form>
-            </div>
         </div>
+
 
         <style>
             .card {
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 transition: box-shadow 0.3s ease;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
             }
 
             .card:hover {
                 box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+            .department-row:hover {
+                background-color: #f8f9fa !important;
+            }
+
+            .department-row:last-child {
+                border-bottom: none !important;
             }
 
             .ui-button {
@@ -218,27 +162,55 @@
             }
 
             .ui-inputtext {
-                border-radius: 4px;
+                border-radius: 6px;
                 border: 1px solid #ddd;
             }
 
             .ui-selectonemenu {
                 border-radius: 4px;
             }
+
+            .ui-button-text {
+                background: none !important;
+                border: none !important;
+                padding: 4px !important;
+            }
+
+            .ui-button-text:hover {
+                background-color: rgba(51, 122, 183, 0.1) !important;
+            }
+
+            /* Grid layout for consistent column widths */
+            .departments-table {
+                display: block;
+            }
+
+            .department-row {
+                transition: background-color 0.2s ease;
+            }
+
+            /* Ensure proper spacing and alignment */
+            .department-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .teams-count, .member-count {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .department-actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
         </style>
+
     </ui:define>
 </ui:composition>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
