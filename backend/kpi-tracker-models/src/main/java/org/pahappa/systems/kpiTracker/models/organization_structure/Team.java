@@ -15,6 +15,8 @@ public class Team extends BaseEntity {
     private User teamHead;
     private RecordStatus teamStatus;
 
+    private Department department;
+
     public Team() {
         super();
     }
@@ -58,5 +60,14 @@ public class Team extends BaseEntity {
     }
     public void setTeamStatus(RecordStatus teamStatus) {
         this.teamStatus = teamStatus;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    public Department getDepartment() {
+        return department;
+    }
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }
