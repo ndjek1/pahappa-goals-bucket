@@ -1,8 +1,13 @@
 package org.pahappa.systems.kpiTracker.views.users;
 
+import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.SystemUserService;
+import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
+import org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser;
 import org.pahappa.systems.kpiTracker.views.dialogs.MessageComposer;
 import org.sers.webutils.model.Gender;
 import org.sers.webutils.model.RecordStatus;
+import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.model.security.Role;
 import org.sers.webutils.model.security.User;
@@ -27,6 +32,10 @@ public class RegistrationView implements Serializable { // Implement Serializabl
     private transient UserService userService; // transient is good practice for injected services
     private List<Gender> listOfGenders;
     private User user;
+    private SystemUserService systemUserService;
+    private DepartmentService departmentService;
+    private List<Department> departments;
+    private Department selectedDepartment;
 
     public RegistrationView() {
     }
@@ -35,29 +44,43 @@ public class RegistrationView implements Serializable { // Implement Serializabl
     public void init() {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         this.listOfGenders = Arrays.asList(Gender.values());
+        this.systemUserService = ApplicationContextProvider.getBean(SystemUserService.class);
+        this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         this.user = new User();
+        loadDepartments();
     }
 
-
-    public void persist() throws ValidationFailedException {
-        // You might want to add password confirmation logic here before saving
-        Role role  = userService.
-                getRoleByRoleName(Role.DEFAULT_WEB_ACCESS_ROLE);
+    public User persist() throws ValidationFailedException {
+        Role role  = userService.getRoleByRoleName(Role.DEFAULT_WEB_ACCESS_ROLE);
         this.user.addRole(role);
         this.user.setRecordStatus(RecordStatus.ACTIVE_LOCKED);
-        this.userService.saveUser(user);
-        this.user = new User();
+        return this.userService.saveUser(user);   // return managed entity
     }
+
 
     public void save() throws Exception {
         try {
-            persist();
-            this.user = new User();
+            User savedUser = persist();
+            saveSystemUser(savedUser);
+            this.user = new User();      
             MessageComposer.info("Action Successful", "Your account has been created. We will notify you when the admin validates it.");
         } catch (Exception e) {
             MessageComposer.error("Action Failure", e.getMessage());
         }
     }
+
+
+    public void loadDepartments(){
+        this.departments = this.departmentService.getAllInstances();
+    }
+
+    public void saveSystemUser(User managedUser) throws ValidationFailedException, OperationFailedException {
+        SystemUser systemUser = new SystemUser();
+        systemUser.setUser(managedUser);   // ✅ ensure managed user is set
+        systemUser.setDepartment(selectedDepartment);
+        this.systemUserService.saveInstance(systemUser);
+    }
+
 
     public User getUser() {
         return user;
@@ -73,5 +96,21 @@ public class RegistrationView implements Serializable { // Implement Serializabl
 
     public void setListOfGenders(List<Gender> listOfGenders) {
         this.listOfGenders = listOfGenders;
+    }
+
+    public List<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
+
+    public Department getSelectedDepartment() {
+        return selectedDepartment;
+    }
+
+    public void setSelectedDepartment(Department selectedDepartment) {
+        this.selectedDepartment = selectedDepartment;
     }
 }
