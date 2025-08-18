@@ -104,6 +104,7 @@
                                         <div>
                                             <p:commandButton value="Add user" process="@this"
                                                              icon="fa fa-plus"
+                                                             ajax="false"
                                                              styleClass="ui-button-success" immediate="true"
                                                              actionListener="#{userFormDialog.show}">
                                                 <f:setPropertyActionListener value="#{null}"
@@ -137,12 +138,13 @@
 
                                 <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                                     <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
+                                                     ajax="false"
                                                      actionListener="#{userFormDialog.show}">
                                         <f:setPropertyActionListener value="#{model}" target="#{userFormDialog.model}" />
                                         <p:ajax event="dialogReturn" update="usersTable" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" title="Delete"
-                                                     styleClass="ui-button-danger" style="margin-left:5px"
+                                                     styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
                                                      actionListener="#{usersView.deleteSelectedUser(model)}"
                                                      update="usersTable">
                                         <p:confirm header="Confirmation"
@@ -199,6 +201,7 @@
 
                                 <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                                     <p:commandButton icon="fa fa-check" styleClass="ui-button-success"
+                                                     ajax="false"
                                                      title="Validate"
                                                      actionListener="#{userFormDialog.activateSelectedUser(model)}">
                                         <p:ajax event="dialogReturn" update="inactiveUsersTable" />
@@ -222,8 +225,10 @@
                     </p:blockUI>
                     <p:confirmDialog global="true">
                         <p:commandButton value="Yes" type="button"
+                                         ajax="false"
                                          styleClass="ui-confirmdialog-yes" icon="fa fa-thumbs-up" />
                         <p:commandButton value="No" type="button"
+                                         ajax="false"
                                          styleClass="ui-confirmdialog-no" icon="fa fa-thumbs-down" />
                     </p:confirmDialog>
 

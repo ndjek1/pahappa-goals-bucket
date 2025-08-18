@@ -22,7 +22,10 @@
                 <div class="ui-col-12 ui-md-6">
                     <h5>Department Head</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText value="#{departmentFormDialog.model.departmentHead}" />
+                        <p:selectOneMenu value="#{departmentFormDialog.model.departmentHead}" converter="userConverter" required="true" filter="true" filterMatchMode="contains" placeholder="Select Department Head">
+                            <f:selectItem itemLabel="Select Department Head" itemValue="" />
+                            <f:selectItems value="#{departmentFormDialog.completeUsers}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}" />
+                        </p:selectOneMenu>
                     </div>
                 </div>
                 <div class="ui-col-12 ui-md-6">
@@ -47,7 +50,8 @@
                             <p:commandButton value="Save"
                                              process="@form"
                                              actionListener="#{departmentFormDialog.save}"
-                                             update="@form" validateClient="true" />
+                                             update="@form" validateClient="true"
+                                             oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();"/>
                         </div>
                     </div>
                 </div>
