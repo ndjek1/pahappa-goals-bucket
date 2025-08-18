@@ -1,5 +1,6 @@
 package org.pahappa.systems.kpiTracker.models.organization_structure;
 
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.model.BaseEntity;
 import org.sers.webutils.model.security.User;
 
@@ -74,6 +75,19 @@ public class Department extends BaseEntity {
     }
     public void setMemberCount(int memberCount) {
         this.memberCount = memberCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+        Department that = (Department) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
     }
 
 }
