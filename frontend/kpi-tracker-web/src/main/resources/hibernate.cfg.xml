@@ -50,6 +50,12 @@
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.Threshold" />
 
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.TeamGoal" />
+
+        <mapping class="org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser" />
+
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
 
