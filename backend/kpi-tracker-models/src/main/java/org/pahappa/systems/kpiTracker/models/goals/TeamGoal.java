@@ -1,5 +1,6 @@
 package org.pahappa.systems.kpiTracker.models.goals;
 
+import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ public class TeamGoal extends BaseEntity {
     private double contributionWeight;
     private GoalStatus status;
     private DepartmentGoal parent;
+    private Team team;
 
     @Column(name = "name",nullable = false,unique = true)
     public String getName() {
@@ -58,6 +60,16 @@ public class TeamGoal extends BaseEntity {
 
     public void setParent(DepartmentGoal parent) {
         this.parent = parent;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     @Override

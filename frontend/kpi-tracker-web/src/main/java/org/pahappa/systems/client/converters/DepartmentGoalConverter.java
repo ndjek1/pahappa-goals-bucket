@@ -8,7 +8,9 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 
+@FacesConverter("departmentGoalConverter")
 public class DepartmentGoalConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
