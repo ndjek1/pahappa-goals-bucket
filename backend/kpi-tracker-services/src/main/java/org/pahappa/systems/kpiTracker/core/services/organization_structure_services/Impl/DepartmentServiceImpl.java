@@ -18,4 +18,9 @@ public class DepartmentServiceImpl extends GenericServiceImpl<Department> implem
     public boolean isDeletable(Department instance) {
         return true; // To determine if the department can be deleted
     }
+
+    @Override
+    public Department getObjectById(String id) {
+        return super.getInstanceByID(id);
+    }
 }

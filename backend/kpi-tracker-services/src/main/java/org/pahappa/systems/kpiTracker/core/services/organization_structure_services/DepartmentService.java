@@ -6,4 +6,5 @@ import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import javax.annotation.Generated;
 
 public interface DepartmentService extends GenericService<Department> {
+    public  Department getObjectById(String id);
 }
