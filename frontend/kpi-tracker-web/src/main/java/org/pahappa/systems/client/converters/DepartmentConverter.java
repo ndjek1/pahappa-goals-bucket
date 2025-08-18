@@ -1,8 +1,6 @@
 package org.pahappa.systems.client.converters;
 
-import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
-import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
