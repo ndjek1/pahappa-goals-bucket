@@ -64,7 +64,7 @@ public class DepartmentGoal extends BaseEntity {
 
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false)
     public Department getDepartment() {
         return department;
