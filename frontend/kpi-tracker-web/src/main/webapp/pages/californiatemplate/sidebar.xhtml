@@ -25,6 +25,21 @@
 
                     </p:submenu>
 
+                    <p:submenu id="kpis" label="Manage KPIs"
+                               styleClass="p-my-3"
+                               style="color:#0d6efd"
+                               icon="pi pi-fw pi-chart-line">
+                        <p:menuitem id="allKPIs" value="All KPIs"
+                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                                    outcome="/pages/kpis/KPIView" />
+                        <p:menuitem id="departmentKPIs" value="Department KPIs"
+                                    rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
+                                    outcome="/pages/kpis/DepartmentKPIView" />
+                        <p:menuitem id="teamKPIs" value="Team KPIs"
+                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
+                                    outcome="/pages/kpis/TeamKPIView" />
+                    </p:submenu>
+
                     <p:submenu id="department" label="Manage Department"
                                rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
                                styleClass="p-my-3"
