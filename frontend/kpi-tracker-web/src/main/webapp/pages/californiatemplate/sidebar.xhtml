@@ -15,6 +15,34 @@
                                 icon="pi pi-th-large"
                                 styleClass="p-my-3"
                                 outcome="/pages/dashboard/Dashboard" />
+                    <p:submenu id="goals" label="Manage Goals"
+                               styleClass="p-my-3"
+                               style="color:#0d6efd"
+                               icon="pi pi-fw pi-user">
+                        <p:menuitem id="orgGoals" value="Organization Goals"
+                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                                    outcome="/pages/goals/OrganizationGoalsView" />
+
+                    </p:submenu>
+
+                    <p:submenu id="department" label="Manage Department"
+                               rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
+                               styleClass="p-my-3"
+                               style="color:#0d6efd"
+                               icon="pi pi-fw pi-user">
+                        <p:menuitem id="departmentGoals" value="Goals"
+                                    outcome="/pages/goals/DepartmentGoalView" />
+                    </p:submenu>
+                    <p:submenu id="team" label="Manage Team"
+                               rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
+                               styleClass="p-my-3"
+                               style="color:#0d6efd"
+                               icon="pi pi-fw pi-user">
+                        <p:menuitem id="teamGoals" value="Team Goals"
+                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
+                                    outcome="/pages/goals/TeamGoalView" />
+                    </p:submenu>
+
 
                     <p:menuitem id="organizationStructure" value="Organization Structure"
                                 icon="pi pi-sitemap"
@@ -22,6 +50,7 @@
                                 outcome="/pages/organizationstructure/OrganizationStructure" />
 
                     <p:submenu id="settings" label="Manage Users"
+                               rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3"
                                style="color:#0d6efd"
                                icon="pi pi-fw pi-user">
