@@ -24,5 +24,8 @@ public class HyperLinks {
     public static final String ORG_FIT_CATEGORY_ITEM_DIALOG = "/pages/systemSetup/OrgFitCategoryItemForm.xhtml";
     public static final String ORG_FIT_CATEGORY_ITEM_TABLE = "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
     public static final String THRESHOLD_DIALOG = "/pages/systemSetup/ThresholdForm.xhtml";
+    public static final String ORGANIZATION_GOAL_DIALOG = "/pages/goals/OrganizationGoalForm.xhtml";
+    public static final String DEPARTMENT_GOAL_DIALOG = "/pages/goals/DepartmentGoalForm.xhtml";
+    public static final String TEAM_GOAL_DIALOG = "/pages/goals/TeamGoalForm.xhtml";
 
 }
