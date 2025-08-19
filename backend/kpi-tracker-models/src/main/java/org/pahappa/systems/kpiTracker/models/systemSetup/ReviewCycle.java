@@ -11,12 +11,22 @@ import java.util.Date;
 @Table(name = "review_cycles")
 public class ReviewCycle extends BaseEntity {
     private static final long serialVersionUID = 1L;
+    private String title;
     private ReviewCycleType type;
     private Date startDate;
     private Date endDate;
     private ReviewCycleStatus status;
     public  ReviewCycle() {
         this.status = ReviewCycleStatus.ACTIVE;
+    }
+
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Enumerated(EnumType.ORDINAL)
