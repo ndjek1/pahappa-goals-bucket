@@ -54,6 +54,8 @@
         <mapping class="org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal" />
         <mapping class="org.pahappa.systems.kpiTracker.models.goals.TeamGoal" />
 
+        <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KPI" />
+
         <mapping class="org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser" />
 
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
