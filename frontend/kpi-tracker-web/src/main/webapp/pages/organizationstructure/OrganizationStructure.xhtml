@@ -84,6 +84,8 @@
                                 <p:commandButton value="Manage Members" process="@this"
                                                  styleClass="ui-button-primary p-mr-2" immediate="true"
                                                  style="background-color: #0a9dff; border: 1px solid #337ab7; border-radius: 4px;"
+                                                 action="#{departmentMembersView.goToDepartmentMembersView}"
+                                                 update="departmentsView"
                                                  actionListener="#{departmentMembersView}" >
                                     <f:setPropertyActionListener value="#{department}"
                                                                  target="#{departmentMembersView.selectedDepartment}" />
