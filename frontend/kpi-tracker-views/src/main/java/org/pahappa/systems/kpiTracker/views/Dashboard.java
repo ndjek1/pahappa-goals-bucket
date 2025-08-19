@@ -1,7 +1,7 @@
 package org.pahappa.systems.kpiTracker.views;
 
 import com.googlecode.genericdao.search.Search;
-;
+
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.sers.webutils.client.controllers.WebAppExceptionHandler;
 import org.sers.webutils.client.views.presenters.ViewPath;
