@@ -64,6 +64,9 @@ public class DepartmentMembersView implements Serializable {
         return "ManageMembers?faces-redirect=true";
     }
 
+    public String goToDepartmentMembersView() {
+        return goToDepartmentMembersView(this.selectedDepartment);
+    }
 
     public void reloadFilterReset() {
 
