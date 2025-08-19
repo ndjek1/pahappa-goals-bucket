@@ -7,26 +7,70 @@
     <ui:define name="content">
 
 
-
         <div class="card">
 
             <h:form id="departmentsView" enctype="multipart/form-data">
                 <p:growl id="messages" showDetail="true" life="4000"/>
 
-                <!-- 1. HEADER: Title (with search space under it) and Add Department Button -->
+                <!-- 1. HEADER: Title with search options -->
                 <div class="p-d-flex p-jc-between p-ai-start p-mb-4">
                     <div>
                         <h1 style="margin: 0; color: #6c757d;">Department Members</h1>
-                        <br />
+                    </div>
+                    <div>
                         <p:inputText id="searchTerm" required="false"
-                                     value="#{departmentsView.searchTerm}"
-                                     placeholder="Search department"
+                                     value="#{departmentMembersView.searchTerm}"
+                                     placeholder="Search department members"
                                      style="border-radius: 6px; padding: 10px 14px; font-size: 14px; min-width: 250px; border: 1px solid #ddd;">
                             <p:ajax event="keyup" listener="#{departmentMembersView.reloadFilterReset()}" />
                         </p:inputText>
                     </div>
                 </div>
 
+                <!-- 2. MEMBERS TABLE -->
+                <div class="members-table-container">
+                    <p:dataTable id="membersTable"
+                                 value="#{departmentMembersView.departmentMembers}"
+                                 var="member"
+                                 styleClass="members-table"
+                                 emptyMessage="No department members found"
+                                 rows="10"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,25,50">
+
+                        <!-- Name Column -->
+                        <p:column headerText="Name" styleClass="name-column">
+                            <h:outputText value="#{member.user.fullName}" />
+                        </p:column>
+
+                        <!-- Email Column -->
+                        <p:column headerText="Email" styleClass="email-column">
+                            <h:outputText value="#{member.user.emailAddress}" />
+                        </p:column>
+
+                        <!-- Role Column -->
+                        <p:column headerText="Role" styleClass="role-column">
+                            <h:outputText value="#{member.user.roles}" />
+                        </p:column>
+
+                        <!-- Action Column -->
+                        <p:column headerText="Action" styleClass="action-column">
+                            <p:commandButton title="Remove"
+                                             styleClass="remove-button"
+                                             icon="pi pi-trash"
+                                             actionListener="#{departmentMembersView.deleteSelectedDepartment(member)}"
+                                             update="membersTable departmentsView:messages"
+                                             process="@this">
+                                <p:confirm header="Confirmation"
+                                           message="Are you sure you want to remove #{member.user.fullName}?"
+                                           icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
 
             </h:form>
 
@@ -40,20 +84,107 @@
                 background: white;
                 border-radius: 8px;
                 overflow: hidden;
+                padding: 20px;
             }
 
             .card:hover {
                 box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             }
 
-            .department-row:hover {
-                background-color: #f8f9fa !important;
+            /* Members Table Styling */
+            .members-table-container {
+                margin-top: 20px;
             }
 
-            .department-row:last-child {
-                border-bottom: none !important;
+            .members-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
 
+            .members-table .ui-datatable-header {
+                background: #f8f9fa;
+                border-bottom: 2px solid #e9ecef;
+                font-weight: 600;
+                color: #495057;
+                padding: 12px 16px;
+            }
+
+            .members-table .ui-datatable-data tr {
+                border-bottom: 1px solid #e9ecef;
+                transition: background-color 0.2s ease;
+            }
+
+            .members-table .ui-datatable-data tr:hover {
+                background-color: #f8f9fa;
+            }
+
+            .members-table .ui-datatable-data tr:last-child {
+                border-bottom: none;
+            }
+
+            .members-table td {
+                padding: 12px 16px;
+                vertical-align: middle;
+            }
+
+            .members-table th {
+                padding: 12px 16px;
+                text-align: left;
+                font-weight: 600;
+                color: #495057;
+                background: #f8f9fa;
+                border-bottom: 2px solid #e9ecef;
+            }
+
+            /* Column specific styling */
+            .name-column {
+                min-width: 150px;
+                font-weight: 500;
+            }
+
+            .email-column {
+                min-width: 200px;
+                color: #6c757d;
+            }
+
+            .role-column {
+                min-width: 120px;
+                color: #495057;
+            }
+
+            .action-column {
+                width: 120px;
+                text-align: center;
+            }
+
+            /* Remove button styling */
+            .remove-button {
+                border-radius: 4px;
+                font-size: 12px;
+                padding: 6px 12px;
+                font-weight: 500;
+                border: none;
+                background-color: #dc3545;
+                color: white;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .remove-button:hover {
+                background-color: #c82333;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+            }
+
+            .remove-button .pi-trash {
+                margin-right: 4px;
+            }
+
+            /* General UI improvements */
             .ui-button {
                 border-radius: 4px;
                 font-weight: 500;
@@ -79,35 +210,39 @@
                 background-color: rgba(51, 122, 183, 0.1) !important;
             }
 
-            /* Grid layout for consistent column widths */
-            .departments-table {
-                display: block;
+            /* Responsive design */
+            @media (max-width: 768px) {
+                .members-table td,
+                .members-table th {
+                    padding: 8px 12px;
+                    font-size: 14px;
+                }
+
+                .email-column {
+                    display: none;
+                }
+
+                .remove-button {
+                    padding: 4px 8px;
+                    font-size: 11px;
+                }
             }
 
-            .department-row {
-                transition: background-color 0.2s ease;
+            /* Empty state styling */
+            .ui-datatable-empty-message {
+                text-align: center;
+                padding: 40px 20px;
+                color: #6c757d;
+                font-style: italic;
             }
 
-            /* Ensure proper spacing and alignment */
-            .department-info {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .teams-count, .member-count {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .department-actions {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                flex-wrap: wrap;
-                gap: 12px;
+            /* Pagination styling */
+            .ui-paginator {
+                background: #f8f9fa;
+                border: 1px solid #e9ecef;
+                border-top: none;
+                padding: 10px 15px;
+                border-radius: 0 0 8px 8px;
             }
         </style>
 
