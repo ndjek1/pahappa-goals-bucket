@@ -40,6 +40,9 @@ public class OrganizationStructureView implements Serializable {
     private int activeDepartments;
     private int activeTeams;
 
+
+
+
     private String searchTerm;
     private RecordStatus selectedStatus;
     private Date createdFrom, createdTo;
