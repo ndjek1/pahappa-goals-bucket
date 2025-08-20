@@ -2,127 +2,137 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                template="/pages/californiatemplate/dialog-template.xhtml">
-    <ui:define name="head">
-        <style type="text/css">
-            .capitalized {
-                text-transform: capitalize;
-            }
-        </style>
-    </ui:define>
-    <ui:define name="content">
-        <title>Add KPI</title>
+                xmlns:p="http://primefaces.org/ui">
 
-        <p:dialog header="KPI Form" widgetVar="kpiForm" modal="true" 
-                  showEffect="fade" hideEffect="fade" responsive="true" 
-                  width="800" height="600" closeOnEscape="true">
-            
-            <h:form id="kpiFormDialog" styleClass="card">
-                <p:growl id="growl" showDetail="true" life="4000" />
+    <p:dialog header="KPI Form" widgetVar="kpiForm" modal="true" 
+              showEffect="fade" hideEffect="fade" responsive="true" 
+              width="700" height="500" closeOnEscape="true"
+              styleClass="kpi-form-dialog">
+        
+        <h:form id="kpiFormDialog">
+            <p:growl id="growl" showDetail="true" life="4000" />
 
-                <div class="p-grid ui-fluid" style="display:flex">
-                    <!-- KPI Name -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>KPI Name *</h5>
-                        <div class="ui-inputgroup">
-                            <p:inputText value="#{kpiForm.model.name}" required="true" />
-                        </div>
-                    </div>
+            <div class="p-fluid formgrid grid">
+                <!-- KPI Name -->
+                <div class="field col-12 md:col-6">
+                    <label for="kpiName" class="font-bold">KPI Name *</label>
+                    <p:inputText id="kpiName" value="#{kpiForm.model.name}" 
+                                required="true" styleClass="w-full" />
+                </div>
 
-                    <!-- Measurement Unit -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Measurement Unit *</h5>
-                        <div class="ui-inputgroup">
-                            <p:selectOneMenu value="#{kpiForm.model.measurementUnit}" required="true" filter="true" filterMatchMode="contains">
-                                <f:selectItem itemLabel="Select Measurement Unit" itemValue="#{null}" noSelectionOption="true"/>
-                                <f:selectItems value="#{kpiForm.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}" />
-                            </p:selectOneMenu>
-                        </div>
-                    </div>
+                <!-- Measurement Unit -->
+                <div class="field col-12 md:col-6">
+                    <label for="measurementUnit" class="font-bold">Measurement Unit *</label>
+                    <p:selectOneMenu id="measurementUnit" value="#{kpiForm.model.measurementUnit}" 
+                                    required="true" filter="true" filterMatchMode="contains"
+                                    styleClass="w-full" noSelectionOption="true">
+                        <f:selectItem itemLabel="Select Measurement Unit" itemValue="#{null}" />
+                        <f:selectItems value="#{kpiForm.measurementUnits}" var="unit" 
+                                      itemLabel="#{unit.displayName}" itemValue="#{unit}" />
+                    </p:selectOneMenu>
+                </div>
 
-                    <!-- Frequency -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Frequency *</h5>
-                        <div class="ui-inputgroup">
-                            <p:selectOneMenu value="#{kpiForm.model.frequency}" required="true" filter="true" filterMatchMode="contains">
-                                <f:selectItem itemLabel="Select Frequency" itemValue="#{null}" noSelectionOption="true"/>
-                                <f:selectItems value="#{kpiForm.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}" />
-                            </p:selectOneMenu>
-                        </div>
-                    </div>
+                <!-- Frequency -->
+                <div class="field col-12 md:col-6">
+                    <label for="frequency" class="font-bold">Frequency *</label>
+                    <p:selectOneMenu id="frequency" value="#{kpiForm.model.frequency}" 
+                                    required="true" filter="true" filterMatchMode="contains"
+                                    styleClass="w-full" noSelectionOption="true">
+                        <f:selectItem itemLabel="Select Frequency" itemValue="#{null}" />
+                        <f:selectItems value="#{kpiForm.frequencies}" var="freq" 
+                                      itemLabel="#{freq.displayName}" itemValue="#{freq}" />
+                    </p:selectOneMenu>
+                </div>
 
-                    <!-- Target Value -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Target Value *</h5>
-                        <div class="ui-inputgroup">
-                            <p:inputNumber value="#{kpiForm.model.targetValue}" required="true" minValue="0" decimalPlaces="2"/>
-                        </div>
-                    </div>
+                <!-- Target Value -->
+                <div class="field col-12 md:col-6">
+                    <label for="targetValue" class="font-bold">Target Value *</label>
+                    <p:inputNumber id="targetValue" value="#{kpiForm.model.targetValue}" 
+                                  required="true" minValue="0" decimalPlaces="2"
+                                  styleClass="w-full" />
+                </div>
 
-                    <!-- Current Value -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Current Value</h5>
-                        <div class="ui-inputgroup">
-                            <p:inputNumber value="#{kpiForm.model.currentValue}" minValue="0" decimalPlaces="2"/>
-                        </div>
-                    </div>
+                <!-- Current Value -->
+                <div class="field col-12 md:col-6">
+                    <label for="currentValue" class="font-bold">Current Value</label>
+                    <p:inputNumber id="currentValue" value="#{kpiForm.model.currentValue}" 
+                                  minValue="0" decimalPlaces="2" styleClass="w-full" />
+                </div>
 
-                    <!-- Start Date -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Start Date *</h5>
-                        <div class="ui-inputgroup">
-                            <p:calendar value="#{kpiForm.model.startDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
-                        </div>
-                    </div>
+                <!-- Start Date -->
+                <div class="field col-12 md:col-6">
+                    <label for="startDate" class="font-bold">Start Date *</label>
+                    <p:calendar id="startDate" value="#{kpiForm.model.startDate}" 
+                               required="true" showTime="false" pattern="MM/dd/yyyy"
+                               styleClass="w-full" />
+                </div>
 
-                    <!-- End Date -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>End Date (Optional)</h5>
-                        <div class="ui-inputgroup">
-                            <p:calendar value="#{kpiForm.model.endDate}" showTime="false" pattern="MM/dd/yyyy" />
-                        </div>
-                    </div>
+                <!-- End Date -->
+                <div class="field col-12 md:col-6">
+                    <label for="endDate" class="font-bold">End Date (Optional)</label>
+                    <p:calendar id="endDate" value="#{kpiForm.model.endDate}" 
+                               showTime="false" pattern="MM/dd/yyyy" styleClass="w-full" />
+                </div>
 
-                    <!-- Department Goal -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Department Goal (Optional)</h5>
-                        <div class="ui-inputgroup">
-                            <p:selectOneMenu value="#{kpiForm.model.departmentGoal}" filter="true" filterMatchMode="contains">
-                                <f:selectItem itemLabel="Select Department Goal" itemValue="#{null}" noSelectionOption="true"/>
-                                <f:selectItems value="#{kpiForm.departmentGoals}" var="deptGoal" itemLabel="#{deptGoal.name}" itemValue="#{deptGoal}" />
-                            </p:selectOneMenu>
-                        </div>
-                    </div>
+                <!-- Department Goal -->
+                <div class="field col-12 md:col-6">
+                    <label for="departmentGoal" class="font-bold">Department Goal (Optional)</label>
+                    <p:selectOneMenu id="departmentGoal" value="#{kpiForm.model.departmentGoal}" 
+                                    filter="true" filterMatchMode="contains"
+                                    styleClass="w-full" noSelectionOption="true">
+                        <f:selectItem itemLabel="Select Department Goal" itemValue="#{null}" />
+                        <f:selectItems value="#{kpiForm.departmentGoals}" var="deptGoal" 
+                                      itemLabel="#{deptGoal.name}" itemValue="#{deptGoal}" />
+                    </p:selectOneMenu>
+                </div>
 
-                    <!-- Team Goal -->
-                    <div class="ui-col-12 ui-md-6">
-                        <h5>Team Goal (Optional)</h5>
-                        <div class="ui-inputgroup">
-                            <p:selectOneMenu value="#{kpiForm.model.teamGoal}" filter="true" filterMatchMode="contains">
-                                <f:selectItem itemLabel="Select Team Goal" itemValue="#{null}" noSelectionOption="true"/>
-                                <f:selectItems value="#{kpiForm.teamGoals}" var="teamGoal" itemLabel="#{teamGoal.name}" itemValue="#{teamGoal}" />
-                            </p:selectOneMenu>
-                        </div>
-                    </div>
+                <!-- Team Goal -->
+                <div class="field col-12 md:col-6">
+                    <label for="teamGoal" class="font-bold">Team Goal (Optional)</label>
+                    <p:selectOneMenu id="teamGoal" value="#{kpiForm.model.teamGoal}" 
+                                    filter="true" filterMatchMode="contains"
+                                    styleClass="w-full" noSelectionOption="true">
+                        <f:selectItem itemLabel="Select Team Goal" itemValue="#{null}" />
+                        <f:selectItems value="#{kpiForm.teamGoals}" var="teamGoal" 
+                                      itemLabel="#{teamGoal.name}" itemValue="#{teamGoal}" />
+                    </p:selectOneMenu>
+                </div>
 
-                    <hr />
-
-                    <!-- Buttons -->
-                    <div class="ui-col-12 ui-md-12">
-                        <div class="p-d-flex p-jc-between">
-                            <p:commandButton value="Cancel" icon="pi pi-times"
-                                             onclick="PF('kpiForm').hide()"
-                                             styleClass="ui-button-danger p-mx-5" />
-
-                            <p:commandButton value="#{kpiForm.edit ? 'Update' : 'Save'}" icon="pi pi-check"
-                                             process="@form" actionListener="#{kpiForm.persist}"
-                                             update="@form growl" styleClass="ui-button-primary p-mx-5"
-                                             oncomplete="if (!args.validationFailed) PF('kpiForm').hide();" />
-                        </div>
+                <!-- Action Buttons -->
+                <div class="field col-12">
+                    <div class="flex justify-content-end gap-2">
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         onclick="PF('kpiForm').hide()"
+                                         styleClass="p-button-outlined p-button-secondary" />
+                        <p:commandButton value="#{kpiForm.edit ? 'Update' : 'Save'}" icon="pi pi-check"
+                                         process="@form" actionListener="#{kpiForm.persist}"
+                                         update="@form growl" styleClass="p-button-primary"
+                                         oncomplete="if (!args.validationFailed) PF('kpiForm').hide();" />
                     </div>
                 </div>
-            </h:form>
-        </p:dialog>
-    </ui:define>
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <style>
+        .kpi-form-dialog .ui-dialog-content {
+            padding: 1.5rem;
+        }
+        .kpi-form-dialog .field {
+            margin-bottom: 1rem;
+        }
+        .kpi-form-dialog label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+        .kpi-form-dialog .p-inputtext,
+        .kpi-form-dialog .p-dropdown,
+        .kpi-form-dialog .p-calendar {
+            width: 100%;
+        }
+        .kpi-form-dialog .p-button {
+            min-width: 100px;
+        }
+    </style>
 </ui:composition>

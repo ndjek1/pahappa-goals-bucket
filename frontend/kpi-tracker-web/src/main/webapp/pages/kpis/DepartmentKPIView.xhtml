@@ -102,11 +102,14 @@
                                      rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
 
                             <f:facet name="header">
-                                <div class="p-d-flex p-jc-between">
-                                    <h:outputText value="Department KPI Management" />
-                                    <p:commandButton value="Add KPI" icon="fa fa-plus"
-                                                     styleClass="ui-button-primary" id="addDeptKpiBtn"
-                                                     onclick="PF('kpiForm').show()">
+                                <div class="flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="m-0">Department KPI Management</h5>
+                                        <p class="text-500 m-0">Manage Department Key Performance Indicators</p>
+                                    </div>
+                                    <p:commandButton value="Add KPI" icon="pi pi-plus"
+                                                     styleClass="p-button-primary p-button-raised"
+                                                     id="addDeptKpiBtn" onclick="PF('kpiForm').show()">
                                         <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
                                     </p:commandButton>
                                 </div>
