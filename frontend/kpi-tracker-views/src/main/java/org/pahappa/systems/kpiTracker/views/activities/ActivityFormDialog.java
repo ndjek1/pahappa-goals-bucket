@@ -134,11 +134,20 @@ public class ActivityFormDialog extends DialogForm<Activity> {
     }
 
     private void loadData() {
-        this.organizationGoals = organizationGoalService.getAllInstances();
-        this.departmentGoals = departmentGoalService.getAllInstances();
-        this.teamGoals = teamGoalService.getAllInstances();
-        this.activityStatuses = Arrays.asList(ActivityStatus.values());
-        this.users = userService.getUsers();
+        try {
+            this.organizationGoals = organizationGoalService.getAllInstances();
+            this.departmentGoals = departmentGoalService.getAllInstances();
+            this.teamGoals = teamGoalService.getAllInstances();
+            this.activityStatuses = Arrays.asList(ActivityStatus.values());
+            this.users = userService.getUsers();
+        } catch (Exception e) {
+            // Initialize with empty lists if services fail
+            this.organizationGoals = Arrays.asList();
+            this.departmentGoals = Arrays.asList();
+            this.teamGoals = Arrays.asList();
+            this.activityStatuses = Arrays.asList(ActivityStatus.values());
+            this.users = Arrays.asList();
+        }
     }
 
     private void clearSelections() {

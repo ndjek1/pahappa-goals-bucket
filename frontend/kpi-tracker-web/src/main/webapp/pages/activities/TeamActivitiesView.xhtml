@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pc="http://primefaces.org/california">
+
+    <ui:define name="head">
+        <title>Team Activities</title>
+        <style>
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="card">
+            <h5>Team Activities</h5>
+            
+            <!-- Team Header -->
+            <div class="surface-card shadow-2 p-4 border-round mb-4" 
+                 rendered="#{teamActivitiesView.currentTeam != null}">
+                <div class="flex align-items-center">
+                    <i class="pi pi-users text-green-500 text-2xl mr-3"></i>
+                    <div>
+                        <h6 class="m-0">#{teamActivitiesView.currentTeam.teamName}</h6>
+                        <p class="text-500 m-0">Team Activities Management</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="grid">
+                <div class="col-12 md:col-3">
+                    <div class="surface-card shadow-2 p-3 border-round">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block text-500 font-medium mb-3">Total Activities</span>
+                                <div class="text-900 font-medium text-xl">#{teamActivitiesView.totalActivities}</div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem">
+                                <i class="pi pi-calendar text-blue-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="surface-card shadow-2 p-3 border-round">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block text-500 font-medium mb-3">Active Activities</span>
+                                <div class="text-900 font-medium text-xl">#{teamActivitiesView.activeActivities}</div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center bg-green-100 border-round" style="width:2.5rem;height:2.5rem">
+                                <i class="pi pi-check-circle text-green-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="surface-card shadow-2 p-3 border-round">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block text-500 font-medium mb-3">Pending Activities</span>
+                                <div class="text-900 font-medium text-xl">#{teamActivitiesView.pendingActivities}</div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">
+                                <i class="pi pi-clock text-orange-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="surface-card shadow-2 p-3 border-round">
+                        <div class="flex justify-content-between mb-3">
+                            <div>
+                                <span class="block text-500 font-medium mb-3">Completed Activities</span>
+                                <div class="text-900 font-medium text-xl">#{teamActivitiesView.completedActivities}</div>
+                            </div>
+                            <div class="flex align-items-center justify-content-center bg-purple-100 border-round" style="width:2.5rem;height:2.5rem">
+                                <i class="pi pi-star text-purple-500 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="surface-card shadow-2 p-4 border-round mb-4">
+                <div class="grid">
+                    <div class="col-12 md:col-4">
+                        <span class="p-float-label">
+                            <p:inputText id="searchTerm" value="#{teamActivitiesView.searchTerm}" 
+                                        styleClass="w-full" />
+                            <label for="searchTerm">Search Activities</label>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-3">
+                        <span class="p-float-label">
+                            <p:selectOneMenu id="statusFilter" value="#{teamActivitiesView.selectedStatus}" 
+                                            styleClass="w-full">
+                                <f:selectItem itemLabel="All Statuses" itemValue="#{null}" />
+                                <f:selectItems value="#{teamActivitiesView.recordStatusList}" 
+                                              var="status" itemLabel="#{status}" itemValue="#{status}" />
+                            </p:selectOneMenu>
+                            <label for="statusFilter">Filter by Status</label>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-2">
+                        <span class="p-float-label">
+                            <p:calendar id="createdFrom" value="#{teamActivitiesView.createdFrom}" 
+                                       styleClass="w-full" showTime="false" />
+                            <label for="createdFrom">From Date</label>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-2">
+                        <span class="p-float-label">
+                            <p:calendar id="createdTo" value="#{teamActivitiesView.createdTo}" 
+                                       styleClass="w-full" showTime="false" />
+                            <label for="createdTo">To Date</label>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-1">
+                        <p:commandButton value="Search" icon="pi pi-search" 
+                                        action="#{teamActivitiesView.reloadFilterReset}"
+                                        styleClass="p-button-primary w-full" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Activity Button -->
+            <div class="flex justify-content-end mb-4">
+                <p:commandButton value="Add Activity" icon="pi pi-plus" 
+                                onclick="PF('activityFormDialog').show()"
+                                styleClass="p-button-primary" />
+            </div>
+
+            <!-- Activities List -->
+            <div class="surface-card shadow-2 p-4 border-round">
+                <h6>Team Activities List</h6>
+                
+                <ui:repeat value="#{teamActivitiesView.activityModels}" var="activity">
+                    <div class="surface-card shadow-1 p-3 border-round mb-3">
+                        <div class="grid">
+                            <div class="col-12 md:col-8">
+                                <h6 class="m-0 mb-2">#{activity.title}</h6>
+                                <p class="text-500 m-0 mb-2">#{activity.description}</p>
+                                <div class="flex align-items-center gap-3">
+                                    <p:tag value="#{activity.status}" 
+                                           severity="#{activity.status == 'COMPLETED' ? 'success' : 
+                                                      activity.status == 'IN_PROGRESS' ? 'info' : 
+                                                      activity.status == 'PENDING' ? 'warning' : 'danger'}" />
+                                    <span class="text-500">
+                                        <i class="pi pi-user mr-1"></i>
+                                        #{activity.user.username}
+                                    </span>
+                                    <span class="text-500">
+                                        <i class="pi pi-calendar mr-1"></i>
+                                        #{activity.createdDate}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-4 flex justify-content-end align-items-center gap-2">
+                                <p:commandButton icon="pi pi-pencil" 
+                                                styleClass="p-button-rounded p-button-text p-button-primary"
+                                                onclick="PF('activityFormDialog').show()">
+                                    <f:setPropertyActionListener target="#{activityFormDialog.model}" value="#{activity}" />
+                                </p:commandButton>
+                                <p:commandButton icon="pi pi-trash" 
+                                                styleClass="p-button-rounded p-button-text p-button-danger"
+                                                onclick="PF('confirmDelete').show()">
+                                    <f:setPropertyActionListener target="#{teamActivitiesView.selectedActivity}" value="#{activity}" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                </ui:repeat>
+
+                <div rendered="#{empty teamActivitiesView.activityModels}" class="text-center p-4">
+                    <i class="pi pi-inbox text-400" style="font-size: 3rem"></i>
+                    <p class="text-500 mt-2">#{teamActivitiesView.dataEmptyMessage}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Form Dialog -->
+        <ui:include src="ActivityFormDialog.xhtml" />
+
+        <!-- Delete Confirmation Dialog -->
+        <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this activity?" 
+                         widgetVar="confirmDelete" showEffect="fade" hideEffect="fade" 
+                         responsive="true" width="350">
+            <p:commandButton value="Yes" type="button" styleClass="p-button-confirm" 
+                            action="#{teamActivitiesView.deleteActivity(teamActivitiesView.selectedActivity)}"
+                            oncomplete="PF('confirmDelete').hide()" />
+            <p:commandButton value="No" type="button" styleClass="p-button-secondary" 
+                            onclick="PF('confirmDelete').hide()" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>
