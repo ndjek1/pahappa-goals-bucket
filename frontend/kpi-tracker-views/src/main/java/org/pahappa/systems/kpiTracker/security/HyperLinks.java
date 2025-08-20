@@ -28,4 +28,10 @@ public class HyperLinks {
     public static final String DEPARTMENT_GOAL_DIALOG = "/pages/goals/DepartmentGoalForm.xhtml";
     public static final String TEAM_GOAL_DIALOG = "/pages/goals/TeamGoalForm.xhtml";
 
+    // Activity-related constants
+    public static final String ACTIVITIES_VIEW = "/pages/activities/ActivitiesView.xhtml?faces-redirect=true";
+    public static final String ACTIVITY_FORM_DIALOG = "/pages/activities/ActivityFormDialog.xhtml";
+    public static final String DEPARTMENT_ACTIVITIES_VIEW = "/pages/activities/DepartmentActivitiesView.xhtml?faces-redirect=true";
+    public static final String TEAM_ACTIVITIES_VIEW = "/pages/activities/TeamActivitiesView.xhtml?faces-redirect=true";
+
 }
