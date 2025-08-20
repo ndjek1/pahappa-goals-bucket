@@ -15,25 +15,25 @@
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Total KPIs" />
-                                <h2 class="p-text-right">#{kpiView.totalKPIs}</h2>
+                                <h2 class="p-text-right">#{kpiView.dataModels.size()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Active KPIs" />
-                                <h2 class="p-text-right">#{kpiView.activeKPIs}</h2>
+                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Department KPIs" />
-                                <h2 class="p-text-right">#{kpiView.departmentKPIs}</h2>
+                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Team KPIs" />
-                                <h2 class="p-text-right">#{kpiView.teamKPIs}</h2>
+                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</h2>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,6 @@
                                                  title="Filter by Measurement Unit" value="#{kpiView.selectedMeasurementUnit}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <f:selectItems value="#{kpiView.measurementUnits}" />
                                     <p:ajax event="change" update="kpiView"
                                             listener="#{kpiView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
@@ -69,7 +68,6 @@
                                                  title="Filter by Frequency" value="#{kpiView.selectedFrequency}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <f:selectItems value="#{kpiView.frequencies}" />
                                     <p:ajax event="change" update="kpiView"
                                             listener="#{kpiView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
