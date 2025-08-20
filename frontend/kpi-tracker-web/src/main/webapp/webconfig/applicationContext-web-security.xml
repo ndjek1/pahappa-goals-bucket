@@ -76,8 +76,7 @@
 			<security:filter-chain
 				pattern="/ServiceLoginFailure" filters="none" />
 
-			<security:filter-chain pattern="/api/**"
-				filters="none" />
+			<!-- API filter chain removed - no REST API exists -->
 			<security:filter-chain pattern="/**"
 				filters="
 	           securityContextPersistenceFilterWithASCTrue,

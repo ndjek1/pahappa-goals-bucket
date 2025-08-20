@@ -86,7 +86,7 @@
                     </div>
                     <div class="col-12 md:col-3">
                         <span class="p-float-label">
-                            <p:selectOneMenu id="statusFilter" value="#{activitiesView.selectedStatus}" 
+                            <p:selectOneMenu id="statusFilter" value="#{null}" 
                                             styleClass="w-full">
                                 <f:selectItem itemLabel="All Statuses" itemValue="#{null}" />
                             </p:selectOneMenu>
@@ -95,14 +95,14 @@
                     </div>
                     <div class="col-12 md:col-2">
                         <span class="p-float-label">
-                            <p:calendar id="createdFrom" value="#{activitiesView.createdFrom}" 
+                            <p:calendar id="createdFrom" value="#{null}" 
                                        styleClass="w-full" showTime="false" />
                             <label for="createdFrom">From Date</label>
                         </span>
                     </div>
                     <div class="col-12 md:col-2">
                         <span class="p-float-label">
-                            <p:calendar id="createdTo" value="#{activitiesView.createdTo}" 
+                            <p:calendar id="createdTo" value="#{null}" 
                                        styleClass="w-full" showTime="false" />
                             <label for="createdTo">To Date</label>
                         </span>

@@ -60,25 +60,7 @@
 	</context-param>
 
 
-	<!-- Servlets to allow this app to web accessed as a webservice -->
-	<servlet>
-		<servlet-name>Web Service API</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>org.pahappa.systems.api</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>Web Service API</servlet-name>
-		<url-pattern>/api/*</url-pattern>
-	</servlet-mapping>
+	<!-- Jersey servlet removed - no REST API classes found in org.pahappa.systems.api package -->
 
 	<!--Load the application context file -->
 	<context-param>

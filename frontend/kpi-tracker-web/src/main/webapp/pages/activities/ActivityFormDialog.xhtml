@@ -41,7 +41,7 @@
                 <!-- Status Field -->
                 <div class="field col-12 md:col-6 p-m-4">
                     <span class="p-float-label">
-                        <p:selectOneMenu id="status" value="#{activityFormDialog.selectedStatus}" 
+                        <p:selectOneMenu id="status" value="#{activityFormDialog.model.status}" 
                                         styleClass="p-inputtext-sm w-full" required="true">
                             <f:selectItem itemLabel="Select Status" itemValue="#{null}" noSelectionOption="true" />
                             <f:selectItems value="#{activityFormDialog.activityStatuses}" 
