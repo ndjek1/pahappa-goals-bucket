@@ -11,6 +11,7 @@ import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -71,11 +72,11 @@ public class ActivitiesView implements Serializable {
         this.activeActivities = activityService.countInstances(activeActivitiesSearch);
 
         Search pendingActivitiesSearch = new Search();
-        pendingActivitiesSearch.addFilterEqual("status", "PENDING");
+        pendingActivitiesSearch.addFilterEqual("status", ActivityStatus.PENDING);
         this.pendingActivities = activityService.countInstances(pendingActivitiesSearch);
 
         Search completedActivitiesSearch = new Search();
-        completedActivitiesSearch.addFilterEqual("status", "COMPLETED");
+        completedActivitiesSearch.addFilterEqual("status", ActivityStatus.COMPLETED);
         this.completedActivities = activityService.countInstances(completedActivitiesSearch);
 
         Search activitySearch = new Search();
