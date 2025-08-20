@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pc="http://primefaces.org/california">
+
+    <ui:define name="head">
+        <title>Add Activity</title>
+        <style>
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+
+    <p:dialog header="#{activityFormDialog.edit ? 'Edit Activity' : 'Add Activity'}" 
+               widgetVar="activityFormDialog" 
+               modal="true" 
+               showEffect="fade" 
+               hideEffect="fade" 
+               responsive="true" 
+               width="700" 
+               height="600"
+               styleClass="dialog-card">
+
+        <p:growl id="growl" showDetail="true" />
+
+        <h:form id="activityForm" styleClass="dialog-card">
+            <div class="ui-fluid formgrid grid p-m-4">
+                
+                <!-- Title Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:inputText id="title" value="#{activityFormDialog.model.title}" 
+                                    styleClass="p-inputtext-sm w-full" required="true" />
+                        <label for="title">Title *</label>
+                    </span>
+                </div>
+
+                <!-- Status Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:selectOneMenu id="status" value="#{activityFormDialog.selectedStatus}" 
+                                        styleClass="p-inputtext-sm w-full" required="true">
+                            <f:selectItem itemLabel="Select Status" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{activityFormDialog.activityStatuses}" 
+                                          var="status" itemLabel="#{status.displayName}" itemValue="#{status}" />
+                        </p:selectOneMenu>
+                        <label for="status">Status *</label>
+                    </span>
+                </div>
+
+                <!-- Description Field -->
+                <div class="field col-12 p-m-4">
+                    <span class="p-float-label">
+                        <p:inputTextarea id="description" value="#{activityFormDialog.model.description}" 
+                                        styleClass="p-inputtext-sm w-full" rows="3" />
+                        <label for="description">Description</label>
+                    </span>
+                </div>
+
+                <!-- User Assignment Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:selectOneMenu id="user" value="#{activityFormDialog.selectedUser}" 
+                                        styleClass="p-inputtext-sm w-full" required="true">
+                            <f:selectItem itemLabel="Select User" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{activityFormDialog.users}" 
+                                          var="user" itemLabel="#{user.firstName} #{user.lastName}" itemValue="#{user}" />
+                        </p:selectOneMenu>
+                        <label for="user">Assigned User *</label>
+                    </span>
+                </div>
+
+                <!-- Organization Goal Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:selectOneMenu id="orgGoal" value="#{activityFormDialog.selectedOrganizationGoal}" 
+                                        styleClass="p-inputtext-sm w-full"
+                                        onchange="#{activityFormDialog.onOrganizationGoalChange()}">
+                            <f:selectItem itemLabel="Select Organization Goal" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{activityFormDialog.organizationGoals}" 
+                                          var="goal" itemLabel="#{goal.name}" itemValue="#{goal}" />
+                        </p:selectOneMenu>
+                        <label for="orgGoal">Organization Goal</label>
+                    </span>
+                </div>
+
+                <!-- Department Goal Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:selectOneMenu id="deptGoal" value="#{activityFormDialog.selectedDepartmentGoal}" 
+                                        styleClass="p-inputtext-sm w-full"
+                                        onchange="#{activityFormDialog.onDepartmentGoalChange()}">
+                            <f:selectItem itemLabel="Select Department Goal" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{activityFormDialog.departmentGoals}" 
+                                          var="goal" itemLabel="#{goal.name}" itemValue="#{goal}" />
+                        </p:selectOneMenu>
+                        <label for="deptGoal">Department Goal</label>
+                    </span>
+                </div>
+
+                <!-- Team Goal Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:selectOneMenu id="teamGoal" value="#{activityFormDialog.selectedTeamGoal}" 
+                                        styleClass="p-inputtext-sm w-full"
+                                        onchange="#{activityFormDialog.onTeamGoalChange()}">
+                            <f:selectItem itemLabel="Select Team Goal" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{activityFormDialog.teamGoals}" 
+                                          var="goal" itemLabel="#{goal.name}" itemValue="#{goal}" />
+                        </p:selectOneMenu>
+                        <label for="teamGoal">Team Goal</label>
+                    </span>
+                </div>
+
+                <!-- Planned Start Date Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:calendar id="plannedStartDate" value="#{activityFormDialog.model.plannedStartDate}" 
+                                   styleClass="p-inputtext-sm w-full" showTime="false" />
+                        <label for="plannedStartDate">Planned Start Date</label>
+                    </span>
+                </div>
+
+                <!-- Planned End Date Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:calendar id="plannedEndDate" value="#{activityFormDialog.model.plannedEndDate}" 
+                                   styleClass="p-inputtext-sm w-full" showTime="false" />
+                        <label for="plannedEndDate">Planned End Date</label>
+                    </span>
+                </div>
+
+                <!-- Actual Start Date Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:calendar id="actualStartDate" value="#{activityFormDialog.model.actualStartDate}" 
+                                   styleClass="p-inputtext-sm w-full" showTime="false" />
+                        <label for="actualStartDate">Actual Start Date</label>
+                    </span>
+                </div>
+
+                <!-- Actual End Date Field -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <span class="p-float-label">
+                        <p:calendar id="actualEndDate" value="#{activityFormDialog.model.actualEndDate}" 
+                                   styleClass="p-inputtext-sm w-full" showTime="false" />
+                        <label for="actualEndDate">Actual End Date</label>
+                    </span>
+                </div>
+
+                <!-- Button Container -->
+                <div class="field col-12 p-d-flex p-jc-between">
+                    <p:commandButton value="Cancel" icon="pi pi-times" 
+                                    onclick="PF('activityFormDialog').hide()"
+                                    styleClass="ui-button-danger p-mx-5" />
+                    <p:commandButton value="#{activityFormDialog.edit ? 'Update' : 'Save'}" 
+                                    icon="pi pi-check" 
+                                    action="#{activityFormDialog.persist}"
+                                    styleClass="ui-button-primary p-mx-5"
+                                    oncomplete="if (!args.validationFailed) PF('activityFormDialog').hide();" />
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
+</ui:composition>
