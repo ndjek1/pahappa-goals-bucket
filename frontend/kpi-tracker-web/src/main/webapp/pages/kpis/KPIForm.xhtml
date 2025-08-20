@@ -16,14 +16,14 @@
                 <!-- KPI Name -->
                 <div class="field col-12 md:col-6">
                     <label for="kpiName" class="font-bold">KPI Name *</label>
-                    <p:inputText id="kpiName" value="#{kpiForm.model.name}" 
+                    <p:inputText id="kpiName" value="#{kpiForm.model != null ? kpiForm.model.name : ''}" 
                                 required="true" styleClass="w-full" />
                 </div>
 
                 <!-- Measurement Unit -->
                 <div class="field col-12 md:col-6">
                     <label for="measurementUnit" class="font-bold">Measurement Unit *</label>
-                    <p:selectOneMenu id="measurementUnit" value="#{kpiForm.model.measurementUnit}" 
+                    <p:selectOneMenu id="measurementUnit" value="#{kpiForm.model != null ? kpiForm.model.measurementUnit : null}" 
                                     required="true" filter="true" filterMatchMode="contains"
                                     styleClass="w-full" noSelectionOption="true">
                         <f:selectItem itemLabel="Select Measurement Unit" itemValue="#{null}" />
@@ -35,7 +35,7 @@
                 <!-- Frequency -->
                 <div class="field col-12 md:col-6">
                     <label for="frequency" class="font-bold">Frequency *</label>
-                    <p:selectOneMenu id="frequency" value="#{kpiForm.model.frequency}" 
+                    <p:selectOneMenu id="frequency" value="#{kpiForm.model != null ? kpiForm.model.frequency : null}" 
                                     required="true" filter="true" filterMatchMode="contains"
                                     styleClass="w-full" noSelectionOption="true">
                         <f:selectItem itemLabel="Select Frequency" itemValue="#{null}" />
@@ -47,7 +47,7 @@
                 <!-- Target Value -->
                 <div class="field col-12 md:col-6">
                     <label for="targetValue" class="font-bold">Target Value *</label>
-                    <p:inputNumber id="targetValue" value="#{kpiForm.model.targetValue}" 
+                    <p:inputNumber id="targetValue" value="#{kpiForm.model != null ? kpiForm.model.targetValue : 0}" 
                                   required="true" minValue="0" decimalPlaces="2"
                                   styleClass="w-full" />
                 </div>
@@ -55,14 +55,14 @@
                 <!-- Current Value -->
                 <div class="field col-12 md:col-6">
                     <label for="currentValue" class="font-bold">Current Value</label>
-                    <p:inputNumber id="currentValue" value="#{kpiForm.model.currentValue}" 
+                    <p:inputNumber id="currentValue" value="#{kpiForm.model != null ? kpiForm.model.currentValue : 0}" 
                                   minValue="0" decimalPlaces="2" styleClass="w-full" />
                 </div>
 
                 <!-- Start Date -->
                 <div class="field col-12 md:col-6">
                     <label for="startDate" class="font-bold">Start Date *</label>
-                    <p:calendar id="startDate" value="#{kpiForm.model.startDate}" 
+                    <p:calendar id="startDate" value="#{kpiForm.model != null ? kpiForm.model.startDate : null}" 
                                required="true" showTime="false" pattern="MM/dd/yyyy"
                                styleClass="w-full" />
                 </div>
@@ -70,14 +70,14 @@
                 <!-- End Date -->
                 <div class="field col-12 md:col-6">
                     <label for="endDate" class="font-bold">End Date (Optional)</label>
-                    <p:calendar id="endDate" value="#{kpiForm.model.endDate}" 
+                    <p:calendar id="endDate" value="#{kpiForm.model != null ? kpiForm.model.endDate : null}" 
                                showTime="false" pattern="MM/dd/yyyy" styleClass="w-full" />
                 </div>
 
                 <!-- Department Goal -->
                 <div class="field col-12 md:col-6">
                     <label for="departmentGoal" class="font-bold">Department Goal (Optional)</label>
-                    <p:selectOneMenu id="departmentGoal" value="#{kpiForm.model.departmentGoal}" 
+                    <p:selectOneMenu id="departmentGoal" value="#{kpiForm.model != null ? kpiForm.model.departmentGoal : null}" 
                                     filter="true" filterMatchMode="contains"
                                     styleClass="w-full" noSelectionOption="true">
                         <f:selectItem itemLabel="Select Department Goal" itemValue="#{null}" />
@@ -89,7 +89,7 @@
                 <!-- Team Goal -->
                 <div class="field col-12 md:col-6">
                     <label for="teamGoal" class="font-bold">Team Goal (Optional)</label>
-                    <p:selectOneMenu id="teamGoal" value="#{kpiForm.model.teamGoal}" 
+                    <p:selectOneMenu id="teamGoal" value="#{kpiForm.model != null ? kpiForm.model.teamGoal : null}" 
                                     filter="true" filterMatchMode="contains"
                                     styleClass="w-full" noSelectionOption="true">
                         <f:selectItem itemLabel="Select Team Goal" itemValue="#{null}" />
@@ -104,7 +104,7 @@
                         <p:commandButton value="Cancel" icon="pi pi-times"
                                          onclick="PF('kpiForm').hide()"
                                          styleClass="p-button-outlined p-button-secondary" />
-                        <p:commandButton value="#{kpiForm.edit ? 'Update' : 'Save'}" icon="pi pi-check"
+                        <p:commandButton value="#{kpiForm.edit != null and kpiForm.edit ? 'Update' : 'Save'}" icon="pi pi-check"
                                          process="@form" actionListener="#{kpiForm.persist}"
                                          update="@form growl" styleClass="p-button-primary"
                                          oncomplete="if (!args.validationFailed) PF('kpiForm').hide();" />

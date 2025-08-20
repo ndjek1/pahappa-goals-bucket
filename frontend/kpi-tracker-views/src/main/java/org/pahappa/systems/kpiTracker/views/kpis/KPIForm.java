@@ -47,6 +47,11 @@ public class KPIForm extends DialogForm<KPI> {
         this.teamGoals = this.teamGoalService.getAllInstances();
         this.measurementUnits = Arrays.asList(MeasurementUnit.values());
         this.frequencies = Arrays.asList(Frequency.values());
+        
+        // Initialize model to prevent null pointer exceptions
+        if (super.model == null) {
+            super.model = new KPI();
+        }
     }
 
     @Override
