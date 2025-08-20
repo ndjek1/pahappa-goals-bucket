@@ -104,7 +104,7 @@
                         <p:commandButton value="Cancel" icon="pi pi-times"
                                          onclick="PF('kpiForm').hide()"
                                          styleClass="p-button-outlined p-button-secondary" />
-                        <p:commandButton value="#{kpiForm.edit != null and kpiForm.edit ? 'Update' : 'Save'}" icon="pi pi-check"
+                        <p:commandButton value="#{kpiForm.isEditing ? 'Update' : 'Save'}" icon="pi pi-check"
                                          process="@form" actionListener="#{kpiForm.persist}"
                                          update="@form growl" styleClass="p-button-primary"
                                          oncomplete="if (!args.validationFailed) PF('kpiForm').hide();" />

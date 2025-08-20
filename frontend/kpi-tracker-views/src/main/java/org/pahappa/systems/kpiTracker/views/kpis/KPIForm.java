@@ -80,4 +80,10 @@ public class KPIForm extends DialogForm<KPI> {
         super.resetModal();
         super.model = new KPI();
     }
+    
+    @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        // The parent class already sets isEditing = true when model is not null
+    }
 }
