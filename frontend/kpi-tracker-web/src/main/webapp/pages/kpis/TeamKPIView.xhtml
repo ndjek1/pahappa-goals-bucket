@@ -11,12 +11,11 @@
                 <h:form id="teamKPIView" enctype="multipart/form-data">
 
                     <!-- Team Header -->
-                    <div class="surface-card shadow-2 p-4 border-round mb-4" 
-                         rendered="#{teamKPIView.currentTeam != null}">
+                    <div class="surface-card shadow-2 p-4 border-round mb-4">
                         <div class="flex align-items-center">
                             <i class="pi pi-users text-green-500 text-2xl mr-3"></i>
                             <div>
-                                <h6 class="m-0">#{teamKPIView.currentTeam.teamName}</h6>
+                                <h6 class="m-0">Team KPIs</h6>
                                 <p class="text-500 m-0">Team KPIs Management</p>
                             </div>
                         </div>
@@ -27,25 +26,25 @@
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Total Team KPIs" />
-                                <h2 class="p-text-right">#{teamKPIView.totalTeamKPIs}</h2>
+                                <h2 class="p-text-right">#{teamKPIView.dataModels.size()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Active KPIs" />
-                                <h2 class="p-text-right">#{teamKPIView.activeTeamKPIs}</h2>
+                                <h2 class="p-text-right">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Completed KPIs" />
-                                <h2 class="p-text-right">#{teamKPIView.completedTeamKPIs}</h2>
+                                <h2 class="p-text-right">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'COMPLETED').count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Pending KPIs" />
-                                <h2 class="p-text-right">#{teamKPIView.pendingTeamKPIs}</h2>
+                                <h2 class="p-text-right">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'PENDING').count()}</h2>
                             </div>
                         </div>
                     </div>
@@ -57,8 +56,7 @@
                         <div class="p-grid">
                             <div class="p-col-12 p-md-6 p-lg-4">
                                 <p:inputText id="searchTerm" required="false"
-                                             value="#{teamKPIView.searchTerm}" placeholder="Search Team KPIs ..."
-                                             onkeyup="#{teamKPIView.reloadFilterReset()}">
+                                             value="#{teamKPIView.searchTerm}" placeholder="Search Team KPIs ...">
                                     <p:ajax event="keyup"
                                             update="teamKPIView"
                                             listener="#{teamKPIView.reloadFilterReset()}" />
@@ -70,7 +68,6 @@
                                                  title="Filter by Measurement Unit" value="#{teamKPIView.selectedMeasurementUnit}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <f:selectItems value="#{teamKPIView.measurementUnits}" />
                                     <p:ajax event="change" update="teamKPIView"
                                             listener="#{teamKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
@@ -81,7 +78,6 @@
                                                  title="Filter by Frequency" value="#{teamKPIView.selectedFrequency}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <f:selectItems value="#{teamKPIView.frequencies}" />
                                     <p:ajax event="change" update="teamKPIView"
                                             listener="#{teamKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>

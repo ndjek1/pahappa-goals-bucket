@@ -11,12 +11,11 @@
                 <h:form id="departmentKPIView" enctype="multipart/form-data">
 
                     <!-- Department Header -->
-                    <div class="surface-card shadow-2 p-4 border-round mb-4" 
-                         rendered="#{departmentKPIView.currentDepartment != null}">
+                    <div class="surface-card shadow-2 p-4 border-round mb-4">
                         <div class="flex align-items-center">
                             <i class="pi pi-building text-blue-500 text-2xl mr-3"></i>
                             <div>
-                                <h6 class="m-0">#{departmentKPIView.currentDepartment.departmentName}</h6>
+                                <h6 class="m-0">Department KPIs</h6>
                                 <p class="text-500 m-0">Department KPIs Management</p>
                             </div>
                         </div>
@@ -27,25 +26,25 @@
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Total Department KPIs" />
-                                <h2 class="p-text-right">#{departmentKPIView.totalDepartmentKPIs}</h2>
+                                <h2 class="p-text-right">#{departmentKPIView.dataModels.size()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Active KPIs" />
-                                <h2 class="p-text-right">#{departmentKPIView.activeDepartmentKPIs}</h2>
+                                <h2 class="p-text-right">#{departmentKPIView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Completed KPIs" />
-                                <h2 class="p-text-right">#{departmentKPIView.completedDepartmentKPIs}</h2>
+                                <h2 class="p-text-right">#{departmentKPIView.dataModels.stream().filter(k -> k.recordStatus == 'COMPLETED').count()}</h2>
                             </div>
                         </div>
                         <div class="p-col-12 p-md-3">
                             <div class="card">
                                 <h:outputText value="Pending KPIs" />
-                                <h2 class="p-text-right">#{departmentKPIView.pendingDepartmentKPIs}</h2>
+                                <h2 class="p-text-right">#{departmentKPIView.dataModels.stream().filter(k -> k.recordStatus == 'PENDING').count()}</h2>
                             </div>
                         </div>
                     </div>
@@ -57,8 +56,7 @@
                         <div class="p-grid">
                             <div class="p-col-12 p-md-6 p-lg-4">
                                 <p:inputText id="searchTerm" required="false"
-                                             value="#{departmentKPIView.searchTerm}" placeholder="Search Department KPIs ..."
-                                             onkeyup="#{departmentKPIView.reloadFilterReset()}">
+                                             value="#{departmentKPIView.searchTerm}" placeholder="Search Department KPIs ...">
                                     <p:ajax event="keyup"
                                             update="departmentKPIView"
                                             listener="#{departmentKPIView.reloadFilterReset()}" />
@@ -70,7 +68,6 @@
                                                  title="Filter by Measurement Unit" value="#{departmentKPIView.selectedMeasurementUnit}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <f:selectItems value="#{departmentKPIView.measurementUnits}" />
                                     <p:ajax event="change" update="departmentKPIView"
                                             listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
@@ -81,7 +78,6 @@
                                                  title="Filter by Frequency" value="#{departmentKPIView.selectedFrequency}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <f:selectItems value="#{departmentKPIView.frequencies}" />
                                     <p:ajax event="change" update="departmentKPIView"
                                             listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
