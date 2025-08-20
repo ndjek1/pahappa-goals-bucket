@@ -33,6 +33,7 @@ public class KPIForm extends DialogForm<KPI> {
     private List<TeamGoal> teamGoals;
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
+    private boolean editing = false;
 
     public KPIForm() {
         super("KPIForm", 600, 500);
@@ -79,18 +80,20 @@ public class KPIForm extends DialogForm<KPI> {
     public void resetModal() {
         super.resetModal();
         super.model = new KPI();
+        this.editing = false;
     }
     
     @Override
     public void setFormProperties() {
         super.setFormProperties();
-        // The parent class already sets isEditing = true when model is not null
+        // Set our local editing flag when model is not null
+        this.editing = (super.model != null);
     }
     
     /**
-     * Getter for isEditing property to make it accessible from XHTML
+     * Getter for editing property to make it accessible from XHTML
      */
     public boolean isEditing() {
-        return super.isEditing;
+        return this.editing;
     }
 }
