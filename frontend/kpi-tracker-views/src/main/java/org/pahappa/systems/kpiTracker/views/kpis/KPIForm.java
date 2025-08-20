@@ -86,4 +86,11 @@ public class KPIForm extends DialogForm<KPI> {
         super.setFormProperties();
         // The parent class already sets isEditing = true when model is not null
     }
+    
+    /**
+     * Getter for isEditing property to make it accessible from XHTML
+     */
+    public boolean isEditing() {
+        return super.isEditing;
+    }
 }
