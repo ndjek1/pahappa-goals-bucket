@@ -4,192 +4,204 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
+
     <ui:define name="content">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <h:form id="departmentKPIView" enctype="multipart/form-data">
 
-        <div class="card">
-
-            <h:form id="departmentKPIView" enctype="multipart/form-data">
-                <p:growl id="messages" showDetail="true" life="4000"/>
-
-                <!-- 1. HEADER: Title (with search space under it) and Add KPI Button -->
-                <div class="p-d-flex p-jc-between p-ai-start p-mb-4">
-                    <div>
-                        <h1 style="margin: 0; color: #6c757d;">Department KPIs</h1>
-                        <h:outputText value="#{departmentKPIView.department != null ? 'Department: ' : ''}#{departmentKPIView.department != null ? departmentKPIView.department.departmentName : 'All Departments'}" style="color: #0a9dff; font-size: 1.2rem; margin-top: 8px;" />
-                        <br />
-                        <p:inputText id="searchTerm" required="false"
-                                     value="#{departmentKPIView.searchTerm}"
-                                     placeholder="Search KPI"
-                                     style="border-radius: 6px; padding: 10px 14px; font-size: 14px; min-width: 250px; border: 1px solid #ddd;">
-                            <p:ajax event="keyup" listener="#{departmentKPIView.reloadFilterReset()}" />
-                        </p:inputText>
-                    </div>
-                    <div>
-                        <p:commandButton value="Add KPI" process="@this"
-                                         styleClass="p-button-success" immediate="true"
-                                         style="background-color: #5cb85c; font-size: 1rem; padding: 0.5rem 2rem; min-width: 150px; font-weight: 600;"
-                                         ajax="false"
-                                         actionListener="#{kpiForm.show}">
-                            <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
-                            <p:ajax event="dialogReturn" listener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIView" />
-                        </p:commandButton>
-                    </div>
-                </div>
-
-                <!-- 2. CONTENT LIST: KPI details with action buttons -->
-                <p:outputPanel id="departmentKPIList">
-
-                    <ui:repeat value="#{departmentKPIView.dataModels}" var="kpi"
-                               varStatus="status">
-                        <div class="p-card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 6px;">
-
-                            <!-- Row 1: KPI Name and Status -->
-                            <div class="p-d-flex p-jc-between p-ai-start">
-                               <div>
-                                   <h3 style="margin-top: 0; margin-bottom: 0.5rem;">#{kpi.name != null ? kpi.name : 'KPI Name'}</h3>
-                                   <h:outputText value="Measurement Unit: #{kpi.measurementUnit != null ? kpi.measurementUnit.displayName : 'N/A'}" style="color: #6c757d;" />
-                               </div>
-                                <p:tag value="#{kpi.recordStatus}" style="background-color: #5cb85c" styleClass="p-mr-2" severity="info" rounded="true" />
+                    <!-- Department Header -->
+                    <div class="surface-card shadow-2 p-4 border-round mb-4" 
+                         rendered="#{departmentKPIView.currentDepartment != null}">
+                        <div class="flex align-items-center">
+                            <i class="pi pi-building text-blue-500 text-2xl mr-3"></i>
+                            <div>
+                                <h6 class="m-0">#{departmentKPIView.currentDepartment.departmentName}</h6>
+                                <p class="text-500 m-0">Department KPIs Management</p>
                             </div>
-
-                            <hr class="p-my-3"/>
-
-                            <!-- Row 2: Target Value, Current Value, Accomplishment Percentage -->
-                            <div class="p-d-flex p-jc-between p-ai-center">
-                                <!-- Column 1: Target Value -->
-                                <div class="target-value" style="padding-right: 20px;">
-                                    <h:outputText value="Target Value" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff;">#{kpi.targetValue != null ? kpi.targetValue : '0'}</h5>
-                                </div>
-
-                                <!-- Column 2: Current Value -->
-                                <div class="current-value" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
-                                    <h:outputText value="Current Value" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{kpi.currentValue != null ? kpi.currentValue : '0'}</h5>
-                                </div>
-
-                                <!-- Column 3: Accomplishment Percentage -->
-                                <div class="accomplishment-percentage" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
-                                    <h:outputText value="Accomplishment" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{kpi.accomplishmentPercentage != null ? kpi.accomplishmentPercentage : '0'}%</h5>
-                                </div>
-                            </div>
-
-                            <hr class="p-my-3"/>
-
-                            <!-- Row 3: Frequency, Start Date, End Date -->
-                            <div class="p-d-flex p-jc-between p-ai-center">
-                                <!-- Column 1: Frequency -->
-                                <div class="frequency" style="padding-right: 20px;">
-                                    <h:outputText value="Frequency" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff;">#{kpi.frequency != null ? kpi.frequency.displayName : 'N/A'}</h5>
-                                </div>
-
-                                <!-- Column 2: Start Date -->
-                                <div class="start-date" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
-                                    <h:outputText value="Start Date" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{kpi.startDate != null ? kpi.startDate : 'N/A'}</h5>
-                                </div>
-
-                                <!-- Column 3: End Date -->
-                                <div class="end-date" style="text-align: center; padding: 0 15px; border-left: 1px solid #e0e0e0;">
-                                    <h:outputText value="End Date" style="color: #6c757d;" />
-                                    <h5 style="margin-top: 0; margin-bottom: 0.5rem; color: #0a9dff">#{kpi.endDate != null ? kpi.endDate : 'N/A'}</h5>
-                                </div>
-                            </div>
-
-                            <hr class="p-my-3"/>
-
-                            <!-- Row 4: Goal Association and Action Buttons -->
-                            <div class="p-d-flex p-jc-between p-ai-center">
-                                <!-- Goal Association Info -->
-                                <div class="goal-association">
-                                    <h:outputText value="Associated Goal:" style="color: #6c757d;" />
-                                    <h:outputText value="#{kpi.departmentGoal != null ? 'Department: ' : ''}#{kpi.departmentGoal != null ? kpi.departmentGoal.name : ''}" style="color: #0a9dff; margin-left: 8px;" />
-                                    <h:outputText value="#{kpi.teamGoal != null ? 'Team: ' : ''}#{kpi.teamGoal != null ? kpi.teamGoal.name : ''}" style="color: #0a9dff; margin-left: 8px;" />
-                                </div>
-
-                                <!-- Action Buttons -->
-                                <div>
-                                    <p:commandButton process="@this" title="Edit" icon="pi pi-pencil"
-                                                     update="departmentKPIView"
-                                                     styleClass=" p-button-text p-mr-2" immediate="true"
-                                                     style="color: #337ab7; padding: 4px; background: none !important; border: none !important;"
-                                                     ajax="false"
-                                                     actionListener="#{kpiForm.show}">
-                                        <f:setPropertyActionListener value="#{kpi}"
-                                                                     target="#{kpiForm.model}" />
-                                    </p:commandButton>
-
-                                    <p:commandButton process="@this" title="Delete" icon="pi pi-trash"
-                                                     styleClass="p-button-text p-mr-2"
-                                                     update="departmentKPIView"
-                                                     actionListener="#{departmentKPIView.deleteKPI(kpi)}">
-                                        <p:confirm header="Confirmation"
-                                                   message="Are you sure you want to delete '#{kpi.name}'?"
-                                                   icon="pi pi-exclamation-triangle" />
-                                    </p:commandButton>
-                                </div>
-                            </div>
-
                         </div>
+                    </div>
 
-                    </ui:repeat>
+                    <!-- Statistics Cards -->
+                    <div class="p-grid overlay-demo">
+                        <div class="p-col-12 p-md-3">
+                            <div class="card">
+                                <h:outputText value="Total Department KPIs" />
+                                <h2 class="p-text-right">#{departmentKPIView.totalDepartmentKPIs}</h2>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-3">
+                            <div class="card">
+                                <h:outputText value="Active KPIs" />
+                                <h2 class="p-text-right">#{departmentKPIView.activeDepartmentKPIs}</h2>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-3">
+                            <div class="card">
+                                <h:outputText value="Completed KPIs" />
+                                <h2 class="p-text-right">#{departmentKPIView.completedDepartmentKPIs}</h2>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-3">
+                            <div class="card">
+                                <h:outputText value="Pending KPIs" />
+                                <h2 class="p-text-right">#{departmentKPIView.pendingDepartmentKPIs}</h2>
+                            </div>
+                        </div>
+                    </div>
 
-                </p:outputPanel>
+                    <!-- Filters Section -->
+                    <div class="card">
+                        <h:outputText value="Filters" />
+                        <p:growl id="messages" showDetail="true" />
+                        <div class="p-grid">
+                            <div class="p-col-12 p-md-6 p-lg-4">
+                                <p:inputText id="searchTerm" required="false"
+                                             value="#{departmentKPIView.searchTerm}" placeholder="Search Department KPIs ..."
+                                             onkeyup="#{departmentKPIView.reloadFilterReset()}">
+                                    <p:ajax event="keyup"
+                                            update="departmentKPIView"
+                                            listener="#{departmentKPIView.reloadFilterReset()}" />
+                                </p:inputText>
+                            </div>
 
-            </h:form>
+                            <div class="p-col-12 p-md-6 p-lg-3">
+                                <p:selectOneMenu id="measurementUnit" label="Filter by Unit"
+                                                 title="Filter by Measurement Unit" value="#{departmentKPIView.selectedMeasurementUnit}"
+                                                 style="height: 100%">
+                                    <f:selectItem itemLabel="All Units" value="#{null}" />
+                                    <f:selectItems value="#{departmentKPIView.measurementUnits}" />
+                                    <p:ajax event="change" update="departmentKPIView"
+                                            listener="#{departmentKPIView.reloadFilterReset()}" />
+                                </p:selectOneMenu>
+                            </div>
 
+                            <div class="p-col-12 p-md-6 p-lg-3">
+                                <p:selectOneMenu id="frequency" label="Filter by Frequency"
+                                                 title="Filter by Frequency" value="#{departmentKPIView.selectedFrequency}"
+                                                 style="height: 100%">
+                                    <f:selectItem itemLabel="All Frequencies" value="#{null}" />
+                                    <f:selectItems value="#{departmentKPIView.frequencies}" />
+                                    <p:ajax event="change" update="departmentKPIView"
+                                            listener="#{departmentKPIView.reloadFilterReset()}" />
+                                </p:selectOneMenu>
+                            </div>
+
+                            <div class="p-col-12 p-md-6 p-lg-2">
+                                <p:commandButton icon="fa fa-search"
+                                                 styleClass="ui-button-success" id="searchBtn"
+                                                 style="margin-right: 18px" update="departmentKPIView"
+                                                 actionListener="#{departmentKPIView.reloadFilterReset()}">
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Department KPIs Data Table -->
+                    <div class="card" style="margin-top:1rem">
+                        <h:outputText value="Department Key Performance Indicators" />
+                        
+                        <p:dataTable id="departmentKPIsTable" var="kpi" value="#{departmentKPIView.dataModels}"
+                                     widgetVar="departmentKPIsTable"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" lazy="true" rows="20"
+                                     emptyMessage="#{departmentKPIView.dataEmptyMessage}"
+                                     paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                                     rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
+
+                            <f:facet name="header">
+                                <div class="p-d-flex p-jc-between">
+                                    <h:outputText value="Department KPI Management" />
+                                    <p:commandButton value="Add KPI" icon="fa fa-plus"
+                                                     styleClass="ui-button-primary" id="addDeptKpiBtn"
+                                                     onclick="PF('kpiForm').show()">
+                                        <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                    </p:commandButton>
+                                </div>
+                            </f:facet>
+
+                            <!-- KPI Name Column -->
+                            <p:column headerText="KPI Name" sortBy="#{kpi.name}" filterBy="#{kpi.name}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.name}" />
+                            </p:column>
+
+                            <!-- Measurement Unit Column -->
+                            <p:column headerText="Unit" sortBy="#{kpi.measurementUnit}" filterBy="#{kpi.measurementUnit}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.measurementUnit != null ? kpi.measurementUnit.displayName : 'N/A'}" />
+                            </p:column>
+
+                            <!-- Target Value Column -->
+                            <p:column headerText="Target" sortBy="#{kpi.targetValue}" filterBy="#{kpi.targetValue}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.targetValue}" />
+                            </p:column>
+
+                            <!-- Current Value Column -->
+                            <p:column headerText="Current" sortBy="#{kpi.currentValue}" filterBy="#{kpi.currentValue}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.currentValue}" />
+                            </p:column>
+
+                            <!-- Accomplishment Percentage Column -->
+                            <p:column headerText="Accomplishment" sortBy="#{kpi.accomplishmentPercentage}" filterBy="#{kpi.accomplishmentPercentage}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.accomplishmentPercentage != null ? kpi.accomplishmentPercentage : '0'}%" />
+                            </p:column>
+
+                            <!-- Frequency Column -->
+                            <p:column headerText="Frequency" sortBy="#{kpi.frequency}" filterBy="#{kpi.frequency}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.frequency != null ? kpi.frequency.displayName : 'N/A'}" />
+                            </p:column>
+
+                            <!-- Start Date Column -->
+                            <p:column headerText="Start Date" sortBy="#{kpi.startDate}" filterBy="#{kpi.startDate}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.startDate}">
+                                    <f:convertDateTime pattern="dd MMM, yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <!-- End Date Column -->
+                            <p:column headerText="End Date" sortBy="#{kpi.endDate}" filterBy="#{kpi.endDate}" filterMatchMode="contains">
+                                <h:outputText value="#{kpi.endDate}">
+                                    <f:convertDateTime pattern="dd MMM, yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <!-- Status Column -->
+                            <p:column headerText="Status" sortBy="#{kpi.recordStatus}" filterBy="#{kpi.recordStatus}" filterMatchMode="contains">
+                                <p:tag value="#{kpi.recordStatus}" severity="#{kpi.recordStatus == 'ACTIVE' ? 'success' : 'warning'}" />
+                            </p:column>
+
+                            <!-- Actions Column -->
+                            <p:column headerText="Actions" style="width:120px">
+                                <div class="p-d-flex p-jc-center">
+                                    <p:commandButton icon="fa fa-edit" 
+                                                     styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
+                                                     onclick="PF('kpiForm').show()">
+                                        <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
+                                    </p:commandButton>
+                                    <p:commandButton icon="fa fa-trash" 
+                                                     styleClass="ui-button-rounded ui-button-text ui-button-danger"
+                                                     onclick="PF('confirmDelete').show()">
+                                        <f:setPropertyActionListener target="#{departmentKPIView.selectedKPI}" value="#{kpi}" />
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </h:form>
+            </div>
         </div>
 
-        <style>
-            .card {
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: box-shadow 0.3s ease;
-                background: white;
-                border-radius: 8px;
-                overflow: hidden;
-            }
+        <!-- KPI Form Dialog -->
+        <ui:include src="KPIForm.xhtml" />
 
-            .card:hover {
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-
-            .ui-button {
-                border-radius: 4px;
-                font-weight: 500;
-                text-transform: none;
-            }
-
-            .ui-inputtext {
-                border-radius: 6px;
-                border: 1px solid #ddd;
-            }
-
-            .ui-button-text {
-                background: none !important;
-                border: none !important;
-                padding: 4px !important;
-            }
-
-            .ui-button-text:hover {
-                background-color: rgba(51, 122, 183, 0.1) !important;
-            }
-
-            .target-value, .current-value, .accomplishment-percentage,
-            .frequency, .start-date, .end-date {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .goal-association {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-        </style>
-
+        <!-- Delete Confirmation Dialog -->
+        <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 
+                         widgetVar="confirmDelete" showEffect="fade" hideEffect="fade" 
+                         responsive="true" width="350">
+            <p:commandButton value="Yes" type="button" styleClass="p-button-confirm" 
+                            action="#{departmentKPIView.deleteKPI(departmentKPIView.selectedKPI)}"
+                            oncomplete="PF('confirmDelete').hide()" />
+            <p:commandButton value="No" type="button" styleClass="p-button-secondary" 
+                            onclick="PF('confirmDelete').hide()" />
+        </p:confirmDialog>
     </ui:define>
 </ui:composition>
