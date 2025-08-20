@@ -86,7 +86,7 @@
                             <div class="p-col-12 p-md-6 p-lg-1">
                                 <p:commandButton value="Add KPI" icon="fa fa-plus"
                                                  styleClass="ui-button-primary" id="addKpiBtn"
-                                                 onclick="PF('kpiFormDialog').show()">
+                                                 onclick="PF('kpiForm').show()">
                                     <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
                                 </p:commandButton>
                             </div>
@@ -165,7 +165,7 @@
                                 <div class="p-d-flex p-jc-center">
                                     <p:commandButton icon="fa fa-edit" 
                                                      styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
-                                                     onclick="PF('kpiFormDialog').show()">
+                                                     onclick="PF('kpiForm').show()">
                                         <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" 
@@ -182,7 +182,7 @@
         </div>
 
         <!-- KPI Form Dialog -->
-        <ui:include src="KPIFormDialog.xhtml" />
+        <ui:include src="KPIForm.xhtml" />
 
         <!-- Delete Confirmation Dialog -->
         <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 
