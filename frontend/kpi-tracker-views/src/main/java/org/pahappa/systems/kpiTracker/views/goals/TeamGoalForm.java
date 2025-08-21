@@ -1,11 +1,13 @@
 package org.pahappa.systems.kpiTracker.views.goals;
 
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
+import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
@@ -43,10 +45,10 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
     public void init() {
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
-        this.departmentGoals = this.departmentGoalService.getAllInstances();
         this.teamService = ApplicationContextProvider.getBean(TeamService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
         loadDepartment();
+        loadDepartmentGoals();
     }
 
     @Override
@@ -68,6 +70,12 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
                     .findFirst()
                     .orElse(null);
         }
+    }
+
+    public void loadDepartmentGoals(){
+        Search search = new Search();
+        search.addFilterEqual("status", GoalStatus.APPROVED);
+        this.departmentGoals = this.departmentGoalService.getInstances(search,0,0);
     }
 
     @Override

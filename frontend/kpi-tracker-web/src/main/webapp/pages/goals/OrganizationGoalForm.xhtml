@@ -36,6 +36,13 @@
                                  placeholder="Description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
+                <div class="field col-12 p-m-4">
+
+                    <p:selectOneMenu id="orgGoal" value="#{organizationGoalForm.reviewCycle}" converter="reviewCycleConverter" >
+                        <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{organizationGoalForm.reviewCycles}" var="reviewCycle"  itemLabel="#{reviewCycle.title} " itemValue="#{reviewCycle}"/>
+                    </p:selectOneMenu>
+                </div>
                 <div class="field col-12 md:col-6 p-m-4">
                     <p:inputText value="#{organizationGoalForm.model.contributionWeight}" required="true"
                                  placeholder="Weight"
