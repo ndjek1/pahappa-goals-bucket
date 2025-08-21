@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="content">
+        <h:form>
+            <h:panelGroup rendered="#{not empty departmentGoalDetails.selectedGoal}">
+                <!-- Back arrow + Title -->
+                <div class="p-d-flex p-ai-center p-gap-2">
+                    <p:commandButton icon="pi pi-arrow-left"
+                                     styleClass="ui-button-text ui-button-outlined p-mr-3 "
+                                     action="#{departmentGoalDetails.backToGoals}"
+                                     immediate="true"
+                    />
+                    <h2>Goal Details</h2>
+                </div>
+                <div class="p-grid">
+                    <!-- Left section -->
+                    <div class="p-col-12 p-md-8">
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h3>#{departmentGoalDetails.selectedGoal.name}</h3>
+                            <div class="p-d-flex p-flex-column">
+                                <span style="margin: 5px 0"><b>Level:</b> #{departmentGoalDetails.goalLevel}</span>
+                                <span style="margin: 5px 0"><b>Weight:</b> #{departmentGoalDetails.selectedGoal.contributionWeight}%</span>
+                                <span style="margin: 5px 0"><b>Created On:</b>
+
+                                <h:outputText  value="#{departmentGoalDetails.selectedGoal.dateCreated}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                            </span>
+                            </div>
+                            <hr/>
+                            <p><b>Description:</b> #{departmentGoalDetails.selectedGoal.description}</p>
+                        </div>
+                    </div>
+                    <!-- Right section: Activities -->
+                    <div class="p-col-12 p-md-4">
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h3>Activities</h3>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{empty departmentGoalDetails.selectedGoal}">
+                <h:outputText value="No goal selected."/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:dataTable id="childGoals" var="model" value="#{departmentGoalDetails.teamGoalGoalList}"
+                             widgetVar="deptGoalsTable"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" lazy="true" rows="20"
+                             emptyMessage="No record found"
+                             paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                             rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
+
+                    <p:column width="30" headerText="No.">
+                        <h:outputText value="#{row + 1}" />
+                    </p:column>
+                    <p:column headerText="Name">
+                        <h:outputText value="#{model.name}" />
+                    </p:column>
+                    <p:column headerText="Description">
+                        <h:outputText value="#{model.description}" />
+                    </p:column>
+                    <p:column headerText="Weight">
+                        <h:outputText value="#{model.contributionWeight}" />
+                    </p:column>
+                    <p:column headerText="Status">
+                        <h:outputText value="#{model.status.name()}" />
+                    </p:column>
+
+
+                    <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
+                        <p:commandButton icon="fa fa-check" styleClass="ui-button-primary"
+                                         ajax="false"
+                                         title="Approve"
+                                         rendered="#{model.status.toString()  eq 'PENDING'}"
+                                         actionListener="#{departmentGoalDetails.approveDepartmentGoal(model)}">
+                            <p:ajax event="dialogReturn" update="childGoals" />
+                        </p:commandButton>
+                        <p:commandButton icon="fa fa-trash" title="Delete"
+                                         styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
+                                         rendered="#{model.status.toString()  eq 'PENDING'}"
+                                         actionListener="#{usersView.deleteSelectedUser(model)}"
+                                         update="childGoals">
+                            <p:confirm header="Confirmation"
+                                       message="You are about to delete a user. Do you wish to continue?"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

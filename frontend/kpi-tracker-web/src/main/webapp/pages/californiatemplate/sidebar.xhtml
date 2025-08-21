@@ -16,9 +16,10 @@
                                 styleClass="p-my-3"
                                 outcome="/pages/dashboard/Dashboard" />
                     <p:submenu id="goals" label="Manage Goals"
+                               rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3"
                                style="color:#0d6efd"
-                               icon="pi pi-fw pi-user">
+                               icon="fa fa-bullseye">
                         <p:menuitem id="orgGoals" value="Organization Goals"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/goals/OrganizationGoalsView" />
@@ -59,7 +60,7 @@
                                rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
                                styleClass="p-my-3"
                                style="color:#0d6efd"
-                               icon="pi pi-fw pi-user">
+                               icon="fa fa-building">
                         <p:menuitem id="departmentGoals" value="Goals"
                                     outcome="/pages/goals/DepartmentGoalView" />
                     </p:submenu>
@@ -67,7 +68,7 @@
                                rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                styleClass="p-my-3"
                                style="color:#0d6efd"
-                               icon="pi pi-fw pi-user">
+                               icon="fa fa-users">
                         <p:menuitem id="teamGoals" value="Team Goals"
                                     rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                     outcome="/pages/goals/TeamGoalView" />
@@ -91,6 +92,7 @@
                     </p:submenu>
 
                     <p:submenu label="Organization Configuration"
+                               rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3"
                                icon="pi pi-fw pi-cog">
                         <p:menuitem value="Manage Global Weights"
