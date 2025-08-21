@@ -20,8 +20,7 @@ public class SystemUser extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(
-            name = "department_id",
-            nullable = false
+            name = "department_id"
     )
     public Department getDepartment() {
         return department;

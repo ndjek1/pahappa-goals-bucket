@@ -49,7 +49,7 @@
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{userFormDialog.selectedDepartment}"
                                          converter="departmentConverter" filter="true"
-                                         required="true" effect="fold">
+                                          effect="fold">
                             <f:selectItem itemLabel="Select department" itemValue="" />
                             <f:selectItems value="#{userFormDialog.departments}" var="dept" itemLabel="#{dept.departmentName}" itemValue="#{dept}"/>
                         </p:selectOneMenu>
