@@ -3,7 +3,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pc="http://primefaces.org/california">
+                xmlns:pc="http://primefaces.org/california"
+                template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
         <title>Team Activities</title>
@@ -97,25 +98,23 @@
                     </div>
                     <div class="col-12 md:col-3">
                         <span class="p-float-label">
-                            <p:selectOneMenu id="statusFilter" value="#{teamActivitiesView.selectedStatus}" 
+                            <p:selectOneMenu id="statusFilter" value="#{null}" 
                                             styleClass="w-full">
                                 <f:selectItem itemLabel="All Statuses" itemValue="#{null}" />
-                                <f:selectItems value="#{teamActivitiesView.recordStatusList}" 
-                                              var="status" itemLabel="#{status}" itemValue="#{status}" />
                             </p:selectOneMenu>
                             <label for="statusFilter">Filter by Status</label>
                         </span>
                     </div>
                     <div class="col-12 md:col-2">
                         <span class="p-float-label">
-                            <p:calendar id="createdFrom" value="#{teamActivitiesView.createdFrom}" 
+                            <p:calendar id="createdFrom" value="#{null}" 
                                        styleClass="w-full" showTime="false" />
                             <label for="createdFrom">From Date</label>
                         </span>
                     </div>
                     <div class="col-12 md:col-2">
                         <span class="p-float-label">
-                            <p:calendar id="createdTo" value="#{teamActivitiesView.createdTo}" 
+                            <p:calendar id="createdTo" value="#{null}" 
                                        styleClass="w-full" showTime="false" />
                             <label for="createdTo">To Date</label>
                         </span>

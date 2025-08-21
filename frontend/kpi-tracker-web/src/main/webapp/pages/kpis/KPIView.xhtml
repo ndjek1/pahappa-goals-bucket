@@ -11,89 +11,106 @@
                 <h:form id="kpiView" enctype="multipart/form-data">
 
                     <!-- Statistics Cards -->
-                    <div class="p-grid overlay-demo">
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Total KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.size()}</h2>
+                    <div class="grid">
+                        <div class="col-12 md:col-3">
+                            <div class="surface-card shadow-1 p-4 border-round">
+                                <div class="flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="block text-500 font-medium mb-2">Total KPIs</span>
+                                        <div class="text-900 font-medium text-xl">#{kpiView.dataModels.size()}</div>
+                                    </div>
+                                    <i class="pi pi-chart-line text-blue-500 text-3xl"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Active KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
+                        <div class="col-12 md:col-3">
+                            <div class="surface-card shadow-1 p-4 border-round">
+                                <div class="flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="block text-500 font-medium mb-2">Active KPIs</span>
+                                        <div class="text-900 font-medium text-xl">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</div>
+                                    </div>
+                                    <i class="pi pi-check-circle text-green-500 text-3xl"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Department KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</h2>
+                        <div class="col-12 md:col-3">
+                            <div class="surface-card shadow-1 p-4 border-round">
+                                <div class="flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="block text-500 font-medium mb-2">Department KPIs</span>
+                                        <div class="text-900 font-medium text-xl">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</div>
+                                    </div>
+                                    <i class="pi pi-building text-blue-500 text-3xl"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Team KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</h2>
+                        <div class="col-12 md:col-3">
+                            <div class="surface-card shadow-1 p-4 border-round">
+                                <div class="flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="block text-500 font-medium mb-2">Team KPIs</span>
+                                        <div class="text-900 font-medium text-xl">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</div>
+                                    </div>
+                                    <i class="pi pi-users text-green-500 text-3xl"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Filters Section -->
-                    <div class="card">
-                        <h:outputText value="Filters" />
+                                        <!-- Filters Section -->
+                    <div class="surface-card shadow-2 p-4 border-round mb-4">
+                        <div class="flex align-items-center mb-3">
+                            <i class="pi pi-filter text-blue-500 text-xl mr-2"></i>
+                            <h6 class="m-0">Filters</h6>
+                        </div>
                         <p:growl id="messages" showDetail="true" />
-                        <div class="p-grid">
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:inputText id="searchTerm" required="false"
-                                             value="#{kpiView.searchTerm}" placeholder="Search KPIs ..."
-                                             onkeyup="#{kpiView.reloadFilterReset()}">
-                                    <p:ajax event="keyup"
-                                            update="kpiView"
-                                            listener="#{kpiView.reloadFilterReset()}" />
-                                </p:inputText>
+                        <div class="grid">
+                            <div class="col-12 md:col-6 lg:col-3">
+                                <span class="p-float-label">
+                                    <p:inputText id="searchTerm" required="false"
+                                                 value="#{kpiView.searchTerm}" placeholder="Search KPIs ..."
+                                                 styleClass="w-full">
+                                        <p:ajax event="keyup"
+                                                update="kpiView"
+                                                listener="#{kpiView.reloadFilterReset()}" />
+                                    </p:inputText>
+                                    <label for="searchTerm">Search</label>
+                                </span>
                             </div>
 
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:selectOneMenu id="measurementUnit" label="Filter by Unit"
-                                                 title="Filter by Measurement Unit" value="#{kpiView.selectedMeasurementUnit}"
-                                                 style="height: 100%">
-                                    <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <p:ajax event="change" update="kpiView"
-                                            listener="#{kpiView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
+                            <div class="col-12 md:col-6 lg:col-3">
+                                <span class="p-float-label">
+                                    <p:selectOneMenu id="measurementUnit" value="#{null}"
+                                                     styleClass="w-full">
+                                        <f:selectItem itemLabel="All Units" itemValue="#{null}" />
+                                    </p:selectOneMenu>
+                                    <label for="measurementUnit">Measurement Unit</label>
+                                </span>
                             </div>
 
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:selectOneMenu id="frequency" label="Filter by Frequency"
-                                                 title="Filter by Frequency" value="#{kpiView.selectedFrequency}"
-                                                 style="height: 100%">
-                                    <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <p:ajax event="change" update="kpiView"
-                                            listener="#{kpiView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
+                            <div class="col-12 md:col-6 lg:col-3">
+                                <span class="p-float-label">
+                                    <p:selectOneMenu id="frequency" value="#{null}"
+                                                     styleClass="w-full">
+                                        <f:selectItem itemLabel="All Frequencies" itemValue="#{null}" />
+                                    </p:selectOneMenu>
+                                    <label for="frequency">Frequency</label>
+                                </span>
                             </div>
 
-                            <div class="p-col-12 p-md-6 p-lg-2">
-                                <p:commandButton icon="fa fa-search"
-                                                 styleClass="ui-button-success" id="searchBtn"
-                                                 style="margin-right: 18px" update="kpiView"
+                            <div class="col-12 md:col-6 lg:col-3">
+                                <p:commandButton icon="pi pi-search" value="Search"
+                                                 styleClass="p-button-outlined p-button-primary w-full"
+                                                 update="kpiView"
                                                  actionListener="#{kpiView.reloadFilterReset()}">
-                                </p:commandButton>
-                            </div>
-
-                            <div class="p-col-12 p-md-6 p-lg-1">
-                                <p:commandButton value="Add KPI" icon="fa fa-plus"
-                                                 styleClass="ui-button-primary" id="addKpiBtn"
-                                                 onclick="PF('kpiForm').show()">
-                                    <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
                                 </p:commandButton>
                             </div>
                         </div>
                     </div>
 
                     <!-- KPIs Data Table -->
-                    <div class="card" style="margin-top:1rem">
-                        <h:outputText value="Key Performance Indicators" />
+                    <div class="surface-card shadow-2 p-4 border-round">
                         
                         <p:dataTable id="kpisTable" var="kpi" value="#{kpiView.dataModels}"
                                      widgetVar="kpisTable"
@@ -101,11 +118,19 @@
                                      paginator="true" lazy="true" rows="20"
                                      emptyMessage="#{kpiView.dataEmptyMessage}"
                                      paginatorPosition="bottom" paginatorAlwaysVisible="false"
-                                     rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
+                                     rowIndexVar="row" reflow="true" styleClass="p-datatable-sm">
 
                             <f:facet name="header">
-                                <div class="p-d-flex p-jc-between">
-                                    <h:outputText value="KPI Management" />
+                                <div class="flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="m-0">KPI Management</h5>
+                                        <p class="text-500 m-0">Manage Key Performance Indicators</p>
+                                    </div>
+                                    <p:commandButton value="Add KPI" icon="pi pi-plus"
+                                                     styleClass="p-button-primary p-button-raised"
+                                                     id="addKpiBtn" actionListener="#{kpiForm.show}">
+                                        <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                    </p:commandButton>
                                 </div>
                             </f:facet>
 
@@ -163,7 +188,7 @@
                                 <div class="p-d-flex p-jc-center">
                                     <p:commandButton icon="fa fa-edit" 
                                                      styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
-                                                     onclick="PF('kpiForm').show()">
+                                                     actionListener="#{kpiForm.show}">
                                         <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" 

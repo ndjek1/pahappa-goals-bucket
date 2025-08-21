@@ -33,6 +33,7 @@ public class KPIForm extends DialogForm<KPI> {
     private List<TeamGoal> teamGoals;
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
+    private boolean editing = false;
 
     public KPIForm() {
         super("KPIForm", 600, 500);
@@ -47,6 +48,11 @@ public class KPIForm extends DialogForm<KPI> {
         this.teamGoals = this.teamGoalService.getAllInstances();
         this.measurementUnits = Arrays.asList(MeasurementUnit.values());
         this.frequencies = Arrays.asList(Frequency.values());
+        
+        // Initialize model to prevent null pointer exceptions
+        if (super.model == null) {
+            super.model = new KPI();
+        }
     }
 
     @Override
@@ -74,5 +80,28 @@ public class KPIForm extends DialogForm<KPI> {
     public void resetModal() {
         super.resetModal();
         super.model = new KPI();
+        this.editing = false;
+    }
+    
+    @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        // Set our local editing flag when model is not null
+        this.editing = (super.model != null);
+    }
+    
+    /**
+     * Getter for editing property to make it accessible from XHTML
+     */
+    public boolean isEditing() {
+        return this.editing;
+    }
+    
+    /**
+     * Show method to display the form dialog
+     */
+    public void show() {
+        // This method is called when the form needs to be displayed
+        // The dialog will be shown by the XHTML template
     }
 }

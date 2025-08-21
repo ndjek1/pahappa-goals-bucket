@@ -22,7 +22,7 @@ public class KPI extends BaseEntity {
     private Date startDate;
     private Date endDate;
     private Date lastUpdated;
-    
+
     // References to different goal types
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_goal_id", nullable = true)

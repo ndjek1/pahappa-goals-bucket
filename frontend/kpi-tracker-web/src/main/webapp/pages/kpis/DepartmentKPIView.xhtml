@@ -65,21 +65,17 @@
 
                             <div class="p-col-12 p-md-6 p-lg-3">
                                 <p:selectOneMenu id="measurementUnit" label="Filter by Unit"
-                                                 title="Filter by Measurement Unit" value="#{departmentKPIView.selectedMeasurementUnit}"
+                                                 title="Filter by Measurement Unit" value="#{null}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <p:ajax event="change" update="departmentKPIView"
-                                            listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
                             </div>
 
                             <div class="p-col-12 p-md-6 p-lg-3">
                                 <p:selectOneMenu id="frequency" label="Filter by Frequency"
-                                                 title="Filter by Frequency" value="#{departmentKPIView.selectedFrequency}"
+                                                 title="Filter by Frequency" value="#{null}"
                                                  style="height: 100%">
                                     <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <p:ajax event="change" update="departmentKPIView"
-                                            listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
                             </div>
 
@@ -106,11 +102,14 @@
                                      rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
 
                             <f:facet name="header">
-                                <div class="p-d-flex p-jc-between">
-                                    <h:outputText value="Department KPI Management" />
-                                    <p:commandButton value="Add KPI" icon="fa fa-plus"
-                                                     styleClass="ui-button-primary" id="addDeptKpiBtn"
-                                                     onclick="PF('kpiForm').show()">
+                                <div class="flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="m-0">Department KPI Management</h5>
+                                        <p class="text-500 m-0">Manage Department Key Performance Indicators</p>
+                                    </div>
+                                    <p:commandButton value="Add KPI" icon="pi pi-plus"
+                                                     styleClass="p-button-primary p-button-raised"
+                                                     id="addDeptKpiBtn" actionListener="#{kpiForm.show}">
                                         <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
                                     </p:commandButton>
                                 </div>
@@ -170,7 +169,7 @@
                                 <div class="p-d-flex p-jc-center">
                                     <p:commandButton icon="fa fa-edit" 
                                                      styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
-                                                     onclick="PF('kpiForm').show()">
+                                                     actionListener="#{kpiForm.show}">
                                         <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" 
