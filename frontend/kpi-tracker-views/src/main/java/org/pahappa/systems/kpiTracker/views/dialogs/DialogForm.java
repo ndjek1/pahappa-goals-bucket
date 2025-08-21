@@ -2,6 +2,7 @@ package org.pahappa.systems.kpiTracker.views.dialogs;
 
 import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.BaseEntity;
+import org.pahappa.systems.kpiTracker.views.dialogs.MessageComposer;
 
 import javax.faces.event.ActionEvent;
 import java.util.HashMap;

@@ -16,6 +16,7 @@ import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
+import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -54,7 +55,12 @@ public class ActivityFormDialog extends DialogForm<Activity> {
     private User selectedUser;
     private ActivityStatus selectedStatus;
     
+    // Add edit field like user dialogs
     private boolean edit;
+
+    public ActivityFormDialog() {
+        super(HyperLinks.ACTIVITY_FORM_DIALOG, 1200, 750);
+    }
 
     @PostConstruct
     public void init() {
@@ -65,45 +71,83 @@ public class ActivityFormDialog extends DialogForm<Activity> {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         
         loadData();
+        resetModal();
     }
 
-    public ActivityFormDialog() {
-        super(HyperLinks.ACTIVITY_FORM_DIALOG, 700, 600);
+    private void loadData() {
+        try {
+            this.organizationGoals = organizationGoalService.getAllInstances();
+        } catch (Exception e) {
+            this.organizationGoals = Arrays.asList();
+        }
+        
+        try {
+            this.departmentGoals = departmentGoalService.getAllInstances();
+        } catch (Exception e) {
+            this.departmentGoals = Arrays.asList();
+        }
+        
+        try {
+            this.teamGoals = teamGoalService.getAllInstances();
+        } catch (Exception e) {
+            this.teamGoals = Arrays.asList();
+        }
+        
+        try {
+            this.activityStatuses = Arrays.asList(ActivityStatus.values());
+        } catch (Exception e) {
+            this.activityStatuses = Arrays.asList();
+        }
+        
+        try {
+            this.users = userService.getUsers();
+        } catch (Exception e) {
+            this.users = Arrays.asList();
+        }
     }
 
     @Override
     public void persist() throws ValidationFailedException, OperationFailedException {
-        if (super.model.getTitle() == null || super.model.getTitle().trim().isEmpty()) {
-            UiUtils.showMessageBox("Missing title", "Activity must have a title.");
-            return;
-        }
-        
-        if (selectedUser == null) {
-            UiUtils.showMessageBox("Missing user", "Activity must be assigned to a user.");
-            return;
-        }
-        
-        // Set the selected user
-        super.model.setUser(selectedUser);
-        
-        // Set the selected goal (only one can be selected)
-        if (selectedOrganizationGoal != null) {
-            super.model.setOrganizationGoal(selectedOrganizationGoal);
-        } else if (selectedDepartmentGoal != null) {
-            super.model.setDepartmentGoal(selectedDepartmentGoal);
-        } else if (selectedTeamGoal != null) {
-            super.model.setTeamGoal(selectedTeamGoal);
-        }
-        
-        // Set status if selected
-        if (selectedStatus != null) {
-            super.model.setStatus(selectedStatus);
-        }
-        
         try {
-            activityService.saveInstance(super.model);
+            if (model.getTitle() == null || model.getTitle().trim().isEmpty()) {
+                UiUtils.showMessageBox("Missing title", "Activity must have a title.");
+                return;
+            }
+            
+            if (selectedUser == null) {
+                UiUtils.showMessageBox("Missing user", "Activity must be assigned to a user.");
+                return;
+            }
+            
+            // Set the selected user
+            model.setUser(selectedUser);
+            
+            // Set the selected goal (only one can be selected)
+            if (selectedOrganizationGoal != null) {
+                model.setOrganizationGoal(selectedOrganizationGoal);
+            } else if (selectedDepartmentGoal != null) {
+                model.setDepartmentGoal(selectedDepartmentGoal);
+            } else if (selectedTeamGoal != null) {
+                model.setTeamGoal(selectedTeamGoal);
+            }
+            
+            // Set status if selected
+            if (selectedStatus != null) {
+                model.setStatus(selectedStatus);
+            }
+            
+            activityService.saveInstance(model);
+            UiUtils.showMessageBox("Success", "Activity saved successfully!");
+            resetModal();
+        } catch (ValidationFailedException e) {
+            UiUtils.ComposeFailure("Validation Error", e.getMessage());
+            throw e;
+        } catch (OperationFailedException e) {
+            UiUtils.ComposeFailure("Operation Error", e.getMessage());
+            throw e;
         } catch (Exception e) {
-            UiUtils.showMessageBox("Error", "Failed to save activity: " + e.getMessage());
+            UiUtils.ComposeFailure("Error", "Failed to save activity: " + e.getMessage());
+            throw new OperationFailedException("Failed to save activity: " + e.getMessage(), e);
         }
     }
 
@@ -118,35 +162,20 @@ public class ActivityFormDialog extends DialogForm<Activity> {
     @Override
     public void setFormProperties() {
         super.setFormProperties();
-        if (super.model != null) {
-            setEdit(true);
+        if (this.model != null && this.model.getId() != null) {
+            this.edit = true;
             // Set selections based on existing model
-            if (super.model.getOrganizationGoal() != null) {
-                selectedOrganizationGoal = super.model.getOrganizationGoal();
-            } else if (super.model.getDepartmentGoal() != null) {
-                selectedDepartmentGoal = super.model.getDepartmentGoal();
-            } else if (super.model.getTeamGoal() != null) {
-                selectedTeamGoal = super.model.getTeamGoal();
+            if (model.getOrganizationGoal() != null) {
+                selectedOrganizationGoal = model.getOrganizationGoal();
+            } else if (model.getDepartmentGoal() != null) {
+                selectedDepartmentGoal = model.getDepartmentGoal();
+            } else if (model.getTeamGoal() != null) {
+                selectedTeamGoal = model.getTeamGoal();
             }
-            selectedUser = super.model.getUser();
-            selectedStatus = super.model.getStatus();
-        }
-    }
-
-    private void loadData() {
-        try {
-            this.organizationGoals = organizationGoalService.getAllInstances();
-            this.departmentGoals = departmentGoalService.getAllInstances();
-            this.teamGoals = teamGoalService.getAllInstances();
-            this.activityStatuses = Arrays.asList(ActivityStatus.values());
-            this.users = userService.getUsers();
-        } catch (Exception e) {
-            // Initialize with empty lists if services fail
-            this.organizationGoals = Arrays.asList();
-            this.departmentGoals = Arrays.asList();
-            this.teamGoals = Arrays.asList();
-            this.activityStatuses = Arrays.asList(ActivityStatus.values());
-            this.users = Arrays.asList();
+            selectedUser = model.getUser();
+            selectedStatus = model.getStatus();
+        } else {
+            this.edit = false;
         }
     }
 
@@ -174,5 +203,15 @@ public class ActivityFormDialog extends DialogForm<Activity> {
         // Clear other goal selections when team goal is selected
         selectedOrganizationGoal = null;
         selectedDepartmentGoal = null;
+    }
+    
+    public void show() {
+        // Show the dialog using the DialogForm base class method
+        super.show(null);
+    }
+    
+    public void hide() {
+        // Hide the dialog using the DialogForm base class method
+        super.hide();
     }
 }

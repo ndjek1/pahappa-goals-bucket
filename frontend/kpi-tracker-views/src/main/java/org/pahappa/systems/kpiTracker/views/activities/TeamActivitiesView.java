@@ -10,6 +10,7 @@ import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
@@ -38,6 +39,7 @@ public class TeamActivitiesView implements Serializable {
     private UserService userService;
 
     private List<RecordStatus> recordStatusList;
+    private List<ActivityStatus> activityStatusList;
 
     private int totalActivities;
     private int activeActivities;
@@ -45,12 +47,13 @@ public class TeamActivitiesView implements Serializable {
     private int completedActivities;
 
     private String searchTerm;
-    private RecordStatus selectedStatus;
+    private ActivityStatus selectedStatus;
     private Date createdFrom, createdTo;
 
     private List<Activity> activityModels;
     private Team currentTeam;
     private String dataEmptyMessage = "No team activities found.";
+    private Activity selectedActivity;
 
     @PostConstruct
     public void init() {
@@ -60,6 +63,7 @@ public class TeamActivitiesView implements Serializable {
         userService = ApplicationContextProvider.getBean(UserService.class);
 
         this.recordStatusList = Arrays.asList(RecordStatus.values());
+        this.activityStatusList = Arrays.asList(ActivityStatus.values());
 
         loadTeam();
         reloadFilterReset();
@@ -76,87 +80,120 @@ public class TeamActivitiesView implements Serializable {
                 this.currentTeam = teams.get(0);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // Initialize with empty team if service fails
+            this.currentTeam = null;
         }
     }
 
     public void reloadFilterReset() {
-        if (currentTeam == null) {
-            return;
+        try {
+            // Initialize with empty lists if no team is available
+            if (currentTeam == null) {
+                this.totalActivities = 0;
+                this.activeActivities = 0;
+                this.pendingActivities = 0;
+                this.completedActivities = 0;
+                this.activityModels = Arrays.asList();
+                return;
+            }
+
+            Search allActivitiesSearch = new Search();
+            this.totalActivities = activityService.countInstances(allActivitiesSearch);
+
+            Search activeActivitiesSearch = new Search();
+            activeActivitiesSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+            this.activeActivities = activityService.countInstances(activeActivitiesSearch);
+
+            Search pendingActivitiesSearch = new Search();
+            pendingActivitiesSearch.addFilterEqual("status", ActivityStatus.PENDING);
+            this.pendingActivities = activityService.countInstances(pendingActivitiesSearch);
+
+            Search completedActivitiesSearch = new Search();
+            completedActivitiesSearch.addFilterEqual("status", ActivityStatus.COMPLETED);
+            this.completedActivities = activityService.countInstances(completedActivitiesSearch);
+
+            // Search for activities related to team goals
+            Search activitySearch = new Search();
+            if (searchTerm != null && !searchTerm.isEmpty()) {
+                activitySearch.addFilterILike("title", "%" + searchTerm + "%");
+            }
+            if (selectedStatus != null) {
+                activitySearch.addFilterEqual("status", selectedStatus);
+            }
+            if (createdFrom != null) {
+                activitySearch.addFilterGreaterOrEqual("dateCreated", createdFrom);
+            }
+            if (createdTo != null) {
+                activitySearch.addFilterLessOrEqual("dateCreated", createdTo);
+            }
+
+            // Filter activities by team goal
+            Search teamGoalSearch = new Search();
+            teamGoalSearch.addFilterEqual("team", currentTeam);
+            List<TeamGoal> teamGoals = teamGoalService.getInstances(teamGoalSearch, 0, 1000);
+            if (!teamGoals.isEmpty()) {
+                activitySearch.addFilterIn("teamGoal", teamGoals);
+            }
+
+            // Filter and load dataModels based on search/filter criteria
+            this.activityModels = activityService.getInstances(activitySearch, 0, 1000);
+        } catch (Exception e) {
+            // Initialize with empty values if any service fails
+            this.totalActivities = 0;
+            this.activeActivities = 0;
+            this.pendingActivities = 0;
+            this.completedActivities = 0;
+            this.activityModels = Arrays.asList();
         }
-
-        Search allActivitiesSearch = new Search();
-        this.totalActivities = activityService.countInstances(allActivitiesSearch);
-
-        Search activeActivitiesSearch = new Search();
-        activeActivitiesSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-        this.activeActivities = activityService.countInstances(activeActivitiesSearch);
-
-        Search pendingActivitiesSearch = new Search();
-        pendingActivitiesSearch.addFilterEqual("status", ActivityStatus.PENDING);
-        this.pendingActivities = activityService.countInstances(pendingActivitiesSearch);
-
-        Search completedActivitiesSearch = new Search();
-        completedActivitiesSearch.addFilterEqual("status", ActivityStatus.COMPLETED);
-        this.completedActivities = activityService.countInstances(completedActivitiesSearch);
-
-        // Search for activities related to team goals
-        Search activitySearch = new Search();
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            activitySearch.addFilterILike("title", "%" + searchTerm + "%");
-        }
-        if (selectedStatus != null) {
-            activitySearch.addFilterEqual("recordStatus", selectedStatus);
-        }
-        if (createdFrom != null) {
-            activitySearch.addFilterGreaterOrEqual("dateCreated", createdFrom);
-        }
-        if (createdTo != null) {
-            activitySearch.addFilterLessOrEqual("dateCreated", createdTo);
-        }
-
-        // Filter activities by team goal
-        Search teamGoalSearch = new Search();
-        teamGoalSearch.addFilterEqual("team", currentTeam);
-        List<TeamGoal> teamGoals = teamGoalService.getInstances(teamGoalSearch, 0, 1000);
-        if (!teamGoals.isEmpty()) {
-            activitySearch.addFilterIn("teamGoal", teamGoals);
-        }
-
-        // Filter and load dataModels based on search/filter criteria
-        this.activityModels = activityService.getInstances(activitySearch, 0, 1000);
     }
 
     public void reloadFromDB(int i, int i1, java.util.Map<String, Object> map) throws Exception {
-        if (currentTeam == null) {
-            return;
-        }
+        try {
+            if (currentTeam == null) {
+                this.activityModels = Arrays.asList();
+                return;
+            }
 
-        Search search = new Search();
-        search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-        
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            search.addFilterILike("title", "%" + searchTerm + "%");
+            Search search = new Search();
+            search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+            
+            if (searchTerm != null && !searchTerm.isEmpty()) {
+                search.addFilterILike("title", "%" + searchTerm + "%");
+            }
+            
+            // Filter activities by team goal
+            Search teamGoalSearch = new Search();
+            teamGoalSearch.addFilterEqual("team", currentTeam);
+            List<TeamGoal> teamGoals = teamGoalService.getInstances(teamGoalSearch, 0, 1000);
+            if (!teamGoals.isEmpty()) {
+                search.addFilterIn("teamGoal", teamGoals);
+            }
+            
+            this.activityModels = activityService.getInstances(search, i, i1);
+        } catch (Exception e) {
+            this.activityModels = Arrays.asList();
+            throw e;
         }
-        
-        // Filter activities by team goal
-        Search teamGoalSearch = new Search();
-        teamGoalSearch.addFilterEqual("team", currentTeam);
-        List<TeamGoal> teamGoals = teamGoalService.getInstances(teamGoalSearch, 0, 1000);
-        if (!teamGoals.isEmpty()) {
-            search.addFilterIn("teamGoal", teamGoals);
-        }
-        
-        this.activityModels = activityService.getInstances(search, i, i1);
     }
 
     public void deleteActivity(Activity activity) {
         try {
-            activityService.deleteInstance(activity);
-            reloadFilterReset();
+            if (activity != null) {
+                activityService.deleteInstance(activity);
+                UiUtils.showMessageBox("Action successful", "Activity has been deleted successfully.");
+                reloadFilterReset();
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            UiUtils.ComposeFailure("Action failed", "Failed to delete activity: " + e.getMessage());
         }
+    }
+    
+    public void clearFilters() {
+        this.searchTerm = null;
+        this.selectedStatus = null;
+        this.createdFrom = null;
+        this.createdTo = null;
+        reloadFilterReset();
     }
 
     public List<ExcelReport> getExcelReportModels() {

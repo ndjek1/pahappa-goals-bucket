@@ -10,6 +10,7 @@ import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
@@ -38,6 +39,7 @@ public class DepartmentActivitiesView implements Serializable {
     private UserService userService;
 
     private List<RecordStatus> recordStatusList;
+    private List<ActivityStatus> activityStatusList;
 
     private int totalActivities;
     private int activeActivities;
@@ -45,12 +47,13 @@ public class DepartmentActivitiesView implements Serializable {
     private int completedActivities;
 
     private String searchTerm;
-    private RecordStatus selectedStatus;
+    private ActivityStatus selectedStatus;
     private Date createdFrom, createdTo;
 
     private List<Activity> activityModels;
     private Department currentDepartment;
     private String dataEmptyMessage = "No department activities found.";
+    private Activity selectedActivity;
 
     @PostConstruct
     public void init() {
@@ -60,6 +63,7 @@ public class DepartmentActivitiesView implements Serializable {
         userService = ApplicationContextProvider.getBean(UserService.class);
 
         this.recordStatusList = Arrays.asList(RecordStatus.values());
+        this.activityStatusList = Arrays.asList(ActivityStatus.values());
 
         loadDepartment();
         reloadFilterReset();
@@ -106,7 +110,7 @@ public class DepartmentActivitiesView implements Serializable {
             activitySearch.addFilterILike("title", "%" + searchTerm + "%");
         }
         if (selectedStatus != null) {
-            activitySearch.addFilterEqual("recordStatus", selectedStatus);
+            activitySearch.addFilterEqual("status", selectedStatus);
         }
         if (createdFrom != null) {
             activitySearch.addFilterGreaterOrEqual("dateCreated", createdFrom);
@@ -152,11 +156,22 @@ public class DepartmentActivitiesView implements Serializable {
 
     public void deleteActivity(Activity activity) {
         try {
-            activityService.deleteInstance(activity);
-            reloadFilterReset();
+            if (activity != null) {
+                activityService.deleteInstance(activity);
+                UiUtils.showMessageBox("Action successful", "Activity has been deleted successfully.");
+                reloadFilterReset();
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            UiUtils.ComposeFailure("Action failed", "Failed to delete activity: " + e.getMessage());
         }
+    }
+    
+    public void clearFilters() {
+        this.searchTerm = null;
+        this.selectedStatus = null;
+        this.createdFrom = null;
+        this.createdTo = null;
+        reloadFilterReset();
     }
 
     public List<ExcelReport> getExcelReportModels() {
