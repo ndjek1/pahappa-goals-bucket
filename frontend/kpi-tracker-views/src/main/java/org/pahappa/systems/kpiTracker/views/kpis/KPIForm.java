@@ -10,7 +10,10 @@ import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
+import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.sers.webutils.model.exception.OperationFailedException;
+import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
@@ -33,10 +36,12 @@ public class KPIForm extends DialogForm<KPI> {
     private List<TeamGoal> teamGoals;
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
-    private boolean editing = false;
+    
+    // Add edit field like user dialogs
+    private boolean edit;
 
     public KPIForm() {
-        super("KPIForm", 600, 500);
+        super(HyperLinks.KPI_FORM_DIALOG, 700, 600);
     }
 
     @PostConstruct
@@ -44,64 +49,72 @@ public class KPIForm extends DialogForm<KPI> {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
+        loadData();
+    }
+
+    private void loadData() {
         this.departmentGoals = this.departmentGoalService.getAllInstances();
         this.teamGoals = this.teamGoalService.getAllInstances();
         this.measurementUnits = Arrays.asList(MeasurementUnit.values());
         this.frequencies = Arrays.asList(Frequency.values());
-        
-        // Initialize model to prevent null pointer exceptions
-        if (super.model == null) {
-            super.model = new KPI();
-        }
     }
 
     @Override
-    public void persist() throws Exception {
+    public void persist() throws ValidationFailedException, OperationFailedException {
+        try {
+            validateForm();
+            kpisService.saveInstance(super.model);
+        } catch (Exception e) {
+            throw new OperationFailedException("Failed to save KPI: " + e.getMessage());
+        }
+    }
+
+    private void validateForm() throws ValidationFailedException {
         if (model.getName() == null || model.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("KPI must have a name.");
+            throw new ValidationFailedException("KPI must have a name.");
         }
         if (model.getTargetValue() == null || model.getTargetValue() <= 0) {
-            throw new IllegalArgumentException("Target value must be greater than 0.");
+            throw new ValidationFailedException("Target value must be greater than 0.");
         }
         if (model.getMeasurementUnit() == null) {
-            throw new IllegalArgumentException("KPI must have a measurement unit.");
+            throw new ValidationFailedException("KPI must have a measurement unit.");
         }
         if (model.getFrequency() == null) {
-            throw new IllegalArgumentException("KPI must have a frequency.");
+            throw new ValidationFailedException("KPI must have a frequency.");
         }
         if (model.getStartDate() == null) {
-            throw new IllegalArgumentException("KPI must have a start date.");
+            throw new ValidationFailedException("KPI must have a start date.");
         }
         
-        kpisService.saveInstance(super.model);
+        // Validate date range if end date is provided
+        if (model.getEndDate() != null && model.getStartDate() != null) {
+            if (model.getEndDate().before(model.getStartDate())) {
+                throw new ValidationFailedException("End date cannot be before start date.");
+            }
+        }
     }
 
     @Override
     public void resetModal() {
         super.resetModal();
         super.model = new KPI();
-        this.editing = false;
+        setEdit(false);
     }
     
     @Override
     public void setFormProperties() {
         super.setFormProperties();
-        // Set our local editing flag when model is not null
-        this.editing = (super.model != null);
+        if (super.model != null && super.model.getId() != null) {
+            setEdit(true);
+        } else {
+            setEdit(false);
+        }
     }
     
     /**
-     * Getter for editing property to make it accessible from XHTML
+     * Refresh the data when needed
      */
-    public boolean isEditing() {
-        return this.editing;
-    }
-    
-    /**
-     * Show method to display the form dialog
-     */
-    public void show() {
-        // This method is called when the form needs to be displayed
-        // The dialog will be shown by the XHTML template
+    public void refreshData() {
+        loadData();
     }
 }

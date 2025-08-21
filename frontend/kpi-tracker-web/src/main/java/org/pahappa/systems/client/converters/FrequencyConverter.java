@@ -1,14 +1,14 @@
 package org.pahappa.systems.client.converters;
 
-import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("organizationGoalConverter")
-public class OrganizationGoalConverter implements Converter {
+@FacesConverter("frequencyConverter")
+public class FrequencyConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -17,10 +17,8 @@ public class OrganizationGoalConverter implements Converter {
         }
         
         try {
-            // For now, return the string value. In a real implementation, you might want to look up the goal by ID
-            // This is a simplified version - you may need to inject a service to do proper lookup
-            return value;
-        } catch (Exception e) {
+            return Frequency.valueOf(value);
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -30,8 +28,8 @@ public class OrganizationGoalConverter implements Converter {
         if (value == null) {
             return "";
         }
-        if (value instanceof OrganizationGoal) {
-            return ((OrganizationGoal) value).getName();
+        if (value instanceof Frequency) {
+            return ((Frequency) value).name();
         }
         return value.toString();
     }

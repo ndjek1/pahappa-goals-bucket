@@ -8,6 +8,8 @@ import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.security.User;
@@ -19,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +40,23 @@ public class DepartmentKPIView implements Serializable {
     private List<KPI> dataModels;
     private String searchTerm;
     private String dataEmptyMessage = "No department KPIs found.";
+    
+    // Filter properties
+    private List<MeasurementUnit> measurementUnitList;
+    private List<Frequency> frequencyList;
+    private MeasurementUnit selectedMeasurementUnit;
+    private Frequency selectedFrequency;
 
     @PostConstruct
     public void init() {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
+        
+        // Initialize enum lists for filters
+        this.measurementUnitList = Arrays.asList(MeasurementUnit.values());
+        this.frequencyList = Arrays.asList(Frequency.values());
+        
         loadDepartment();
         reloadFilterReset();
     }
@@ -57,6 +71,16 @@ public class DepartmentKPIView implements Serializable {
         );
 
         search1.addFilter(filter);
+        
+        // Add measurement unit filter
+        if (selectedMeasurementUnit != null) {
+            search1.addFilterEqual("measurementUnit", selectedMeasurementUnit);
+        }
+        
+        // Add frequency filter
+        if (selectedFrequency != null) {
+            search1.addFilterEqual("frequency", selectedFrequency);
+        }
 
         this.dataModels = kpisService.getInstances(search1, i, i1);
     }
@@ -83,6 +107,16 @@ public class DepartmentKPIView implements Serializable {
                 search.addFilterILike("name", "%" + searchTerm + "%");
             }
             
+            // Add measurement unit filter
+            if (selectedMeasurementUnit != null) {
+                search.addFilterEqual("measurementUnit", selectedMeasurementUnit);
+            }
+            
+            // Add frequency filter
+            if (selectedFrequency != null) {
+                search.addFilterEqual("frequency", selectedFrequency);
+            }
+            
             this.dataModels = kpisService.getInstances(search, 0, 1000);
         }
     }
@@ -97,13 +131,11 @@ public class DepartmentKPIView implements Serializable {
                     .orElse(null);
         }
     }
-
-    public void deleteKPI(KPI kpi) {
-        try {
-            kpisService.deleteInstance(kpi);
-            reloadFilterReset();
-        } catch (OperationFailedException e) {
-            e.printStackTrace();
-        }
+    
+    public void clearFilters() {
+        this.searchTerm = null;
+        this.selectedMeasurementUnit = null;
+        this.selectedFrequency = null;
+        reloadFilterReset();
     }
 }

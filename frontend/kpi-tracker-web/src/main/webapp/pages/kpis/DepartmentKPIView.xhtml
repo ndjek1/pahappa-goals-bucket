@@ -57,32 +57,38 @@
                             <div class="p-col-12 p-md-6 p-lg-4">
                                 <p:inputText id="searchTerm" required="false"
                                              value="#{departmentKPIView.searchTerm}" placeholder="Search Department KPIs ...">
-                                    <p:ajax event="keyup"
-                                            update="departmentKPIView"
-                                            listener="#{departmentKPIView.reloadFilterReset()}" />
+                                                                <p:ajax event="keyup"
+                                    update="departmentKPIsTable"
+                                    listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:inputText>
                             </div>
 
                             <div class="p-col-12 p-md-6 p-lg-3">
                                 <p:selectOneMenu id="measurementUnit" label="Filter by Unit"
-                                                 title="Filter by Measurement Unit" value="#{null}"
-                                                 style="height: 100%">
+                                                 title="Filter by Measurement Unit" value="#{departmentKPIView.selectedMeasurementUnit}"
+                                                 style="height: 100%" converter="measurementUnitConverter">
                                     <f:selectItem itemLabel="All Units" value="#{null}" />
+                                    <f:selectItems value="#{departmentKPIView.measurementUnitList}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                                    <p:ajax event="change" update="departmentKPIsTable"
+                                            listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
                             </div>
 
                             <div class="p-col-12 p-md-6 p-lg-3">
                                 <p:selectOneMenu id="frequency" label="Filter by Frequency"
-                                                 title="Filter by Frequency" value="#{null}"
-                                                 style="height: 100%">
+                                                 title="Filter by Frequency" value="#{departmentKPIView.selectedFrequency}"
+                                                 style="height: 100%" converter="frequencyConverter">
                                     <f:selectItem itemLabel="All Frequencies" value="#{null}" />
+                                    <f:selectItems value="#{departmentKPIView.frequencyList}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                                    <p:ajax event="change" update="departmentKPIsTable"
+                                            listener="#{departmentKPIView.reloadFilterReset()}" />
                                 </p:selectOneMenu>
                             </div>
 
                             <div class="p-col-12 p-md-6 p-lg-2">
                                 <p:commandButton icon="fa fa-search"
                                                  styleClass="ui-button-success" id="searchBtn"
-                                                 style="margin-right: 18px" update="departmentKPIView"
+                                                 style="margin-right: 18px" update="departmentKPIsTable"
                                                  actionListener="#{departmentKPIView.reloadFilterReset()}">
                                 </p:commandButton>
                             </div>
@@ -102,82 +108,91 @@
                                      rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
 
                             <f:facet name="header">
-                                <div class="flex justify-content-between align-items-center">
+                                <div class="p-d-flex p-jc-between">
                                     <div>
-                                        <h5 class="m-0">Department KPI Management</h5>
-                                        <p class="text-500 m-0">Manage Department Key Performance Indicators</p>
+                                        <span class="table-header-text">Department Key Performance Indicators</span>
                                     </div>
-                                    <p:commandButton value="Add KPI" icon="pi pi-plus"
-                                                     styleClass="p-button-primary p-button-raised"
-                                                     id="addDeptKpiBtn" actionListener="#{kpiForm.show}">
-                                        <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
-                                    </p:commandButton>
+                                    <div>
+                                        <p:commandButton value="Add KPI" process="@this"
+                                                         icon="fa fa-plus"
+                                                         ajax="false"
+                                                         styleClass="ui-button-success" immediate="true"
+                                                         actionListener="#{kpiForm.show}">
+                                            <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                            <p:ajax event="dialogReturn"
+                                                    listener="#{departmentKPIView.reloadFilterReset}"
+                                                    update="departmentKPIsTable" />
+                                        </p:commandButton>
+                                    </div>
                                 </div>
                             </f:facet>
 
+                                <p:column width="30" headerText="No.">
+                                    <h:outputText value="#{row + 1}" />
+                                </p:column>
+
                             <!-- KPI Name Column -->
-                            <p:column headerText="KPI Name" sortBy="#{kpi.name}" filterBy="#{kpi.name}" filterMatchMode="contains">
+                            <p:column headerText="KPI Name">
                                 <h:outputText value="#{kpi.name}" />
                             </p:column>
 
                             <!-- Measurement Unit Column -->
-                            <p:column headerText="Unit" sortBy="#{kpi.measurementUnit}" filterBy="#{kpi.measurementUnit}" filterMatchMode="contains">
+                            <p:column headerText="Unit">
                                 <h:outputText value="#{kpi.measurementUnit != null ? kpi.measurementUnit.displayName : 'N/A'}" />
                             </p:column>
 
                             <!-- Target Value Column -->
-                            <p:column headerText="Target" sortBy="#{kpi.targetValue}" filterBy="#{kpi.targetValue}" filterMatchMode="contains">
+                            <p:column headerText="Target">
                                 <h:outputText value="#{kpi.targetValue}" />
                             </p:column>
 
                             <!-- Current Value Column -->
-                            <p:column headerText="Current" sortBy="#{kpi.currentValue}" filterBy="#{kpi.currentValue}" filterMatchMode="contains">
+                            <p:column headerText="Current">
                                 <h:outputText value="#{kpi.currentValue}" />
                             </p:column>
 
                             <!-- Accomplishment Percentage Column -->
-                            <p:column headerText="Accomplishment" sortBy="#{kpi.accomplishmentPercentage}" filterBy="#{kpi.accomplishmentPercentage}" filterMatchMode="contains">
+                            <p:column headerText="Accomplishment">
                                 <h:outputText value="#{kpi.accomplishmentPercentage != null ? kpi.accomplishmentPercentage : '0'}%" />
                             </p:column>
 
                             <!-- Frequency Column -->
-                            <p:column headerText="Frequency" sortBy="#{kpi.frequency}" filterBy="#{kpi.frequency}" filterMatchMode="contains">
+                            <p:column headerText="Frequency">
                                 <h:outputText value="#{kpi.frequency != null ? kpi.frequency.displayName : 'N/A'}" />
                             </p:column>
 
                             <!-- Start Date Column -->
-                            <p:column headerText="Start Date" sortBy="#{kpi.startDate}" filterBy="#{kpi.startDate}" filterMatchMode="contains">
+                            <p:column headerText="Start Date">
                                 <h:outputText value="#{kpi.startDate}">
                                     <f:convertDateTime pattern="dd MMM, yyyy" />
                                 </h:outputText>
                             </p:column>
 
                             <!-- End Date Column -->
-                            <p:column headerText="End Date" sortBy="#{kpi.endDate}" filterBy="#{kpi.endDate}" filterMatchMode="contains">
+                            <p:column headerText="End Date">
                                 <h:outputText value="#{kpi.endDate}">
                                     <f:convertDateTime pattern="dd MMM, yyyy" />
                                 </h:outputText>
                             </p:column>
 
                             <!-- Status Column -->
-                            <p:column headerText="Status" sortBy="#{kpi.recordStatus}" filterBy="#{kpi.recordStatus}" filterMatchMode="contains">
-                                <p:tag value="#{kpi.recordStatus}" severity="#{kpi.recordStatus == 'ACTIVE' ? 'success' : 'warning'}" />
+                            <p:column headerText="Status">
+                                <h:outputText value="#{kpi.recordStatus}" />
                             </p:column>
 
                             <!-- Actions Column -->
-                            <p:column headerText="Actions" style="width:120px">
-                                <div class="p-d-flex p-jc-center">
-                                    <p:commandButton icon="fa fa-edit" 
-                                                     styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
-                                                     actionListener="#{kpiForm.show}">
-                                        <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
-                                    </p:commandButton>
-                                    <p:commandButton icon="fa fa-trash" 
-                                                     styleClass="ui-button-rounded ui-button-text ui-button-danger"
-                                                     onclick="PF('confirmDelete').show()">
-                                        <f:setPropertyActionListener target="#{departmentKPIView.selectedKPI}" value="#{kpi}" />
-                                    </p:commandButton>
-                                </div>
+                            <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
+                                                            <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
+                                             ajax="false"
+                                             actionListener="#{kpiForm.show}">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{kpiForm.model}" />
+                                <p:ajax event="dialogReturn" update="departmentKPIsTable" />
+                            </p:commandButton>
+                                <p:commandButton icon="fa fa-trash" title="Delete"
+                                                 styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
+                                                 onclick="PF('confirmDelete').show()">
+                                    <f:setPropertyActionListener target="#{departmentKPIView.selectedKPI}" value="#{kpi}" />
+                                </p:commandButton>
                             </p:column>
                         </p:dataTable>
                     </div>
@@ -192,7 +207,7 @@
         <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 
                          widgetVar="confirmDelete" showEffect="fade" hideEffect="fade" 
                          responsive="true" width="350">
-            <p:commandButton value="Yes" type="button" styleClass="p-button-confirm" 
+            <p:commandButton value="Yes" type="button" styleClass="ui-button-success" 
                             action="#{departmentKPIView.deleteKPI(departmentKPIView.selectedKPI)}"
                             oncomplete="PF('confirmDelete').hide()" />
             <p:commandButton value="No" type="button" styleClass="p-button-secondary" 

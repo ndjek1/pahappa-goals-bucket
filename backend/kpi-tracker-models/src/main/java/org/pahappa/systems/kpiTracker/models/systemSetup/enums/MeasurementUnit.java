@@ -1,7 +1,5 @@
 package org.pahappa.systems.kpiTracker.models.systemSetup.enums;
 
-
-
 public enum MeasurementUnit {
     PERCENTAGE("%"),
     NUMBER("Number"),

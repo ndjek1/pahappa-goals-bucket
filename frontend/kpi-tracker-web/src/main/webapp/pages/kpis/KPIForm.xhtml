@@ -5,7 +5,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
     <ui:define name="head">
-        <title>Add KPI</title>
         <style type="text/css">
             .capitalized {
                 text-transform: capitalize;
@@ -16,15 +15,18 @@
         <title>Add KPI</title>
         <h:form id="kpiFormDialog" style="height: 600px" styleClass="card">
             <div class="p-grid ui-fluid" style="display:flex">
+                
+
+                
                 <div class="ui-col-12 ui-md-6">
-                    <h5>KPI Name</h5>
+                    <h5>KPI Name *</h5>
                     <div class="ui-inputgroup">
                         <p:inputText value="#{kpiForm.model.name}" required="true" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Measurement Unit</h5>
+                    <h5>Measurement Unit *</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{kpiForm.model.measurementUnit}"
                                          converter="measurementUnitConverter" filter="true"
@@ -36,7 +38,7 @@
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Frequency</h5>
+                    <h5>Frequency *</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{kpiForm.model.frequency}"
                                          converter="frequencyConverter" filter="true"
@@ -48,7 +50,7 @@
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Target Value</h5>
+                    <h5>Target Value *</h5>
                     <div class="ui-inputgroup">
                         <p:inputNumber value="#{kpiForm.model.targetValue}" required="true" minValue="0" decimalPlaces="2" />
                     </div>
@@ -62,7 +64,7 @@
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Start Date</h5>
+                    <h5>Start Date *</h5>
                     <div class="ui-inputgroup">
                         <p:calendar value="#{kpiForm.model.startDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
@@ -106,15 +108,14 @@
                             <p:commandButton value="Cancel" 
                                              validateClient="false"
                                              process="@this"
-                                             onclick="PF('kpiForm').hide()"
+                                             action="#{kpiForm.hide}"
                                              styleClass="ui-button-outlined ui-button-help" />
                         </div>
                         <div class="p-col-2" >
-                            <p:commandButton value="#{kpiForm.isEditing ? 'Update' : 'Save'}" 
+                            <p:commandButton value="Save" 
                                              process="@form"
-                                             actionListener="#{kpiForm.persist}"
-                                             update="@form" validateClient="true"
-                                             oncomplete="if (!args.validationFailed) PF('kpiForm').hide();" />
+                                             actionListener="#{kpiForm.save}"
+                                             update="@form" validateClient="true" />
                         </div>
                     </div>
                 </div>

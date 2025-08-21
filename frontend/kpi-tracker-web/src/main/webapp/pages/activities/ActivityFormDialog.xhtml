@@ -1,12 +1,10 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
-
     <ui:define name="head">
-        <title>Add Activity</title>
         <style type="text/css">
             .capitalized {
                 text-transform: capitalize;
@@ -15,23 +13,36 @@
     </ui:define>
     <ui:define name="content">
         <title>Add Activity</title>
-        <h:form id="activityForm" style="height: 700px" styleClass="card">
+        <h:form id="activityForm" style="height: 750px" styleClass="card">
             <div class="p-grid ui-fluid" style="display:flex">
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Title</h5>
+                
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Title *</h5>
                     <div class="ui-inputgroup">
                         <p:inputText value="#{activityFormDialog.model.title}" required="true" />
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Status</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.model.status}"
+                        <p:selectOneMenu value="#{activityFormDialog.selectedStatus}"
                                          converter="activityStatusConverter" filter="true"
                                          required="true" effect="fold">
                             <f:selectItem itemLabel="Select status" itemValue="" />
                             <f:selectItems value="#{activityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Assigned User *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{activityFormDialog.selectedUser}"
+                                         converter="userConverter" filter="true"
+                                         required="true" effect="fold">
+                            <f:selectItem itemLabel="Select user" itemValue="" />
+                            <f:selectItems value="#{activityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -43,23 +54,11 @@
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Assigned User</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.model.user}"
-                                         converter="userConverter" filter="true"
-                                         required="true" effect="fold">
-                            <f:selectItem itemLabel="Select user" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.users}" var="user" itemLabel="#{user.firstName} #{user.lastName}" itemValue="#{user}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </div>
-
                 <hr></hr>
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Organization Goal</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.model.organizationGoal}"
+                        <p:selectOneMenu value="#{activityFormDialog.selectedOrganizationGoal}"
                                          converter="organizationGoalConverter" filter="true"
                                          effect="fold"
                                          onchange="#{activityFormDialog.onOrganizationGoalChange()}">
@@ -69,10 +68,10 @@
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Department Goal</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.model.departmentGoal}"
+                        <p:selectOneMenu value="#{activityFormDialog.selectedDepartmentGoal}"
                                          converter="departmentGoalConverter" filter="true"
                                          effect="fold"
                                          onchange="#{activityFormDialog.onDepartmentGoalChange()}">
@@ -82,10 +81,10 @@
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Team Goal</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.model.teamGoal}"
+                        <p:selectOneMenu value="#{activityFormDialog.selectedTeamGoal}"
                                          converter="teamGoalConverter" filter="true"
                                          effect="fold"
                                          onchange="#{activityFormDialog.onTeamGoalChange()}">
@@ -96,49 +95,50 @@
                 </div>
 
                 <hr></hr>
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Planned Start Date</h5>
                     <div class="ui-inputgroup">
                         <p:calendar value="#{activityFormDialog.model.plannedStartDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Planned End Date</h5>
                     <div class="ui-inputgroup">
                         <p:calendar value="#{activityFormDialog.model.plannedEndDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Actual Start Date</h5>
                     <div class="ui-inputgroup">
                         <p:calendar value="#{activityFormDialog.model.actualStartDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
+                <div class="ui-col-12 ui-md-4">
                     <h5>Actual End Date</h5>
                     <div class="ui-inputgroup">
                         <p:calendar value="#{activityFormDialog.model.actualEndDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">
+                <div class="ui-col-12 ui-md-12" style="margin-top: 20px; align-self: flex-end !important;">
                     <div class="p-grid p-justify-end">
-                        <div class="p-col-2">
+                        <div class="p-col-1" style="margin-right: 10px;">
                             <p:commandButton value="Cancel" 
                                              validateClient="false"
                                              process="@this"
-                                             onclick="PF('activityFormDialog').hide()"
-                                             styleClass="ui-button-outlined ui-button-help" />
+                                             action="#{activityFormDialog.hide}"
+                                             styleClass="ui-button-outlined ui-button-help"
+                                             style="min-width: 80px; padding: 8px 16px;" />
                         </div>
-                        <div class="p-col-2" >
-                            <p:commandButton value="#{activityFormDialog.edit ? 'Update' : 'Save'}" 
+                        <div class="p-col-1">
+                            <p:commandButton value="Save" 
                                              process="@form"
-                                             actionListener="#{activityFormDialog.persist}"
+                                             actionListener="#{activityFormDialog.save}"
                                              update="@form" validateClient="true"
-                                             oncomplete="if (!args.validationFailed) PF('activityFormDialog').hide();" />
+                                             style="min-width: 80px; padding: 8px 16px;" />
                         </div>
                     </div>
                 </div>
