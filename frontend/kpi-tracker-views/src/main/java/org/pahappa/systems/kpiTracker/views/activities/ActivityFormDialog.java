@@ -63,18 +63,17 @@ public class ActivityFormDialog extends DialogForm<Activity> {
     }
 
     @PostConstruct
-    public void init() {
+    public void init() throws OperationFailedException {
         this.activityService = ApplicationContextProvider.getBean(ActivityService.class);
         this.organizationGoalService = ApplicationContextProvider.getBean(OrganizationGoalService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.userService = ApplicationContextProvider.getBean(UserService.class);
-        
         loadData();
         resetModal();
     }
 
-    private void loadData() {
+    private void loadData() throws OperationFailedException {
         try {
             this.organizationGoals = organizationGoalService.getAllInstances();
         } catch (Exception e) {
