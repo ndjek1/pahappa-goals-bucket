@@ -1,5 +1,7 @@
 package org.pahappa.systems.kpiTracker.views.dialogs.systemSetup;
 
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
@@ -7,8 +9,10 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.Gender;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
@@ -52,11 +56,22 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
                             "Please select both review cycle type and start date."));
             return;
         }
+        Search search = new Search();
+        search.addFilterAnd(
+                Filter.equal("type", model.getType() ),
+                Filter.equal("status", ReviewCycleStatus.ACTIVE),
+                Filter.equal("recordStatus", RecordStatus.ACTIVE)
+        );
+        List<ReviewCycle> reviewCycleList = this.reviewCycleService.getInstances(search,0,0);
 
-        // Auto-set end date based on type
-        model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
-
-        reviewCycleService.saveInstance(super.model);
+        if (reviewCycleList.isEmpty()) {
+            // Auto-set end date based on type
+            model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
+            reviewCycleService.saveInstance(super.model);
+        }else {
+            UiUtils.ComposeFailure("Duplicate review cycles", "Cannot have two active review cycles of the same type");
+            return;
+        }
 
     }
 

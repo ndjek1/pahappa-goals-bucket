@@ -16,9 +16,6 @@ public class ReviewCycle extends BaseEntity {
     private Date startDate;
     private Date endDate;
     private ReviewCycleStatus status;
-    public  ReviewCycle() {
-        this.status = ReviewCycleStatus.ACTIVE;
-    }
 
     @Column(name = "title")
     public String getTitle() {
