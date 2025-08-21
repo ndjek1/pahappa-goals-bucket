@@ -27,7 +27,7 @@ public class HyperLinks {
     public static final String ORGANIZATION_GOAL_DIALOG = "/pages/goals/OrganizationGoalForm.xhtml";
     public static final String DEPARTMENT_GOAL_DIALOG = "/pages/goals/DepartmentGoalForm.xhtml";
     public static final String TEAM_GOAL_DIALOG = "/pages/goals/TeamGoalForm.xhtml";
-
+    public static final String GOAL_VIEW = "/pages/pages/GoalDetails.xhtml?faces-redirect=true";
     // KPI-related constants
     public static final String KPIS_VIEW = "/pages/kpis/KPIView.xhtml?faces-redirect=true";
     public static final String KPI_FORM_DIALOG = "/pages/kpis/KPIForm.xhtml";

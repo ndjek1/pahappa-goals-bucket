@@ -38,7 +38,7 @@
                 </div>
                 <div class="field col-12 p-m-4">
 
-                    <p:selectOneMenu id="orgGoal" value="#{departmentGoalsForm.model.parent}" converter="organizationGoalConverter" >
+                    <p:selectOneMenu id="orgGoal" value="#{departmentGoalsForm.selectedOrganizationGoal}" converter="organizationGoalConverter" >
                         <f:selectItem itemLabel="Select parent goal" itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{departmentGoalsForm.organizationGoals}" var="parentGoal"  itemLabel="#{parentGoal.name} " itemValue="#{parentGoal}"/>
                     </p:selectOneMenu>

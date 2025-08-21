@@ -4,6 +4,37 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="head">
+        <style>
+            /* Remove default background */
+            .custom-btn {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                display: flex;
+                align-items: center;
+                padding: 6px 10px;
+            }
+
+            /* Background only on hover */
+            .custom-btn:hover {
+                background: #b3d1e6 !important;
+                border-radius: 8px;
+            }
+
+            /* Icon colors */
+            .custom-icon {
+                font-size: 1.2rem;
+            }
+            .custom-icon-edit {
+                color: orange;
+                font-size: 1.2rem;
+            }
+
+        </style>
+
+
+    </ui:define>
 
     <ui:define name="content">
         <h:form id="goalForm">
@@ -32,18 +63,20 @@
                     <f:selectItem itemLabel="Status" itemValue=""/>
                     <f:selectItems value="..."/>
                 </p:selectOneMenu>
-                <p:inputText placeholder="Search Goal" value="..." style="flex:1"/>
+                <p:inputText placeholder="Search Goal" label="Search goal..." style="flex:1"/>
             </div>
 
             <!-- Goal Cards -->
+            <div class="p-grid p-nogutter p-mt-2" style="background: white">
             <ui:repeat value="#{departmentGoalsView.dataModels}" var="goal">
-                <div class="p-card p-p-3 p-mb-3"
+                <div class="p-col-12 p-md-6 p-p-2">
+                <div class="p-card p-p-3 p-mb-3 "
                      style="border: 1px solid #dee2e6; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
 
                     <!-- Goal Title -->
-                    <h3 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
+                    <h4 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
                         #{goal.name}
-                    </h3>
+                    </h4>
 
                     <!-- Horizontal Divider -->
                     <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5rem 0 1rem 0;" />
@@ -81,14 +114,18 @@
 
                     <!-- Actions -->
                     <div class="p-d-flex p-jc-end p-mt-2">
-                        <p:commandButton value="View" icon="pi pi-eye"
-                                         styleClass="ui-button-secondary p-mr-2" />
-                        <p:commandButton value="Edit" icon="pi pi-pencil"
-                                         styleClass="ui-button-info" />
+                        <p:commandLink styleClass="custom-btn"
+                                       ajax="false"
+                                       action="#{departmentGoalDetails.prepareForCategory(goal.id)}">
+                            <i class="pi pi-eye custom-icon"></i>
+                            <span class="p-ml-2">View</span>
+                        </p:commandLink>
                     </div>
 
                 </div>
+                </div>
             </ui:repeat>
+            </div>
 
             <!-- Pagination -->
             <div class="p-d-flex p-jc-between p-mt-3">

@@ -1,6 +1,10 @@
 package org.pahappa.systems.client.converters;
 
+import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
+import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
+import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
+import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -11,28 +15,18 @@ import javax.faces.convert.FacesConverter;
 public class DepartmentGoalConverter implements Converter {
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null || value.trim().isEmpty()) {
+    public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
+        if (arg2 == null || arg2.isEmpty())
             return null;
-        }
-        
-        try {
-            // For now, return the string value. In a real implementation, you might want to look up the goal by ID
-            // This is a simplified version - you may need to inject a service to do proper lookup
-            return value;
-        } catch (Exception e) {
-            return null;
-        }
+        return ApplicationContextProvider.getBean(DepartmentGoalService.class)
+                .getObjectById(arg2);
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component, Object value) {
-        if (value == null) {
-            return "";
-        }
-        if (value instanceof DepartmentGoal) {
-            return ((DepartmentGoal) value).getName();
-        }
-        return value.toString();
+    public String getAsString(FacesContext arg0, UIComponent arg1, Object object) {
+        if (object == null || object instanceof String)
+            return null;
+
+        return ((OrganizationGoal) object).getId();
     }
 }
