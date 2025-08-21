@@ -1,6 +1,5 @@
 package org.pahappa.systems.kpiTracker.models.organization_structure;
 
-import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.model.BaseEntity;
 import org.sers.webutils.model.security.User;
 

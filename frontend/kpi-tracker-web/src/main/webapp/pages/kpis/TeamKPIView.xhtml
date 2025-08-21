@@ -109,7 +109,7 @@
                                     </div>
                                     <p:commandButton value="Add KPI" icon="pi pi-plus"
                                                      styleClass="p-button-primary p-button-raised"
-                                                     id="addTeamKpiBtn" onclick="PF('kpiForm').show()">
+                                                     id="addTeamKpiBtn" actionListener="#{kpiForm.show}">
                                         <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
                                     </p:commandButton>
                                 </div>
@@ -169,7 +169,7 @@
                                 <div class="p-d-flex p-jc-center">
                                     <p:commandButton icon="fa fa-edit" 
                                                      styleClass="ui-button-rounded ui-button-text ui-button-primary p-mr-1"
-                                                     onclick="PF('kpiForm').show()">
+                                                     actionListener="#{kpiForm.show}">
                                         <f:setPropertyActionListener target="#{kpiForm.model}" value="#{kpi}" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" 

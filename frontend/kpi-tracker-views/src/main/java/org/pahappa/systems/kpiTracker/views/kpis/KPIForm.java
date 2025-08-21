@@ -96,4 +96,12 @@ public class KPIForm extends DialogForm<KPI> {
     public boolean isEditing() {
         return this.editing;
     }
+    
+    /**
+     * Show method to display the form dialog
+     */
+    public void show() {
+        // This method is called when the form needs to be displayed
+        // The dialog will be shown by the XHTML template
+    }
 }
