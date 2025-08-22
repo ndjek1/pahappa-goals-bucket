@@ -93,6 +93,13 @@
                                 </p:commandButton>
                             </div>
                         </div>
+
+                        <!-- Clear Filters Button -->
+                        <div class="p-grid" style="margin-top: 1rem;">
+                            <div class="p-col-12">
+                                <p:commandButton value="Clear Filters" icon="fa fa-times" styleClass="ui-button-outlined ui-button-secondary" actionListener="#{departmentKPIView.clearFilters}" update="departmentKPIsTable" />
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Department KPIs Data Table -->

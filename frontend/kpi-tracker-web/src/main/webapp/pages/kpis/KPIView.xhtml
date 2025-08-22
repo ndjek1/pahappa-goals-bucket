@@ -5,10 +5,72 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
 
+    <ui:define name="head">
+        <style type="text/css">
+            .activity-nav-card {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid #e0e0e0;
+            }
+            .activity-nav-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+        </style>
+    </ui:define>
+
     <ui:define name="content">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <h:form id="kpiView" enctype="multipart/form-data">
+
+                    <!-- KPI Type Navigation -->
+                    <div class="card">
+                        <h5>KPI Management</h5>
+                        <p>Select the type of KPIs you want to manage:</p>
+                        
+                        <div class="p-grid">
+                            <div class="p-col-12 p-md-3">
+                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/OrganizationalKPIView.xhtml'">
+                                    <div class="text-center">
+                                        <i class="pi pi-globe text-green-500 text-4xl mb-3"></i>
+                                        <h6>Organizational KPIs</h6>
+                                        <p class="text-500">Manage organization-wide KPIs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-3">
+                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/DepartmentKPIView.xhtml'">
+                                    <div class="text-center">
+                                        <i class="pi pi-building text-blue-500 text-4xl mb-3"></i>
+                                        <h6>Department KPIs</h6>
+                                        <p class="text-500">Manage department-level KPIs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-3">
+                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/TeamKPIView.xhtml'">
+                                    <div class="text-center">
+                                        <i class="pi pi-users text-purple-500 text-4xl mb-3"></i>
+                                        <h6>Team KPIs</h6>
+                                        <p class="text-500">Manage team-level KPIs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-3">
+                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/KPIView.xhtml'">
+                                    <div class="text-center">
+                                        <i class="pi pi-list text-orange-500 text-4xl mb-3"></i>
+                                        <h6>All KPIs</h6>
+                                        <p class="text-500">View all system KPIs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="p-grid overlay-demo">
                         <div class="p-col-12 p-md-3">
@@ -92,6 +154,13 @@
                                 </p:commandButton>
                             </div>
                         </div>
+
+                        <!-- Clear Filters Button -->
+                        <div class="p-grid" style="margin-top: 1rem;">
+                            <div class="p-col-12">
+                                <p:commandButton value="Clear Filters" icon="fa fa-times" styleClass="ui-button-outlined ui-button-secondary" actionListener="#{kpiView.clearFilters}" update="kpisTable" />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card" style="margin-top:1rem">
@@ -105,21 +174,21 @@
 
                             <f:facet name="header">
                                 <div class="p-d-flex p-jc-between">
-                                    <div>
-                                        <span class="table-header-text">Key Performance Indicators</span>
-                                    </div>
-                                    <div>
-                                                                                    <p:commandButton value="Add KPI" process="@this"
-                                                         icon="fa fa-plus"
-                                                         ajax="false"
-                                                         styleClass="ui-button-success" immediate="true"
-                                                         actionListener="#{kpiForm.show}">
-                                            <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
-                                            <p:ajax event="dialogReturn"
-                                                    listener="#{kpiView.reloadFilterReset}"
-                                                    update="kpisTable" />
-                                        </p:commandButton>
-                                    </div>
+                                                                <div>
+                                <span class="table-header-text">All System KPIs</span>
+                            </div>
+                            <div>
+                                <p:commandButton value="Add System KPI" process="@this"
+                                                 icon="fa fa-plus"
+                                                 ajax="false"
+                                                 styleClass="ui-button-success" immediate="true"
+                                                 actionListener="#{kpiForm.show}">
+                                    <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                    <p:ajax event="dialogReturn"
+                                            listener="#{kpiView.reloadFilterReset}"
+                                            update="kpisTable" />
+                                </p:commandButton>
+                            </div>
                                 </div>
                             </f:facet>
 
@@ -128,12 +197,20 @@
                             </p:column>
 
                         <!-- KPI Name Column -->
-                        <p:column headerText="KPI Name">
-                            <h:outputText value="#{kpi.name}" />
-                        </p:column>
+                                                    <p:column headerText="KPI Name">
+                                <h:outputText value="#{kpi.name}" />
+                            </p:column>
 
-                        <!-- Measurement Unit Column -->
-                        <p:column headerText="Unit">
+                            <p:column headerText="Goal Type">
+                                <h:outputText value="#{kpi.organizationGoal != null ? 'Organization' : (kpi.departmentGoal != null ? 'Department' : (kpi.teamGoal != null ? 'Team' : 'N/A'))}" />
+                            </p:column>
+
+                            <p:column headerText="Goal Name">
+                                <h:outputText value="#{kpi.organizationGoal != null ? kpi.organizationGoal.name : (kpi.departmentGoal != null ? kpi.departmentGoal.name : (kpi.teamGoal != null ? kpi.teamGoal.name : 'N/A'))}" />
+                            </p:column>
+
+                            <!-- Measurement Unit Column -->
+                            <p:column headerText="Unit">
                             <h:outputText value="#{kpi.measurementUnit != null ? kpi.measurementUnit.displayName : 'N/A'}" />
                         </p:column>
 

@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <title>Add Organizational KPI</title>
+        <h:form id="organizationalKpiForm" style="height: 600px" styleClass="card">
+            <div class="p-grid ui-fluid" style="display:flex">
+                
+                <div class="ui-col-12 ui-md-6">
+                    <h5>KPI Name *</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{organizationalKpiForm.model.name}" required="true" styleClass="ui-fluid" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Organization Goal *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{organizationalKpiForm.selectedOrganizationGoal}"
+                                         converter="organizationGoalConverter" filter="true"
+                                         effect="fold" required="true">
+                            <f:selectItem itemLabel="Select organization goal" itemValue="" />
+                            <f:selectItems value="#{organizationalKpiForm.organizationGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Measurement Unit *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{organizationalKpiForm.model.measurementUnit}"
+                                         converter="measurementUnitConverter" effect="fold" required="true">
+                            <f:selectItem itemLabel="Select measurement unit" itemValue="" />
+                            <f:selectItems value="#{organizationalKpiForm.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Frequency *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{organizationalKpiForm.model.frequency}"
+                                         converter="frequencyConverter" effect="fold" required="true">
+                            <f:selectItem itemLabel="Select frequency" itemValue="" />
+                            <f:selectItems value="#{organizationalKpiForm.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <hr></hr>
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Target Value *</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber value="#{organizationalKpiForm.model.targetValue}" required="true" styleClass="ui-fluid" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Current Value</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber value="#{organizationalKpiForm.model.currentValue}" styleClass="ui-fluid" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Accomplishment %</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber value="#{organizationalKpiForm.model.accomplishmentPercentage}" 
+                                       minValue="0" maxValue="100" styleClass="ui-fluid" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Start Date *</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{organizationalKpiForm.model.startDate}" showTime="false" pattern="MM/dd/yyyy" required="true" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-6">
+                    <h5>End Date *</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{organizationalKpiForm.model.endDate}" showTime="false" pattern="MM/dd/yyyy" required="true" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12" style="margin-top: 2rem; text-align: center;">
+                    <p:commandButton value="Save" icon="fa fa-save" styleClass="ui-button-success" 
+                                     actionListener="#{organizationalKpiForm.save}" update="@form" />
+                    <p:commandButton value="Cancel" icon="fa fa-times" styleClass="ui-button-secondary" 
+                                     action="#{organizationalKpiForm.hide}" style="margin-left: 10px;" />
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
