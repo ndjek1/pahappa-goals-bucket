@@ -245,10 +245,10 @@
                             onclick="PF('confirmDelete').hide()" />
         </p:confirmDialog>
         
-        <script type="javascript">
+        <script type="text/javascript">
             function refreshOrganizationalKpiTable() {
                 console.log('Refreshing organizational KPI table...');
-                if (typeof PF !== 'undefined' && PF('organizationalKpisTable')) {
+                if (typeof PF !== 'undefined' &amp;&amp; PF('organizationalKpisTable')) {
                     PF('organizationalKpisTable').filter();
                 }
                 setTimeout(function() {

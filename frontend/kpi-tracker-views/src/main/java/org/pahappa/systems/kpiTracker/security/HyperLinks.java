@@ -33,6 +33,10 @@ public class HyperLinks {
     public static final String KPI_FORM_DIALOG = "/pages/kpis/KPIForm.xhtml";
     public static final String ORGANIZATIONAL_KPIS_VIEW = "/pages/kpis/OrganizationalKPIView.xhtml?faces-redirect=true";
     public static final String ORGANIZATIONAL_KPI_FORM_DIALOG = "/pages/kpis/OrganizationalKPIForm.xhtml";
+    public static final String DEPARTMENT_KPIS_VIEW = "/pages/kpis/DepartmentKPIView.xhtml?faces-redirect=true";
+    public static final String DEPARTMENT_KPI_FORM_DIALOG = "/pages/kpis/DepartmentKPIForm.xhtml";
+    public static final String TEAM_KPIS_VIEW = "/pages/kpis/TeamKPIView.xhtml?faces-redirect=true";
+    public static final String TEAM_KPI_FORM_DIALOG = "/pages/kpis/TeamKPIForm.xhtml";
 
     // Activity-related constants
     public static final String ACTIVITIES_VIEW = "/pages/activities/ActivitiesView.xhtml?faces-redirect=true";

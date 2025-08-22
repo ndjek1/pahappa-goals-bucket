@@ -73,25 +73,31 @@
                     </div>
 
                     <div class="p-grid overlay-demo">
-                        <div class="p-col-12 p-md-3">
+                        <div class="p-col-12 p-md-2">
                             <div class="card">
                                 <h:outputText value="Total KPIs" />
                                 <h2 class="p-text-right">#{kpiView.dataModels.size()}</h2>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
+                        <div class="p-col-12 p-md-2">
                             <div class="card">
                                 <h:outputText value="Active KPIs" />
                                 <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
+                        <div class="p-col-12 p-md-2">
+                            <div class="card">
+                                <h:outputText value="Organizational KPIs" />
+                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.organizationGoal != null).count()}</h2>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-2">
                             <div class="card">
                                 <h:outputText value="Department KPIs" />
                                 <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</h2>
                             </div>
                         </div>
-                        <div class="p-col-12 p-md-3">
+                        <div class="p-col-12 p-md-2">
                             <div class="card">
                                 <h:outputText value="Team KPIs" />
                                 <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</h2>
@@ -276,8 +282,11 @@
             </div>
         </div>
 
-        <!-- KPI Form Dialog -->
+        <!-- KPI Form Dialogs -->
         <ui:include src="KPIForm.xhtml" />
+        <ui:include src="OrganizationalKPIForm.xhtml" />
+        <ui:include src="DepartmentKPIForm.xhtml" />
+        <ui:include src="TeamKPIForm.xhtml" />
 
         <!-- Delete Confirmation Dialog -->
         <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 

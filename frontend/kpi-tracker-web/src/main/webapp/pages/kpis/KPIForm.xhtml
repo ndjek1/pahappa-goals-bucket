@@ -102,20 +102,22 @@
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">
-                    <div class="p-grid p-justify-end">
+                <div class="ui-col-12 ui-md-12" style="margin-top: 30px; align-self: flex-end !important;">
+                    <div class="p-grid p-justify-between">
                         <div class="p-col-2">
                             <p:commandButton value="Cancel" 
                                              validateClient="false"
                                              process="@this"
                                              action="#{kpiForm.hide}"
-                                             styleClass="ui-button-outlined ui-button-help" />
+                                             styleClass="ui-button-outlined ui-button-help"
+                                             style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: left;" />
                         </div>
-                        <div class="p-col-2" >
+                        <div class="p-col-2">
                             <p:commandButton value="Save" 
                                              process="@form"
                                              actionListener="#{kpiForm.save}"
-                                             update="@form" validateClient="true" />
+                                             update="@form" validateClient="true"
+                                             style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: right;" />
                         </div>
                     </div>
                 </div>
