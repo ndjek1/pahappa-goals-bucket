@@ -7,18 +7,75 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <title>Manage Activities</title>
+        <title>System Activities</title>
         <style>
             .capitalized {
                 text-transform: capitalize;
+            }
+            .activity-nav-card {
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .activity-nav-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
         </style>
     </ui:define>
 
     <ui:define name="content">
         <h:form id="activitiesForm" enctype="multipart/form-data">
+            
+            <!-- Activity Type Navigation -->
             <div class="card">
-                <h5>Manage Activities</h5>
+                <h5>Activity Management</h5>
+                <p>Select the type of activities you want to manage:</p>
+                
+                <div class="p-grid">
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/OrganizationalActivitiesView.xhtml'">
+                            <div class="text-center">
+                                <i class="pi pi-globe text-green-500 text-4xl mb-3"></i>
+                                <h6>Organizational Activities</h6>
+                                <p class="text-500">Manage organization-wide activities</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/DepartmentActivitiesView.xhtml'">
+                            <div class="text-center">
+                                <i class="pi pi-building text-blue-500 text-4xl mb-3"></i>
+                                <h6>Department Activities</h6>
+                                <p class="text-500">Manage department-level activities</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/TeamActivitiesView.xhtml'">
+                            <div class="text-center">
+                                <i class="pi pi-users text-purple-500 text-4xl mb-3"></i>
+                                <h6>Team Activities</h6>
+                                <p class="p-500">Manage team-level activities</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/ActivitiesView.xhtml'">
+                            <div class="text-center">
+                                <i class="pi pi-list text-orange-500 text-4xl mb-3"></i>
+                                <h6>All Activities</h6>
+                                <p class="text-500">View all system activities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h5>System Activities Overview</h5>
             
             <!-- Statistics Cards -->
             <div class="p-grid overlay-demo">
@@ -94,7 +151,16 @@
                 </div>
             </div>
 
-
+            <!-- Clear Filters Button -->
+            <div class="p-grid" style="margin-top: 1rem;">
+                <div class="p-col-12">
+                    <p:commandButton value="Clear Filters" 
+                                     icon="fa fa-times"
+                                     styleClass="ui-button-outlined ui-button-secondary"
+                                     actionListener="#{activitiesView.clearFilters}"
+                                     update="activitiesTable" />
+                </div>
+            </div>
 
             <!-- Activities List -->
             <div class="card" style="margin-top:1rem">
@@ -109,10 +175,10 @@
                     <f:facet name="header">
                         <div class="p-d-flex p-jc-between">
                             <div>
-                                <span class="table-header-text">System activities</span>
+                                <span class="table-header-text">All System Activities</span>
                             </div>
                             <div>
-                                <p:commandButton value="Add Activity" process="@this"
+                                <p:commandButton value="Add System Activity" process="@this"
                                                  icon="fa fa-plus"
                                                  ajax="false"
                                                  styleClass="ui-button-success" immediate="true"
@@ -142,10 +208,16 @@
                     <p:column headerText="Assigned User">
                         <h:outputText value="#{activity.user != null ? activity.user.fullName : 'N/A'}" />
                     </p:column>
+                    <p:column headerText="Goal Type">
+                        <h:outputText value="#{activity.organizationGoal != null ? 'Organization' : (activity.departmentGoal != null ? 'Department' : (activity.teamGoal != null ? 'Team' : 'N/A'))}" />
+                    </p:column>
+                    <p:column headerText="Goal Name">
+                        <h:outputText value="#{activity.organizationGoal != null ? activity.organizationGoal.name : (activity.departmentGoal != null ? activity.departmentGoal.name : (activity.teamGoal != null ? activity.teamGoal.name : 'N/A'))}" />
+                    </p:column>
                     <p:column headerText="Created Date">
                         <h:outputText value="#{activity.createdDate}">
                             <f:convertDateTime pattern="dd MMM, yyyy" />
-                        </h:outputText>
+                        </h:convertDateTime>
                     </p:column>
 
                     <p:column headerText="Action" width="140" exportable="false" style="text-align:center">

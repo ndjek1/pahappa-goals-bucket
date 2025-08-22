@@ -12,25 +12,25 @@
         </style>
     </ui:define>
     <ui:define name="content">
-        <title>Add Activity</title>
-        <h:form id="activityForm" style="height: 750px" styleClass="card">
+        <title>Add Department Activity</title>
+        <h:form id="departmentActivityForm" style="height: 750px" styleClass="card">
             <div class="p-grid ui-fluid" style="display:flex">
                 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Title *</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText value="#{activityFormDialog.model.title}" required="true" />
+                        <p:inputText value="#{departmentActivityFormDialog.model.title}" required="true" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Status</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.selectedStatus}"
+                        <p:selectOneMenu value="#{departmentActivityFormDialog.selectedStatus}"
                                          converter="activityStatusConverter" filter="true"
                                          required="true" effect="fold">
                             <f:selectItem itemLabel="Select status" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
+                            <f:selectItems value="#{departmentActivityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -38,11 +38,11 @@
                 <div class="ui-col-12 ui-md-4">
                     <h5>Assigned User *</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.selectedUser}"
+                        <p:selectOneMenu value="#{departmentActivityFormDialog.selectedUser}"
                                          converter="userConverter" filter="true"
                                          required="true" effect="fold">
                             <f:selectItem itemLabel="Select user" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
+                            <f:selectItems value="#{departmentActivityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -50,46 +50,30 @@
                 <div class="ui-col-12 ui-md-12">
                     <h5>Description</h5>
                     <div class="ui-inputgroup">
-                        <p:inputTextarea value="#{activityFormDialog.model.description}" rows="3" />
+                        <p:inputTextarea value="#{departmentActivityFormDialog.model.description}" rows="3" />
                     </div>
                 </div>
 
                 <hr></hr>
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Organization Goal</h5>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Department Goal *</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.selectedOrganizationGoal}"
-                                         converter="organizationGoalConverter" filter="true"
-                                         effect="fold">
-                            <f:selectItem itemLabel="Select organization goal" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.organizationGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                            <p:ajax event="change" listener="#{activityFormDialog.onOrganizationGoalChange}" />
-                        </p:selectOneMenu>
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Department Goal</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.selectedDepartmentGoal}"
+                        <p:selectOneMenu value="#{departmentActivityFormDialog.selectedDepartmentGoal}"
                                          converter="departmentGoalConverter" filter="true"
-                                         effect="fold">
+                                         effect="fold" required="true">
                             <f:selectItem itemLabel="Select department goal" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.departmentGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                            <p:ajax event="change" listener="#{activityFormDialog.onDepartmentGoalChange}" />
+                            <f:selectItems value="#{departmentActivityFormDialog.departmentGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
 
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Team Goal</h5>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Activity Type</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{activityFormDialog.selectedTeamGoal}"
-                                         converter="teamGoalConverter" filter="true"
+                        <p:selectOneMenu value="#{departmentActivityFormDialog.selectedActivityType}"
                                          effect="fold">
-                            <f:selectItem itemLabel="Select team goal" itemValue="" />
-                            <f:selectItems value="#{activityFormDialog.teamGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                            <p:ajax event="change" listener="#{activityFormDialog.onTeamGoalChange}" />
+                            <f:selectItem itemLabel="Select activity type" itemValue="" />
+                            <f:selectItems value="#{departmentActivityFormDialog.activityTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -98,28 +82,39 @@
                 <div class="ui-col-12 ui-md-4">
                     <h5>Planned Start Date</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{activityFormDialog.model.plannedStartDate}" showTime="false" pattern="MM/dd/yyyy" />
+                        <p:calendar value="#{departmentActivityFormDialog.model.plannedStartDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Planned End Date</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{activityFormDialog.model.plannedEndDate}" showTime="false" pattern="MM/dd/yyyy" />
+                        <p:calendar value="#{departmentActivityFormDialog.model.plannedEndDate}" showTime="false" pattern="MM/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Priority</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{departmentActivityFormDialog.selectedPriority}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="Select priority" itemValue="" />
+                            <f:selectItems value="#{departmentActivityFormDialog.priorities}" var="priority" itemLabel="#{priority}" itemValue="#{priority}"/>
+                        </p:selectOneMenu>
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Actual Start Date</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{activityFormDialog.model.actualStartDate}" showTime="false" pattern="MM/dd/yyyy" />
+                        <p:calendar value="#{departmentActivityFormDialog.model.actualStartDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Actual End Date</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{activityFormDialog.model.actualEndDate}" showTime="false" pattern="MM/dd/yyyy" />
+                        <p:calendar value="#{departmentActivityFormDialog.model.actualEndDate}" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
@@ -129,14 +124,14 @@
                             <p:commandButton value="Cancel" 
                                              validateClient="false"
                                              process="@this"
-                                             action="#{activityFormDialog.hide}"
+                                             action="#{departmentActivityFormDialog.hide}"
                                              styleClass="ui-button-outlined ui-button-help"
                                              style="min-width: 80px; padding: 8px 16px;" />
                         </div>
                         <div class="p-col-1">
                             <p:commandButton value="Save" 
                                              process="@form"
-                                             actionListener="#{activityFormDialog.save}"
+                                             actionListener="#{departmentActivityFormDialog.save}"
                                              update="@form" validateClient="true"
                                              style="min-width: 80px; padding: 8px 16px;" />
                         </div>

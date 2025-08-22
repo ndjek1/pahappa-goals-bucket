@@ -1,6 +1,8 @@
 package org.pahappa.systems.client.converters;
 
+import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,9 +19,9 @@ public class TeamGoalConverter implements Converter {
         }
         
         try {
-            // For now, return the string value. In a real implementation, you might want to look up the goal by ID
-            // This is a simplified version - you may need to inject a service to do proper lookup
-            return value;
+            // Look up the goal by ID using the service
+            return ApplicationContextProvider.getBean(TeamGoalService.class)
+                    .getObjectById(value);
         } catch (Exception e) {
             return null;
         }
@@ -31,7 +33,7 @@ public class TeamGoalConverter implements Converter {
             return "";
         }
         if (value instanceof TeamGoal) {
-            return ((TeamGoal) value).getName();
+            return ((TeamGoal) value).getId();
         }
         return value.toString();
     }

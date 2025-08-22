@@ -27,6 +27,7 @@
                     <div>
                         <h6 class="m-0">Department Activities</h6>
                         <p class="text-500 m-0">Department Activities Management</p>
+                        <p class="text-400 m-0">Current Department: #{departmentActivitiesView.currentDepartment.name}</p>
                     </div>
                 </div>
             </div>
@@ -105,6 +106,17 @@
                 </div>
             </div>
 
+            <!-- Clear Filters Button -->
+            <div class="p-grid" style="margin-top: 1rem;">
+                <div class="p-col-12">
+                    <p:commandButton value="Clear Filters" 
+                                     icon="fa fa-times"
+                                     styleClass="ui-button-outlined ui-button-secondary"
+                                     actionListener="#{departmentActivitiesView.clearFilters}"
+                                     update="departmentActivitiesTable" />
+                </div>
+            </div>
+
             <!-- Activities List -->
             <div class="card" style="margin-top:1rem">
                 <p:dataTable id="departmentActivitiesTable" var="activity" value="#{departmentActivitiesView.activityModels}"
@@ -121,13 +133,13 @@
                                 <span class="table-header-text">Department activities</span>
                             </div>
                             <div>
-                                <p:commandButton value="Add Activity" process="@this"
+                                <p:commandButton value="Add Department Activity" process="@this"
                                                  icon="fa fa-plus"
                                                  ajax="false"
                                                  styleClass="ui-button-success" immediate="true"
-                                                 actionListener="#{activityFormDialog.show}">
+                                                 actionListener="#{departmentActivityFormDialog.show}">
                                     <f:setPropertyActionListener value="#{null}"
-                                                                 target="#{activityFormDialog.model}" />
+                                                                 target="#{departmentActivityFormDialog.model}" />
                                     <p:ajax event="dialogReturn"
                                             listener="#{departmentActivitiesView.reloadFilterReset}"
                                             update="departmentActivitiesTable" />
@@ -160,8 +172,8 @@
                     <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                         <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
                                          ajax="false"
-                                         actionListener="#{activityFormDialog.show}">
-                            <f:setPropertyActionListener value="#{activity}" target="#{activityFormDialog.model}" />
+                                         actionListener="#{departmentActivityFormDialog.show}">
+                            <f:setPropertyActionListener value="#{activity}" target="#{departmentActivityFormDialog.model}" />
                             <p:ajax event="dialogReturn" update="departmentActivitiesTable" />
                         </p:commandButton>
                         <p:commandButton icon="fa fa-trash" title="Delete"
@@ -177,8 +189,8 @@
             </div>
         </h:form>
 
-        <!-- Activity Form Dialog -->
-        <ui:include src="ActivityFormDialog.xhtml" />
+        <!-- Department Activity Form Dialog -->
+        <ui:include src="DepartmentActivityFormDialog.xhtml" />
 
 
     </ui:define>

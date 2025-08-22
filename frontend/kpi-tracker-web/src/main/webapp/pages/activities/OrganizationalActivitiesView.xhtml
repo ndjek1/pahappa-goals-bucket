@@ -7,7 +7,7 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <title>Team Activities</title>
+        <title>Organizational Activities</title>
         <style>
             .capitalized {
                 text-transform: capitalize;
@@ -16,15 +16,17 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:form id="teamActivitiesForm" enctype="multipart/form-data">
-            <!-- Team Header -->
+        <h:form id="organizationalActivitiesForm" enctype="multipart/form-data">
+            <div class="card">
+                <h5>Organizational Activities</h5>
+            
+            <!-- Organizational Header -->
             <div class="surface-card shadow-2 p-4 border-round mb-4">
                 <div class="flex align-items-center">
-                    <i class="pi pi-users text-green-500 text-2xl mr-3"></i>
+                    <i class="pi pi-globe text-green-500 text-2xl mr-3"></i>
                     <div>
-                        <h6 class="m-0">Team Activities</h6>
-                        <p class="text-500 m-0">Team Activities Management</p>
-                        <p class="text-400 m-0">Current Team: #{teamActivitiesView.currentTeam.name}</p>
+                        <h6 class="m-0">Organizational Activities</h6>
+                        <p class="text-500 m-0">Organization-wide Activities Management</p>
                     </div>
                 </div>
             </div>
@@ -34,27 +36,28 @@
                 <div class="p-col-12 p-md-3">
                     <div class="card">
                         <h:outputText value="Total Activities" />
-                        <h2 class="p-text-right">#{teamActivitiesView.activityModels != null ? teamActivitiesView.activityModels.size() : 0}</h2>
+                        <h2 class="p-text-right">#{organizationalActivitiesView.activityModels.size()}</h2>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-3">
                     <div class="card">
                         <h:outputText value="Active Activities" />
-                        <h2 class="p-text-right">#{teamActivitiesView.activityModels != null ? teamActivitiesView.activityModels.stream().filter(a -> a.status == 'IN_PROGRESS').count() : 0}</h2>
+                        <h2 class="p-text-right">#{organizationalActivitiesView.activityModels.stream().filter(a -> a.status == 'IN_PROGRESS').count()}</h2>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-3">
                     <div class="card">
                         <h:outputText value="Pending Activities" />
-                        <h2 class="p-text-right">#{teamActivitiesView.activityModels != null ? teamActivitiesView.activityModels.stream().filter(a -> a.status == 'PENDING').count() : 0}</h2>
+                        <h2 class="p-text-right">#{organizationalActivitiesView.activityModels.stream().filter(a -> a.status == 'PENDING').count()}</h2>
                     </div>
                 </div>
                 <div class="p-col-12 p-md-3">
                     <div class="card">
                         <h:outputText value="Completed Activities" />
-                        <h2 class="p-text-right">#{teamActivitiesView.activityModels != null ? teamActivitiesView.activityModels.stream().filter(a -> a.status == 'COMPLETED').count() : 0}</h2>
+                        <h2 class="p-text-right">#{organizationalActivitiesView.activityModels.stream().filter(a -> a.status == 'COMPLETED').count()}</h2>
                     </div>
                 </div>
+            </div>
             </div>
 
             <!-- Search and Filter Section -->
@@ -64,39 +67,39 @@
                 <div class="p-grid">
                     <div class="p-col-12 p-md-6 p-lg-2">
                         <p:inputText id="searchTerm" required="false"
-                                     value="#{teamActivitiesView.searchTerm}" placeholder="Search activities ..."
-                                     onkeyup="#{teamActivitiesView.reloadFilterReset()}">
+                                     value="#{organizationalActivitiesView.searchTerm}" placeholder="Search activities ..."
+                                     onkeyup="#{organizationalActivitiesView.reloadFilterReset()}">
                             <p:ajax event="keyup"
-                                    update="teamActivitiesTable"
-                                    listener="#{teamActivitiesView.reloadFilterReset()}" />
+                                    update="organizationalActivitiesTable"
+                                    listener="#{organizationalActivitiesView.reloadFilterReset()}" />
                         </p:inputText>
                     </div>
 
                     <div class="p-col-12 p-md-6 p-lg-3">
                         <p:selectOneMenu id="statusFilter" label="Filter by Status"
-                                         title="Filter by Status" value="#{teamActivitiesView.selectedStatus}"
+                                         title="Filter by Status" value="#{organizationalActivitiesView.selectedStatus}"
                                          style="height: 100%" converter="activityStatusConverter">
                             <f:selectItem itemLabel="All Statuses" value="#{null}" />
-                            <f:selectItems value="#{teamActivitiesView.activityStatusList}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
-                            <p:ajax event="change" update="teamActivitiesTable"
-                                    listener="#{teamActivitiesView.reloadFilterReset()}" />
+                            <f:selectItems value="#{organizationalActivitiesView.activityStatusList}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
+                            <p:ajax event="change" update="organizationalActivitiesTable"
+                                    listener="#{organizationalActivitiesView.reloadFilterReset()}" />
                         </p:selectOneMenu>
                     </div>
                     <div class="p-col-12 p-md-6 p-lg-3">
                         <p:calendar placeholder="From Date Created"
-                                    value="#{teamActivitiesView.createdFrom}" inputStyleClass="Wid100"
+                                    value="#{organizationalActivitiesView.createdFrom}" inputStyleClass="Wid100"
                                     navigator="true" pattern="dd MMM, yyyy" />
                     </div>
                     <div class="p-col-12 p-md-6 p-lg-3">
                         <p:calendar placeholder="To Date Created"
-                                    value="#{teamActivitiesView.createdTo}" inputStyleClass="Wid100"
+                                    value="#{organizationalActivitiesView.createdTo}" inputStyleClass="Wid100"
                                     navigator="true" pattern="dd MMM, yyyy" />
                     </div>
                     <div class="p-col-12 p-md-6 p-lg-1">
                         <p:commandButton icon="fa fa-search"
                                          styleClass="ui-button-success" id="searchBtn"
-                                         style="margin-right: 18px" update="teamActivitiesTable"
-                                         actionListener="#{teamActivitiesView.reloadFilterReset()}">
+                                         style="margin-right: 18px" update="organizationalActivitiesTable"
+                                         actionListener="#{organizationalActivitiesView.reloadFilterReset()}">
                         </p:commandButton>
                     </div>
                 </div>
@@ -108,37 +111,37 @@
                     <p:commandButton value="Clear Filters" 
                                      icon="fa fa-times"
                                      styleClass="ui-button-outlined ui-button-secondary"
-                                     actionListener="#{teamActivitiesView.clearFilters}"
-                                     update="teamActivitiesTable" />
+                                     actionListener="#{organizationalActivitiesView.clearFilters}"
+                                     update="organizationalActivitiesTable" />
                 </div>
             </div>
 
             <!-- Activities List -->
             <div class="card" style="margin-top:1rem">
-                <p:dataTable id="teamActivitiesTable" var="activity" value="#{teamActivitiesView.activityModels != null ? teamActivitiesView.activityModels : []}"
-                             widgetVar="teamActivitiesTable"
+                <p:dataTable id="organizationalActivitiesTable" var="activity" value="#{organizationalActivitiesView.activityModels}"
+                             widgetVar="organizationalActivitiesTable"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              paginator="true" lazy="true" rows="20"
-                             emptyMessage="#{teamActivitiesView.dataEmptyMessage}"
+                             emptyMessage="#{organizationalActivitiesView.dataEmptyMessage}"
                              paginatorPosition="bottom" paginatorAlwaysVisible="false"
                              rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
 
                     <f:facet name="header">
                         <div class="p-d-flex p-jc-between">
                             <div>
-                                <span class="table-header-text">Team activities</span>
+                                <span class="table-header-text">Organizational Activities</span>
                             </div>
                             <div>
-                                <p:commandButton value="Add Team Activity" process="@this"
+                                <p:commandButton value="Add Organizational Activity" process="@this"
                                                  icon="fa fa-plus"
                                                  ajax="false"
                                                  styleClass="ui-button-success" immediate="true"
-                                                 actionListener="#{teamActivityFormDialog.show}">
+                                                 actionListener="#{organizationalActivityFormDialog.show}">
                                     <f:setPropertyActionListener value="#{null}"
-                                                                 target="#{teamActivityFormDialog.model}" />
+                                                                 target="#{organizationalActivityFormDialog.model}" />
                                     <p:ajax event="dialogReturn"
-                                            listener="#{teamActivitiesView.reloadFilterReset}"
-                                            update="teamActivitiesTable" />
+                                            listener="#{organizationalActivitiesView.reloadFilterReset}"
+                                            update="organizationalActivitiesTable" />
                                 </p:commandButton>
                             </div>
                         </div>
@@ -159,6 +162,9 @@
                     <p:column headerText="Assigned User">
                         <h:outputText value="#{activity.user != null ? activity.user.fullName : 'N/A'}" />
                     </p:column>
+                    <p:column headerText="Organization Goal">
+                        <h:outputText value="#{activity.organizationGoal != null ? activity.organizationGoal.name : 'N/A'}" />
+                    </p:column>
                     <p:column headerText="Created Date">
                         <h:outputText value="#{activity.createdDate}">
                             <f:convertDateTime pattern="dd MMM, yyyy" />
@@ -168,14 +174,14 @@
                     <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                         <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
                                          ajax="false"
-                                         actionListener="#{teamActivityFormDialog.show}">
-                            <f:setPropertyActionListener value="#{activity}" target="#{teamActivityFormDialog.model}" />
-                            <p:ajax event="dialogReturn" update="teamActivitiesTable" />
+                                         actionListener="#{organizationalActivityFormDialog.show}">
+                            <f:setPropertyActionListener value="#{activity}" target="#{organizationalActivityFormDialog.model}" />
+                            <p:ajax event="dialogReturn" update="organizationalActivitiesTable" />
                         </p:commandButton>
                         <p:commandButton icon="fa fa-trash" title="Delete"
                                          styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
-                                         actionListener="#{teamActivitiesView.deleteActivity(activity)}"
-                                         update="teamActivitiesTable">
+                                         actionListener="#{organizationalActivitiesView.deleteActivity(activity)}"
+                                         update="organizationalActivitiesTable">
                             <p:confirm header="Confirmation"
                                        message="You are about to delete an activity. Do you wish to continue?"
                                        icon="ui-icon-alert" />
@@ -185,9 +191,8 @@
             </div>
         </h:form>
 
-        <!-- Team Activity Form Dialog -->
-        <ui:include src="TeamActivityFormDialog.xhtml" />
-
+        <!-- Organizational Activity Form Dialog -->
+        <ui:include src="OrganizationalActivityFormDialog.xhtml" />
 
     </ui:define>
 </ui:composition>
