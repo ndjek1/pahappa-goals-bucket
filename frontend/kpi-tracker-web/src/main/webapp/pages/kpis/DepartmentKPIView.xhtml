@@ -102,10 +102,8 @@
                         </div>
                     </div>
 
-                    <!-- Department KPIs Data Table -->
+                                        <!-- Department KPIs Data Table -->
                     <div class="card" style="margin-top:1rem">
-                        <h:outputText value="Department Key Performance Indicators" />
-                        
                         <p:dataTable id="departmentKPIsTable" var="kpi" value="#{departmentKPIView.dataModels}"
                                      widgetVar="departmentKPIsTable"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
@@ -134,9 +132,9 @@
                                 </div>
                             </f:facet>
 
-                                <p:column width="30" headerText="No.">
-                                    <h:outputText value="#{row + 1}" />
-                                </p:column>
+                            <p:column width="30" headerText="No.">
+                                <h:outputText value="#{row + 1}" />
+                            </p:column>
 
                             <!-- KPI Name Column -->
                             <p:column headerText="KPI Name">
@@ -155,7 +153,7 @@
 
                             <!-- Current Value Column -->
                             <p:column headerText="Current">
-                                <h:outputText value="#{kpi.currentValue}" />
+                                <h:outputText value="#{kpi.currentValue != null ? kpi.currentValue : '0'}" />
                             </p:column>
 
                             <!-- Accomplishment Percentage Column -->
@@ -188,15 +186,23 @@
                             </p:column>
 
                             <!-- Actions Column -->
-                            <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
-                                                            <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
-                                             ajax="false"
-                                             actionListener="#{departmentKpiForm.show}">
-                                <f:setPropertyActionListener value="#{kpi}" target="#{departmentKpiForm.model}" />
-                                <p:ajax event="dialogReturn" update="departmentKPIsTable" />
-                            </p:commandButton>
+                            <p:column headerText="Action" width="160" exportable="false" style="text-align:center">
+                                <p:commandButton icon="fa fa-eye" styleClass="ui-button-info"
+                                                 ajax="false"
+                                                 action="#{departmentKPIDetails.prepareForViewing(kpi.id)}"
+                                                 title="View Details"
+                                                 style="margin-right: 5px;" />
+                                
+                                <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
+                                                 ajax="false"
+                                                 title="Edit KPI"
+                                                 actionListener="#{departmentKpiForm.show}">
+                                    <f:setPropertyActionListener value="#{kpi}" target="#{departmentKpiForm.model}" />
+                                    <p:ajax event="dialogReturn" update="departmentKPIsTable" />
+                                </p:commandButton>
+                                
                                 <p:commandButton icon="fa fa-trash" title="Delete"
-                                                 styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
+                                                 styleClass="ui-button-danger" style="margin-left: 5px;" ajax="false"
                                                  onclick="PF('confirmDelete').show()">
                                     <f:setPropertyActionListener target="#{departmentKPIView.selectedKPI}" value="#{kpi}" />
                                 </p:commandButton>

@@ -1,0 +1,363 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+    
+    <ui:define name="head">
+        <!-- Chart.js for KPI Performance Trend Chart -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .progress-bar-container {
+                background-color: #e9ecef;
+                border-radius: 10px;
+                height: 20px;
+                position: relative;
+                overflow: hidden;
+            }
+            .progress-fill {
+                background-color: #28a745;
+                height: 100%;
+                border-radius: 10px;
+                transition: width 0.3s ease;
+            }
+            .progress-indicator {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 20px;
+                background-color: #007bff;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+            .chart-container {
+                height: 300px;
+                position: relative;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <h:form>
+            <h:panelGroup rendered="#{not empty departmentKPIDetails.selectedKPI}">
+                <!-- Back arrow + Title -->
+                <div class="p-d-flex p-ai-center p-gap-2">
+                    <p:commandButton icon="pi pi-arrow-left"
+                                     styleClass="ui-button-text ui-button-outlined p-mr-3"
+                                     action="#{departmentKPIDetails.backToKPIs}"
+                                     immediate="true"
+                    />
+                    <h2>Department KPI Details</h2>
+                </div>
+                
+                <div class="p-grid">
+                    <!-- Left section: KPI Details -->
+                    <div class="p-col-12 p-md-8">
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h3>#{departmentKPIDetails.selectedKPI.name}</h3>
+                            <div class="p-d-flex p-flex-column">
+                                <span style="margin: 5px 0"><b>Goal:</b> #{departmentKPIDetails.selectedKPI.departmentGoal != null ? departmentKPIDetails.selectedKPI.departmentGoal.name : 'N/A'}</span>
+                                <span style="margin: 5px 0"><b>Target Value:</b> #{departmentKPIDetails.selectedKPI.targetValue}</span>
+                                <span style="margin: 5px 0"><b>Current Value:</b> #{departmentKPIDetails.selectedKPI.currentValue != null ? departmentKPIDetails.selectedKPI.currentValue : '0'}</span>
+                                <span style="margin: 5px 0"><b>Measurement Unit:</b> #{departmentKPIDetails.selectedKPI.measurementUnit != null ? departmentKPIDetails.selectedKPI.measurementUnit.displayName : 'N/A'}</span>
+                                <span style="margin: 5px 0"><b>Frequency:</b> #{departmentKPIDetails.selectedKPI.frequency != null ? departmentKPIDetails.selectedKPI.frequency.displayName : 'N/A'}</span>
+                                <span style="margin: 5px 0"><b>Start Date:</b>
+                                    <h:outputText value="#{departmentKPIDetails.selectedKPI.startDate}">
+                                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                                    </h:outputText>
+                                </span>
+                            </div>
+                            <hr/>
+                            <p><b>Description:</b> #{departmentKPIDetails.selectedKPI.description != null ? departmentKPIDetails.selectedKPI.description : 'No description available.'}</p>
+                        </div>
+                        
+                        <!-- Progress Section -->
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h4>Progress</h4>
+                            <div class="p-d-flex p-ai-center p-mb-3">
+                                <div class="p-flex-1 p-mr-3">
+                                    <div class="progress-bar-container" style="background-color: #e9ecef; border-radius: 10px; height: 20px; position: relative; overflow: hidden;">
+                                        <div class="progress-fill" style="background-color: #28a745; height: 100%; width: #{departmentKPIDetails.currentAccomplishmentPercentage}%; border-radius: 10px; transition: width 0.3s ease;"></div>
+                                        <div class="progress-indicator" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background-color: #007bff; border-radius: 50%; margin-right: 10px;"></div>
+                                    </div>
+                                </div>
+                                <div class="p-text-bold" style="color: #007bff; font-size: 1.2rem; min-width: 60px;">
+                                    #{departmentKPIDetails.currentAccomplishmentPercentage}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- KPI Performance Trend Chart -->
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h4>KPI Performance Trend (Monthly)</h4>
+                            <div class="chart-container" style="height: 300px; position: relative;">
+                                <canvas id="kpiTrendChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Update Progress Button -->
+                        <div class="p-card p-p-3 p-mb-3">
+                            <div class="p-d-flex p-jc-end">
+                                <p:commandButton value="Update Progress" 
+                                                 icon="pi pi-plus" 
+                                                 styleClass="ui-button-primary"
+                                                 actionListener="#{departmentKPIDetails.showProgressDialog}"
+                                                 onclick="PF('progressUpdateDialog').show()" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right section: Related Activities -->
+                    <div class="p-col-12 p-md-4">
+                        <div class="p-card p-p-3 p-mb-3">
+                            <h3>Related Activities</h3>
+                            <div class="p-text-center p-p-4" rendered="#{empty departmentKPIDetails.relatedActivities}">
+                                <i class="pi pi-calendar text-4xl text-400 p-mb-3"></i>
+                                <h5 class="text-500">No Related Activities</h5>
+                                <p class="text-400">No activities are currently linked to this KPI.</p>
+                            </div>
+                            <div class="p-d-flex p-flex-column" rendered="#{not empty departmentKPIDetails.relatedActivities}">
+                                <ui:repeat value="#{departmentKPIDetails.relatedActivities}" var="activity">
+                                    <div class="p-card p-p-2 p-mb-2" style="border: 1px solid #dee2e6; border-radius: 8px;">
+                                        <h5 style="margin: 0; margin-bottom: 0.5rem; font-size: 1rem;">#{activity.name}</h5>
+                                        <p style="margin: 0; font-size: 0.9rem; color: #666;">#{activity.description != null ? activity.description : 'No description'}</p>
+                                        <div class="p-d-flex p-jc-between p-ai-center p-mt-2">
+                                            <span style="font-size: 0.8rem; color: #888;">#{activity.status}</span>
+                                            <span style="font-size: 0.8rem; color: #888;">
+                                                <h:outputText value="#{activity.startDate}">
+                                                    <f:convertDateTime pattern="dd MMM"/>
+                                                </h:outputText>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions Section -->
+                <div class="p-grid p-mt-3">
+                    <div class="p-col-12">
+                        <div class="p-card p-p-3">
+                            <h4>Actions</h4>
+                            <div class="p-d-flex p-gap-2">
+                                <p:commandButton value="Edit KPI" 
+                                                 icon="pi pi-pencil" 
+                                                 styleClass="ui-button-primary"
+                                                 actionListener="#{departmentKpiForm.show}"
+                                                 ajax="false">
+                                    <f:setPropertyActionListener value="#{departmentKPIDetails.selectedKPI}" target="#{departmentKpiForm.model}" />
+                                </p:commandButton>
+                                
+                                <p:commandButton value="Delete KPI" 
+                                                 icon="pi pi-trash" 
+                                                 styleClass="ui-button-danger"
+                                                 onclick="PF('confirmDelete').show()">
+                                    <f:setPropertyActionListener target="#{departmentKPIDetails.selectedKPI}" value="#{departmentKPIDetails.selectedKPI}" />
+                                </p:commandButton>
+                                
+                                <p:commandButton value="Add Related Activity" 
+                                                 icon="pi pi-plus" 
+                                                 styleClass="ui-button-success"
+                                                 actionListener="#{departmentActivityFormDialog.show}"
+                                                 ajax="false">
+                                    <f:setPropertyActionListener value="#{null}" target="#{departmentActivityFormDialog.model}" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            
+            <h:panelGroup rendered="#{empty departmentKPIDetails.selectedKPI}">
+                <div class="p-text-center p-p-4">
+                    <i class="pi pi-chart-line text-4xl text-400 p-mb-3"></i>
+                    <h5 class="text-500">No KPI Selected</h5>
+                    <p class="text-400">Please select a KPI to view its details.</p>
+                    <p:commandButton value="Back to KPIs" 
+                                     icon="pi pi-arrow-left" 
+                                     styleClass="ui-button-primary"
+                                     action="#{departmentKPIDetails.backToKPIs}"
+                                     immediate="true" />
+                </div>
+            </h:panelGroup>
+        </h:form>
+        
+        <!-- Chart Initialization Script -->
+        <script type="text/javascript">
+            // Initialize KPI Performance Trend Chart
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeKPITrendChart();
+            });
+            
+            function initializeKPITrendChart() {
+                const ctx = document.getElementById('kpiTrendChart');
+                if (!ctx) return;
+                
+                // Get chart data from the backing bean
+                const chartData = #{departmentKPIDetails.monthlyProgressData != null ? 
+                    '[' + departmentKPIDetails.monthlyProgressData.stream()
+                        .map(mp -> mp.progress.toString())
+                        .collect(java.util.stream.Collectors.joining(',')) + ']' : '[]'};
+                
+                const monthLabels = #{departmentKPIDetails.monthlyProgressData != null ? 
+                    '[' + departmentKPIDetails.monthlyProgressData.stream()
+                        .map(mp -> '"' + mp.monthLabel + '"')
+                        .collect(java.util.stream.Collectors.joining(',')) + ']' : '[]'};
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'KPI Achievement (%)',
+                            data: chartData,
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#007bff',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#007bff',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 60,
+                                max: 95,
+                                ticks: {
+                                    stepSize: 5,
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    drawBorder: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)',
+                                    drawBorder: false
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
+                        },
+                        elements: {
+                            point: {
+                                hoverBackgroundColor: '#0056b3'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Function to refresh chart after progress update
+            function refreshChart() {
+                // Remove existing chart
+                const canvas = document.getElementById('kpiTrendChart');
+                if (canvas) {
+                    const existingChart = Chart.getChart(canvas);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                }
+                
+                // Reinitialize chart
+                setTimeout(function() {
+                    initializeKPITrendChart();
+                }, 100);
+            }
+        </script>
+        
+        <!-- Department KPI Form Dialog -->
+        <ui:include src="DepartmentKPIForm.xhtml" />
+        
+        <!-- Department Activity Form Dialog -->
+        <ui:include src="../activities/DepartmentActivityFormDialog.xhtml" />
+        
+        <!-- Progress Update Dialog -->
+        <p:dialog header="Update Progress" widgetVar="progressUpdateDialog" 
+                   showEffect="fade" hideEffect="fade" 
+                   responsive="true" width="400" modal="true">
+            <h:form id="progressUpdateForm">
+                <div class="p-grid p-fluid">
+                    <div class="p-col-12">
+                        <label for="currentValue">Current Value</label>
+                        <p:inputNumber id="currentValue" 
+                                       value="#{departmentKPIDetails.currentProgressValue}"
+                                       placeholder="Enter current value"
+                                       minValue="0"
+                                       decimalPlaces="2"
+                                       styleClass="p-inputtext p-component" />
+                    </div>
+                    <div class="p-col-12">
+                        <label for="updateDate">Date</label>
+                        <p:inputText id="updateDate" 
+                                     value="#{departmentKPIDetails.progressUpdateDate}"
+                                     readonly="true"
+                                     styleClass="p-inputtext p-component p-disabled"
+                                     style="background-color: #f8f9fa; color: #6c757d;" />
+                        <small class="p-text-muted">Current date (automatically set)</small>
+                    </div>
+                </div>
+                
+                <f:facet name="footer">
+                    <div class="p-d-flex p-jc-between">
+                        <p:commandButton value="Cancel" 
+                                         icon="pi pi-times" 
+                                         styleClass="ui-button-outlined ui-button-secondary"
+                                         onclick="PF('progressUpdateDialog').hide()" />
+                        <p:commandButton value="Save" 
+                                         icon="pi pi-check" 
+                                         styleClass="ui-button-success"
+                                         actionListener="#{departmentKPIDetails.updateProgress}"
+                                         update="@form"
+                                         oncomplete="PF('progressUpdateDialog').hide(); refreshChart();" />
+                    </div>
+                </f:facet>
+            </h:form>
+        </p:dialog>
+
+        <!-- Delete Confirmation Dialog -->
+        <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 
+                         widgetVar="confirmDelete" showEffect="fade" hideEffect="fade" 
+                         responsive="true" width="350">
+            <p:commandButton value="Yes" type="button" styleClass="ui-button-success" 
+                            action="#{departmentKPIDetails.deleteKPI}"
+                            oncomplete="PF('confirmDelete').hide()" />
+            <p:commandButton value="No" type="button" styleClass="p-button-secondary" 
+                            onclick="PF('confirmDelete').hide()" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>
