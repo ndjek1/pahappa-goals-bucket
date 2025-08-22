@@ -11,10 +11,12 @@ import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
+import org.primefaces.PrimeFaces;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -64,8 +66,36 @@ public class KPIForm extends DialogForm<KPI> {
         try {
             validateForm();
             kpisService.saveInstance(super.model);
+            
+            // Show success message
+            UiUtils.showMessageBox("Success", "KPI saved successfully!");
+            
+            // Handle successful save and trigger refresh
+            handleSuccessfulSave();
+            
         } catch (Exception e) {
             throw new OperationFailedException("Failed to save KPI: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Handle successful save and trigger refresh in parent views
+     */
+    private void handleSuccessfulSave() {
+        try {
+            // Hide the dialog
+            hide();
+            
+            // Trigger dialogReturn event for automatic refresh
+            PrimeFaces.current().executeScript("PF('kpiForm').fireEvent('dialogReturn');");
+            
+            // Reset the modal for next use
+            resetModal();
+            
+            System.out.println("KPI saved successfully, dialog closed and refresh triggered");
+        } catch (Exception e) {
+            System.err.println("Error handling successful save: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -116,5 +146,15 @@ public class KPIForm extends DialogForm<KPI> {
      */
     public void refreshData() {
         loadData();
+    }
+    
+    public void show() {
+        // Show the dialog using the DialogForm base class method
+        super.show(null);
+    }
+    
+    public void hide() {
+        // Hide the dialog using the DialogForm base class method
+        super.hide();
     }
 }
