@@ -199,6 +199,12 @@
                                 </p:column>
 
                                 <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
+                                    <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
+                                                     ajax="false"
+                                                     actionListener="#{userFormDialog.show}">
+                                        <f:setPropertyActionListener value="#{model}" target="#{userFormDialog.model}" />
+                                        <p:ajax event="dialogReturn" update="inactiveUsersTable" />
+                                    </p:commandButton>
                                     <p:commandButton icon="fa fa-check" styleClass="ui-button-success"
                                                      ajax="false"
                                                      title="Validate"

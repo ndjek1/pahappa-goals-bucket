@@ -25,16 +25,22 @@
 
             <div class="field col-12 p-m-4">
 
-               <p:inputText value="#{thresholdForm.model.minScore}"
+                <p:outputLabel title="Mininmun score" for="minScore"/>
+               <p:inputText
+                       id="minScore"
+                       value="#{thresholdForm.model.minScore}"
                             required="true"
-                            placeholder="Name"
+                            placeholder="Mininmun score"
+
                             styleClass="p-inputtext-sm w-full"/>
             </div>
 
 
             <div class="field col-12 md:col-6 p-m-4">
+                <p:outputLabel title="Red flag score" for="redFlagScore"/>
 
                <p:inputText value="#{thresholdForm.model.redFlagScore}"
+                            id="redFlagScore"
                             required="true"
                             placeholder="Description"
                             styleClass="p-inputtext-sm w-full"/>

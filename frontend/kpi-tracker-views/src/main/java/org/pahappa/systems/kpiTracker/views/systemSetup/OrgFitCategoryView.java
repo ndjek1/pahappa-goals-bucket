@@ -44,7 +44,7 @@ public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFi
         globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
         reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         reloadFilterReset();
-        loadTotalWeight();
+//        loadTotalWeight();
     }
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
