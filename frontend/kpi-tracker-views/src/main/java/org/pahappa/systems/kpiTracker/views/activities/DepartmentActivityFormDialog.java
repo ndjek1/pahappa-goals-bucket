@@ -6,6 +6,8 @@ import org.pahappa.systems.kpiTracker.core.services.activities.ActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityPriority;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
@@ -37,14 +39,14 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
     private List<DepartmentGoal> departmentGoals;
     private List<ActivityStatus> activityStatuses;
     private List<User> users;
-    private List<String> activityTypes;
-    private List<String> priorities;
+    private List<ActivityType> activityTypes;
+    private List<ActivityPriority> priorities;
     
     private DepartmentGoal selectedDepartmentGoal;
     private User selectedUser;
     private ActivityStatus selectedStatus;
-    private String selectedActivityType;
-    private String selectedPriority;
+    private ActivityType selectedActivityType;
+    private ActivityPriority selectedPriority;
     
     // Add edit field like user dialogs
     private boolean edit;
@@ -83,8 +85,8 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
         }
         
         // Initialize activity types and priorities
-        this.activityTypes = Arrays.asList("Strategic", "Tactical", "Operational", "Project", "Maintenance", "Research");
-        this.priorities = Arrays.asList("Low", "Medium", "High", "Critical");
+        this.activityTypes = Arrays.asList(ActivityType.values());
+        this.priorities = Arrays.asList(ActivityPriority.values());
     }
 
     @Override
@@ -120,8 +122,11 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
             
             // Set activity type and priority if selected
             if (selectedActivityType != null) {
-                // You might want to add an activityType field to the Activity model
-                // For now, we'll store it in a custom field or extend the model
+                model.setActivityType(selectedActivityType);
+            }
+            
+            if (selectedPriority != null) {
+                model.setPriority(selectedPriority);
             }
             
             activityService.saveInstance(model);
@@ -156,6 +161,8 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
             }
             selectedUser = model.getUser();
             selectedStatus = model.getStatus();
+            selectedActivityType = model.getActivityType();
+            selectedPriority = model.getPriority();
         } else {
             this.edit = false;
         }

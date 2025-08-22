@@ -111,6 +111,13 @@ The activities management system has been restructured to provide clear separati
 
 ## Navigation Flow
 
+### **Sidebar Navigation**
+- **All Activities** → `ActivitiesView` (Main Hub) - Available to `ROLE_ADMINISTRATOR`
+- **Organizational Activities** → `OrganizationalActivitiesView` - Available to `ROLE_ADMINISTRATOR`
+- **Department Activities** → `DepartmentActivitiesView` - Available to `DEPT_LEAD`
+- **Team Activities** → `TeamActivitiesView` - Available to `TEAM_LEAD`
+
+### **Card Navigation (Main Hub)**
 ```
 ActivitiesView (Main Hub)
 ├── Organizational Activities → OrganizationalActivitiesView
@@ -141,6 +148,22 @@ ActivitiesView (Main Hub)
 - Clear filters functionality added to all views
 - Consistent styling and layout across all views
 - **Enhanced User Experience**: Users see only relevant goal options for each activity type
+
+### **Backend Model Enhancement**
+- **ActivityPriority Enum**: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` with proper display names
+- **ActivityType Enum**: `STRATEGIC`, `TACTICAL`, `OPERATIONAL`, `PROJECT`, `MAINTENANCE`, `RESEARCH` with proper display names
+- **Database Fields**: Added `priority` and `activity_type` columns to activities table
+- **Default Values**: New activities default to `MEDIUM` priority and `OPERATIONAL` type
+- **Validation**: Proper enum validation and database constraints
+
+### **Sidebar Integration**
+- **Organizational Activities** added to sidebar under "Manage Activities" submenu
+- **Role-based Access Control**: 
+  - `ROLE_ADMINISTRATOR`: All Activities, Organizational Activities
+  - `DEPT_LEAD`: Department Activities
+  - `TEAM_LEAD`: Team Activities
+- **ViewPath Annotations**: All activity views now have proper navigation paths
+- **Consistent Navigation**: Sidebar and card navigation provide multiple access points
 
 ## Future Enhancements
 
