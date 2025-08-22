@@ -23,7 +23,10 @@
                         <p:menuitem id="orgGoals" value="Organization Goals"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/goals/OrganizationGoalsView" />
-
+                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
+                                    outcome="/pages/kpis/OrganizationalKPIView" />
+                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
+                                    outcome="/pages/activities/OrganizationalActivitiesView" />
                     </p:submenu>
 
                     <p:submenu id="kpis" label="Manage KPIs"
@@ -33,15 +36,6 @@
                         <p:menuitem id="allKPIs" value="All KPIs"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/kpis/KPIView" />
-                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
-                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    outcome="/pages/kpis/OrganizationalKPIView" />
-                        <p:menuitem id="departmentKPIs" value="Department KPIs"
-                                    rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
-                                    outcome="/pages/kpis/DepartmentKPIView" />
-                        <p:menuitem id="teamKPIs" value="Team KPIs"
-                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
-                                    outcome="/pages/kpis/TeamKPIView" />
                     </p:submenu>
 
                     <p:submenu id="activities" label="Manage Activities"
@@ -51,15 +45,6 @@
                         <p:menuitem id="allActivities" value="All Activities"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/activities/ActivitiesView" />
-                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
-                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    outcome="/pages/activities/OrganizationalActivitiesView" />
-                        <p:menuitem id="departmentActivities" value="Department Activities"
-                                    rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
-                                    outcome="/pages/activities/DepartmentActivitiesView" />
-                        <p:menuitem id="teamActivities" value="Team Activities"
-                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
-                                    outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
                     <p:submenu id="department" label="Manage Department"
@@ -69,6 +54,10 @@
                                icon="fa fa-building">
                         <p:menuitem id="departmentGoals" value="Goals"
                                     outcome="/pages/goals/DepartmentGoalView" />
+                        <p:menuitem id="departmentKPIs" value="Department KPIs"
+                                    outcome="/pages/kpis/DepartmentKPIView" />
+                        <p:menuitem id="departmentActivities" value="Department Activities"
+                                    outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
                     <p:submenu id="team" label="Manage Team"
                                rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
@@ -78,6 +67,10 @@
                         <p:menuitem id="teamGoals" value="Team Goals"
                                     rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                     outcome="/pages/goals/TeamGoalView" />
+                        <p:menuitem id="teamKPIs" value="Team KPIs"
+                                    outcome="/pages/kpis/TeamKPIView" />
+                        <p:menuitem id="teamActivities" value="Team Activities"
+                                    outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
 
