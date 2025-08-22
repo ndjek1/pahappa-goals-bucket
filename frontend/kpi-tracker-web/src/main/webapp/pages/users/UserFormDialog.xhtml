@@ -12,7 +12,10 @@
         </style>
     </ui:define>
     <ui:define name="content">
-        <title>Add user</title>
+        <title>
+            #{userFormDialog.edit ? 'Update user' : 'Add user'}
+        </title>
+
         <h:form id="userFormDialog" style="height: 450px" styleClass="card">
             <div class="p-grid ui-fluid" style="display:flex">
                 <div class="ui-col-12 ui-md-6">
@@ -92,14 +95,14 @@
                 <div class="ui-col-12 ui-md-6">
                     <h5>Password</h5>
                     <div class="ui-inputgroup">
-                        <p:password id="pwd1" value="#{userFormDialog.model.clearTextPassword}" match="pwd2" />
+                        <p:password id="pwd1" value="#{userFormDialog.model.clearTextPassword}" disabled="#{userFormDialog.edit}" match="pwd2" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
                     <h5>Confirm Password</h5>
                     <div class="ui-inputgroup">
-                        <p:password id="pwd2" value="#{userFormDialog.model.clearTextPassword}"  />
+                        <p:password id="pwd2" value="#{userFormDialog.model.clearTextPassword}" disabled="#{userFormDialog.edit}" />
                     </div>
                 </div>
                 <div class="ui-col-12 ui-md-12" style="margin-top: 60px; align-self: flex-end !important;">

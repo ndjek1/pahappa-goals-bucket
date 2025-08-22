@@ -15,7 +15,7 @@
 
                 <p:selectOneMenu id="reviewCycle" value="#{globalWeightsForm.model.reviewCycle}" converter="reviewCycleConverter" >
                     <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
-                    <f:selectItems value="#{globalWeightsForm.reviewCycleList}" var="review"  itemLabel="#{review.startDate} #{review.endDate}" itemValue="#{review}"/>
+                    <f:selectItems value="#{globalWeightsForm.reviewCycleList}" var="review"  itemLabel="#{review.title}" itemValue="#{review}"/>
                 </p:selectOneMenu>
             </div>
 

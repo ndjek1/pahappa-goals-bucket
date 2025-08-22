@@ -86,6 +86,7 @@ public class UserFormDialog extends DialogForm<User> {
         super.resetModal();
         super.model = new User();
         setEdit(false);
+        loadDepartments();
     }
 
     @Override
@@ -94,6 +95,7 @@ public class UserFormDialog extends DialogForm<User> {
         if(super.model != null)
             setEdit(true);
         this.userRoles = new HashSet<>(userService.getRoles(super.model, 0, 0));
+        loadDepartments();
     }
 
     public void activateSelectedUser(User user) throws ValidationFailedException {
