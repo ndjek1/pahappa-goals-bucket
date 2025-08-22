@@ -43,13 +43,12 @@
                         <p:inputText value="#{userFormDialog.model.emailAddress}" />
                     </div>
                 </div>
-
                 <div class="ui-col-12 ui-md-6">
                     <h5>Department</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{userFormDialog.selectedDepartment}"
                                          converter="departmentConverter" filter="true"
-                                         required="true" effect="fold">
+                                        effect="fold">
                             <f:selectItem itemLabel="Select department" itemValue="" />
                             <f:selectItems value="#{userFormDialog.departments}" var="dept" itemLabel="#{dept.departmentName}" itemValue="#{dept}"/>
                         </p:selectOneMenu>
