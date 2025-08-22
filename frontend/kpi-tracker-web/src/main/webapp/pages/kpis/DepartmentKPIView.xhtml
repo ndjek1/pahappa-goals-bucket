@@ -120,12 +120,12 @@
                                         <span class="table-header-text">Department Key Performance Indicators</span>
                                     </div>
                                     <div>
-                                        <p:commandButton value="Add KPI" process="@this"
+                                        <p:commandButton value="Add Department KPI" process="@this"
                                                          icon="fa fa-plus"
                                                          ajax="false"
                                                          styleClass="ui-button-success" immediate="true"
-                                                         actionListener="#{kpiForm.show}">
-                                            <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                                         actionListener="#{departmentKpiForm.show}">
+                                            <f:setPropertyActionListener value="#{null}" target="#{departmentKpiForm.model}" />
                                             <p:ajax event="dialogReturn"
                                                     listener="#{departmentKPIView.reloadFilterReset}"
                                                     update="departmentKPIsTable" />
@@ -191,8 +191,8 @@
                             <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                                                             <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
                                              ajax="false"
-                                             actionListener="#{kpiForm.show}">
-                                <f:setPropertyActionListener value="#{kpi}" target="#{kpiForm.model}" />
+                                             actionListener="#{departmentKpiForm.show}">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{departmentKpiForm.model}" />
                                 <p:ajax event="dialogReturn" update="departmentKPIsTable" />
                             </p:commandButton>
                                 <p:commandButton icon="fa fa-trash" title="Delete"
@@ -207,8 +207,8 @@
             </div>
         </div>
 
-        <!-- KPI Form Dialog -->
-        <ui:include src="KPIForm.xhtml" />
+        <!-- Department KPI Form Dialog -->
+        <ui:include src="DepartmentKPIForm.xhtml" />
 
         <!-- Delete Confirmation Dialog -->
         <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 

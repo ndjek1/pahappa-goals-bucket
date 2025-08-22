@@ -14,25 +14,25 @@
     </ui:define>
 
     <ui:define name="content">
-        <title>Add Organizational KPI</title>
-        <h:form id="organizationalKpiForm" style="height: 600px" styleClass="card">
+        <title>Add Department KPI</title>
+        <h:form id="departmentKpiForm" style="height: 600px" styleClass="card">
             <div class="p-grid ui-fluid" style="display:flex">
                 
                 <div class="ui-col-12 ui-md-6">
                     <h5>KPI Name *</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText value="#{organizationalKpiForm.model.name}" required="true" styleClass="ui-fluid" />
+                        <p:inputText value="#{departmentKpiForm.model.name}" required="true" styleClass="ui-fluid" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Organization Goal *</h5>
+                    <h5>Department Goal *</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{organizationalKpiForm.selectedOrganizationGoal}"
-                                         converter="organizationGoalConverter" filter="true"
+                        <p:selectOneMenu value="#{departmentKpiForm.selectedDepartmentGoal}"
+                                         converter="departmentGoalConverter" filter="true"
                                          effect="fold" required="true">
-                            <f:selectItem itemLabel="Select organization goal" itemValue="" />
-                            <f:selectItems value="#{organizationalKpiForm.organizationGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
+                            <f:selectItem itemLabel="Select department goal" itemValue="" />
+                            <f:selectItems value="#{departmentKpiForm.departmentGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -40,10 +40,10 @@
                 <div class="ui-col-12 ui-md-6">
                     <h5>Measurement Unit *</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{organizationalKpiForm.model.measurementUnit}"
+                        <p:selectOneMenu value="#{departmentKpiForm.model.measurementUnit}"
                                          converter="measurementUnitConverter" effect="fold" required="true">
                             <f:selectItem itemLabel="Select measurement unit" itemValue="" />
-                            <f:selectItems value="#{organizationalKpiForm.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                            <f:selectItems value="#{departmentKpiForm.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -51,10 +51,10 @@
                 <div class="ui-col-12 ui-md-6">
                     <h5>Frequency *</h5>
                     <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{organizationalKpiForm.model.frequency}"
+                        <p:selectOneMenu value="#{departmentKpiForm.model.frequency}"
                                          converter="frequencyConverter" effect="fold" required="true">
                             <f:selectItem itemLabel="Select frequency" itemValue="" />
-                            <f:selectItems value="#{organizationalKpiForm.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
+                            <f:selectItems value="#{departmentKpiForm.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -63,21 +63,21 @@
                 <div class="ui-col-12 ui-md-4">
                     <h5>Target Value *</h5>
                     <div class="ui-inputgroup">
-                        <p:inputNumber value="#{organizationalKpiForm.model.targetValue}" required="true" styleClass="ui-fluid" />
+                        <p:inputNumber value="#{departmentKpiForm.model.targetValue}" required="true" minValue="0" decimalPlaces="2" styleClass="ui-fluid" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Current Value</h5>
                     <div class="ui-inputgroup">
-                        <p:inputNumber value="#{organizationalKpiForm.model.currentValue}" styleClass="ui-fluid" />
+                        <p:inputNumber value="#{departmentKpiForm.model.currentValue}" minValue="0" decimalPlaces="2" styleClass="ui-fluid" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-4">
                     <h5>Accomplishment %</h5>
                     <div class="ui-inputgroup">
-                        <p:inputNumber value="#{organizationalKpiForm.model.accomplishmentPercentage}" 
+                        <p:inputNumber value="#{departmentKpiForm.model.accomplishmentPercentage}" 
                                        minValue="0" maxValue="100" styleClass="ui-fluid" />
                     </div>
                 </div>
@@ -85,14 +85,14 @@
                 <div class="ui-col-12 ui-md-6">
                     <h5>Start Date *</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{organizationalKpiForm.model.startDate}" showTime="false" pattern="MM/dd/yyyy" required="true" />
+                        <p:calendar value="#{departmentKpiForm.model.startDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
                     <h5>End Date *</h5>
                     <div class="ui-inputgroup">
-                        <p:calendar value="#{organizationalKpiForm.model.endDate}" showTime="false" pattern="MM/dd/yyyy" required="true" />
+                        <p:calendar value="#{departmentKpiForm.model.endDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
                     </div>
                 </div>
 
@@ -102,14 +102,14 @@
                             <p:commandButton value="Cancel" 
                                              validateClient="false"
                                              process="@this"
-                                             action="#{organizationalKpiForm.hide}"
+                                             action="#{departmentKpiForm.hide}"
                                              styleClass="ui-button-outlined ui-button-help"
                                              style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: left;" />
                         </div>
                         <div class="p-col-2">
                             <p:commandButton value="Save" 
                                              process="@form"
-                                             actionListener="#{organizationalKpiForm.save}"
+                                             actionListener="#{departmentKpiForm.save}"
                                              update="@form" validateClient="true"
                                              style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: right;" />
                         </div>
