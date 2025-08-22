@@ -71,9 +71,9 @@
                     <h5>Activity Type</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{organizationalActivityFormDialog.selectedActivityType}"
-                                         effect="fold">
+                                         effect="fold" converter="activityTypeConverter">
                             <f:selectItem itemLabel="Select activity type" itemValue="" />
-                            <f:selectItems value="#{organizationalActivityFormDialog.activityTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
+                            <f:selectItems value="#{organizationalActivityFormDialog.activityTypes}" var="type" itemLabel="#{type.displayName}" itemValue="#{type}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -97,9 +97,9 @@
                     <h5>Priority</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu value="#{organizationalActivityFormDialog.selectedPriority}"
-                                         effect="fold">
+                                         effect="fold" converter="activityPriorityConverter">
                             <f:selectItem itemLabel="Select priority" itemValue="" />
-                            <f:selectItems value="#{organizationalActivityFormDialog.priorities}" var="priority" itemLabel="#{priority}" itemValue="#{priority}"/>
+                            <f:selectItems value="#{organizationalActivityFormDialog.priorities}" var="priority" itemLabel="#{priority.displayName}" itemValue="#{priority}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>

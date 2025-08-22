@@ -48,6 +48,9 @@
                         <p:menuitem id="allActivities" value="All Activities"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/activities/ActivitiesView" />
+                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
+                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                                    outcome="/pages/activities/OrganizationalActivitiesView" />
                         <p:menuitem id="departmentActivities" value="Department Activities"
                                     rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
                                     outcome="/pages/activities/DepartmentActivitiesView" />

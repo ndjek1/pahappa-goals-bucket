@@ -10,7 +10,9 @@ import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
+import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.sers.webutils.client.views.presenters.ViewPath;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
@@ -29,6 +31,7 @@ import java.util.List;
 @Getter
 @Setter
 @SessionScoped
+@ViewPath(path = HyperLinks.TEAM_ACTIVITIES_VIEW)
 public class TeamActivitiesView implements Serializable {
 
     private static final long serialVersionUID = 1L;

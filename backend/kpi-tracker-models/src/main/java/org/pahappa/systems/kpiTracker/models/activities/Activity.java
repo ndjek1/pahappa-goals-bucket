@@ -4,6 +4,8 @@ import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityPriority;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
 import org.sers.webutils.model.BaseEntity;
 import org.sers.webutils.model.security.User;
 
@@ -17,6 +19,8 @@ public class Activity extends BaseEntity {
     private String title;
     private String description;
     private ActivityStatus status;
+    private ActivityPriority priority;
+    private ActivityType activityType;
     private Date plannedStartDate;
     private Date plannedEndDate;
     private Date actualStartDate;
@@ -45,6 +49,8 @@ public class Activity extends BaseEntity {
     public Activity() {
         super();
         this.status = ActivityStatus.PENDING;
+        this.priority = ActivityPriority.MEDIUM;
+        this.activityType = ActivityType.OPERATIONAL;
         this.createdDate = new Date();
     }
 
@@ -75,6 +81,26 @@ public class Activity extends BaseEntity {
 
     public void setStatus(ActivityStatus status) {
         this.status = status;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority")
+    public ActivityPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(ActivityPriority priority) {
+        this.priority = priority;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "activity_type")
+    public ActivityType getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
     }
 
     @Column(name = "planned_start_date")
@@ -203,6 +229,8 @@ public class Activity extends BaseEntity {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", status=" + status +
+                ", priority=" + priority +
+                ", activityType=" + activityType +
                 ", user=" + (user != null ? user.getUsername() : "N/A") +
                 '}';
     }
