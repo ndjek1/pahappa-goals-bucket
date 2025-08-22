@@ -33,6 +33,9 @@
                         <p:menuitem id="allKPIs" value="All KPIs"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/kpis/KPIView" />
+                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
+                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                                    outcome="/pages/kpis/OrganizationalKPIView" />
                         <p:menuitem id="departmentKPIs" value="Department KPIs"
                                     rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
                                     outcome="/pages/kpis/DepartmentKPIView" />

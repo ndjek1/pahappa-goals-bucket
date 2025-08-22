@@ -1,6 +1,7 @@
 package org.pahappa.systems.kpiTracker.models.kpis;
 
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
+import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
@@ -24,6 +25,10 @@ public class KPI extends BaseEntity {
     private Date lastUpdated;
 
     // References to different goal types
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_goal_id", nullable = true)
+    private OrganizationGoal organizationGoal;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_goal_id", nullable = true)
     private DepartmentGoal departmentGoal;
@@ -122,6 +127,14 @@ public class KPI extends BaseEntity {
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public OrganizationGoal getOrganizationGoal() {
+        return organizationGoal;
+    }
+
+    public void setOrganizationGoal(OrganizationGoal organizationGoal) {
+        this.organizationGoal = organizationGoal;
     }
 
     public DepartmentGoal getDepartmentGoal() {
