@@ -27,6 +27,6 @@ public class DepartmentGoalConverter implements Converter {
         if (object == null || object instanceof String)
             return null;
 
-        return ((OrganizationGoal) object).getId();
+        return ((DepartmentGoal) object).getId();
     }
 }
