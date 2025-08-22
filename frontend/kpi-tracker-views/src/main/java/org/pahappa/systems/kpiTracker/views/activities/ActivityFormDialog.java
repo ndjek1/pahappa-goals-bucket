@@ -137,8 +137,6 @@ public class ActivityFormDialog extends DialogForm<Activity> {
             }
             
             activityService.saveInstance(model);
-            UiUtils.showMessageBox("Success", "Activity saved successfully!");
-            resetModal();
         } catch (ValidationFailedException e) {
             UiUtils.ComposeFailure("Validation Error", e.getMessage());
             throw e;

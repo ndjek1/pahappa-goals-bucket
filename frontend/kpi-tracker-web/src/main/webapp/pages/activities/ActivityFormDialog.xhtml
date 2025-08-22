@@ -61,7 +61,7 @@
                         <p:selectOneMenu value="#{activityFormDialog.selectedOrganizationGoal}"
                                          converter="organizationGoalConverter" filter="true"
                                          effect="fold"
-                                         onchange="#{activityFormDialog.onOrganizationGoalChange()}">
+                                         onchange="#{activityFormDialog.onOrganizationGoalChange}">
                             <f:selectItem itemLabel="Select organization goal" itemValue="" />
                             <f:selectItems value="#{activityFormDialog.organizationGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
                         </p:selectOneMenu>
@@ -74,7 +74,7 @@
                         <p:selectOneMenu value="#{activityFormDialog.selectedDepartmentGoal}"
                                          converter="departmentGoalConverter" filter="true"
                                          effect="fold"
-                                         onchange="#{activityFormDialog.onDepartmentGoalChange()}">
+                                         onchange="#{activityFormDialog.onDepartmentGoalChange}">
                             <f:selectItem itemLabel="Select department goal" itemValue="" />
                             <f:selectItems value="#{activityFormDialog.departmentGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
                         </p:selectOneMenu>
@@ -87,7 +87,7 @@
                         <p:selectOneMenu value="#{activityFormDialog.selectedTeamGoal}"
                                          converter="teamGoalConverter" filter="true"
                                          effect="fold"
-                                         onchange="#{activityFormDialog.onTeamGoalChange()}">
+                                         onchange="#{activityFormDialog.onTeamGoalChange}">
                             <f:selectItem itemLabel="Select team goal" itemValue="" />
                             <f:selectItems value="#{activityFormDialog.teamGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
                         </p:selectOneMenu>
