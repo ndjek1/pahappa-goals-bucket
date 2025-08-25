@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <title>Add Goal</title>
+
+        <h:form id="orgGoalForm" styleClass="dialog-card">
+            <p:growl id="growl" showDetail="true" life="4000" />
+
+            <div class="ui-fluid formgrid grid p-m-4">
+
+                <!-- Type -->
+                <div class="field col-12 p-m-4">
+
+                    <p:inputText value="#{individualGoalForm.model.name}"
+                                 required="true"
+                                 placeholder="Name"
+                                 styleClass="p-inputtext-sm w-full"/>
+                </div>
+
+
+                <div class="field col-12 md:col-6 p-m-4">
+
+                    <p:inputText value="#{individualGoalForm.model.description}"
+                                 required="true"
+                                 placeholder="Description"
+                                 styleClass="p-inputtext-sm w-full"/>
+                </div>
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:inputText value="#{individualGoalForm.model.contributionWeight}" required="true"
+                                 placeholder="Weight"
+                                 styleClass="p-inputtext-sm w-full"
+                    />
+                </div>
+                <div class="field col-12 p-m-4">
+
+                    <p:selectOneMenu id="deptParentGoal" value="#{individualGoalForm.model.parent}" converter="departmentGoalConverter"
+                    rendered="#{individualGoalForm.team eq null}">
+                        <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{individualGoalForm.departmentGoals}" var="parentGoal"  itemLabel="#{parentGoal.name} " itemValue="#{parentGoal}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="field col-12 p-m-4">
+
+                    <p:selectOneMenu id="teamGoal" value="#{individualGoalForm.model.teamGoal}" converter="teamGoalConverter"
+                                     rendered="#{individualGoalForm.team ne null}">
+                        <f:selectItem itemLabel="Select team goal" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{individualGoalForm.teamGoals}" var="teamGoal"  itemLabel="#{teamGoal.name} " itemValue="#{teamGoal}"/>
+                    </p:selectOneMenu>
+                </div>
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between">
+                    <p:commandButton value="Cancel"
+                                     immediate="true"
+                                     action="#{individualGoalForm.hide}"
+                                     styleClass="ui-button-danger p-mx-5" />
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     actionListener="#{individualGoalForm.save}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" />
+                </div>
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
