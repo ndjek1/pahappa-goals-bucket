@@ -60,7 +60,7 @@
 
         <mapping class="org.pahappa.systems.kpiTracker.models.activities.Activity" />
 
-        <mapping class="org.pahappa.systems.kpiTracker.models.systemUsers.Staff" />
+        <!-- Removed obsolete Staff mapping; using org.sers.webutils.model.security.User -->
 
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
