@@ -87,7 +87,7 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
     }
 
     public void loadDepartment() {
-        if (loggedinUser.hasRole("DEPT_LEAD")) {
+        if (loggedinUser.hasRole("Department Lead")) {
             this.department = departmentService.getAllInstances()
                     .stream()
                     .filter(d -> d.getDepartmentHead() != null
