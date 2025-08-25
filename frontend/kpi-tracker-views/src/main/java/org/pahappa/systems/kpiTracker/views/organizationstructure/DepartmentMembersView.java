@@ -3,14 +3,9 @@ package org.pahappa.systems.kpiTracker.views.organizationstructure;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
-import org.pahappa.systems.kpiTracker.core.services.systemUsers.SystemUserService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
-import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
-import org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser;
-import org.sers.webutils.model.RecordStatus;
-import org.sers.webutils.model.security.User;
-import org.sers.webutils.server.core.service.UserService;
+import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
@@ -29,9 +24,9 @@ public class DepartmentMembersView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private SystemUserService systemUserService;
+    private StaffService staffService;
     private Department selectedDepartment;
-    private List<SystemUser> departmentMembers;
+    private List<Staff> departmentMembers;
 
     private String searchTerm;
 
@@ -41,13 +36,13 @@ public class DepartmentMembersView implements Serializable {
 
     @PostConstruct
     public void init() {
-        systemUserService = ApplicationContextProvider.getBean(SystemUserService.class);
+        staffService = ApplicationContextProvider.getBean(StaffService.class);
     }
 
     public void show(Department department) {
         this.selectedDepartment = department;
         if (department != null) {
-            this.departmentMembers = systemUserService.getMembersByDepartment(department);
+            this.departmentMembers = staffService.getMembersByDepartment(department);
         } else {
             this.departmentMembers = null;
         }
@@ -56,7 +51,7 @@ public class DepartmentMembersView implements Serializable {
     public String goToDepartmentMembersView(Department department) {
         this.selectedDepartment = department;
         if (department != null) {
-            this.departmentMembers = systemUserService.getMembersByDepartment(department);
+            this.departmentMembers = staffService.getMembersByDepartment(department);
         } else {
             this.departmentMembers = null;
         }
@@ -78,13 +73,13 @@ public class DepartmentMembersView implements Serializable {
 
 
         // Filter and load dataModels based on search/filter criteria
-        this.departmentMembers = systemUserService.getInstances(departmentMembersSearch, 0, 1000);
+        this.departmentMembers = staffService.getInstances(departmentMembersSearch, 0, 1000);
 
     }
 
-    public void deleteSelectedDepartment(SystemUser systemUser) {
+    public void deleteSelectedDepartment(Staff staff) {
         try {
-            systemUserService.deleteInstance(systemUser);
+            staffService.deleteInstance(staff);
             reloadFilterReset();
         } catch (org.sers.webutils.model.exception.OperationFailedException e) {
             e.printStackTrace();

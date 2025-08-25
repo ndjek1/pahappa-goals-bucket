@@ -52,7 +52,7 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         this.reviewCycleService =  ApplicationContextProvider.getBean(ReviewCycleService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
-        loadDepartment();
+
         loadOrganizationGoals();
     }
 
@@ -74,15 +74,19 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
             UiUtils.showMessageBox("Total contribution weight too high","Sum of all goals contribution weights is greater than 100");
             return;
         }
+        loadDepartment();
 
         model.setDepartment(department);
         model.setParent(this.selectedOrganizationGoal);
         model.setStatus(GoalStatus.PENDING);
         departmentGoalService.saveInstance(super.model);
+        resetModal();
+        hide();
+        UiUtils.showMessageBox("Action successful","Department goal saved successfully");
     }
 
     public void loadDepartment() {
-        if (loggedinUser.hasRole("DEPT_LEAD")) {
+        if (loggedinUser.hasRole("Department Lead")) {
             this.department = departmentService.getAllInstances()
                     .stream()
                     .filter(d -> d.getDepartmentHead() != null
