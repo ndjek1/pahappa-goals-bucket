@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "system_users")
-public class SystemUser extends BaseEntity {
+public class Staff extends BaseEntity {
     private static final long serialVersionUID = 1L;
     private Department department;
     private User user;
