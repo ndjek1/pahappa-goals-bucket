@@ -43,13 +43,6 @@
                         <f:selectItems value="#{organizationGoalForm.reviewCycles}" var="reviewCycle"  itemLabel="#{reviewCycle.title} " itemValue="#{reviewCycle}"/>
                     </p:selectOneMenu>
                 </div>
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:inputText value="#{organizationGoalForm.model.contributionWeight}" required="true"
-                                 placeholder="Weight"
-                                 styleClass="p-inputtext-sm w-full"
-                    />
-                </div>
-
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">
                     <p:commandButton value="Cancel"

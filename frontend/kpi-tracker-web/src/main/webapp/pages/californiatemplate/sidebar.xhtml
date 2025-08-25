@@ -3,7 +3,15 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pc="http://primefaces.org/california">
+                xmlns:pc="http://primefaces.org/california"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <style>
+        .active-menu {
+            font-weight: bold;
+            color: #0d6efd !important;
+            background-color: #d9e6f7 !important;
+        }
+    </style>
 
     <div class="layout-sidebar" style="background: #EBEFF5; ">
         <div class="sidebar-scroll-content">
@@ -11,109 +19,151 @@
             <h:form id="menuform">
                 <pc:menu widgetVar="CaliforniaMenuWidget" styleClass="custom-sidebar-menu">
 
+
                     <p:menuitem id="dashboard" value="Dashboard"
                                 icon="pi pi-th-large"
-                                styleClass="p-my-3"
+                                styleClass="#{facesContext.viewRoot.viewId eq '/pages/dashboard/Dashboard.xhtml' ? 'active-menu' : ''}"
                                 outcome="/pages/dashboard/Dashboard" />
-                    <p:submenu id="goals" label="Manage Goals"
+
+
+                    <p:submenu id="goals" label="Manage Organization"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="fa fa-bullseye">
+                               icon="fa fa-bullseye"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'organization')}">
+
                         <p:menuitem id="orgGoals" value="Organization Goals"
-                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    outcome="/pages/goals/OrganizationGoalsView" />
+                                    outcome="/pages/goals/OrganizationGoalsView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/OrganizationGoalsView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
-                                    outcome="/pages/kpis/OrganizationalKPIView" />
+                                    outcome="/pages/kpis/OrganizationalKPIView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/OrganizationalKPIView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="organizationalActivities" value="Organizational Activities"
-                                    outcome="/pages/activities/OrganizationalActivitiesView" />
+                                    outcome="/pages/activities/OrganizationalActivitiesView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/OrganizationalActivitiesView.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
+
 
                     <p:submenu id="kpis" label="Manage KPIs"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="pi pi-fw pi-chart-line">
+                               icon="pi pi-fw pi-chart-line"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'kpis')}">
+
                         <p:menuitem id="allKPIs" value="All KPIs"
+                                    outcome="/pages/kpis/KPIView"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    outcome="/pages/kpis/KPIView" />
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
+
 
                     <p:submenu id="activities" label="Manage Activities"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="pi pi-fw pi-calendar">
+                               icon="pi pi-fw pi-calendar"
+                               rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'activities')}">
                         <p:menuitem id="allActivities" value="All Activities"
-                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    outcome="/pages/activities/ActivitiesView" />
+                                    outcome="/pages/activities/ActivitiesView"
+
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/ActivitiesView.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
 
+
                     <p:submenu id="department" label="Manage Department"
-                               rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="fa fa-building">
+                               rendered="#{dashboard.loggedinUser.hasRole('Department Lead')}"
+                               icon="fa fa-building"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Department')}">
+
                         <p:menuitem id="departmentGoals" value="Goals"
-                                    outcome="/pages/goals/DepartmentGoalView" />
+                                    outcome="/pages/goals/DepartmentGoalView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/DepartmentGoalView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="departmentKPIs" value="Department KPIs"
-                                    outcome="/pages/kpis/DepartmentKPIView" />
+                                    outcome="/pages/kpis/DepartmentKPIView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/DepartmentKPIView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="departmentActivities" value="Department Activities"
-                                    outcome="/pages/activities/DepartmentActivitiesView" />
+                                    outcome="/pages/activities/DepartmentActivitiesView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
+
+
                     <p:submenu id="team" label="Manage Team"
-                               rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="fa fa-users">
+                               rendered="#{dashboard.loggedinUser.hasRole('Team Lead')}"
+                               icon="fa fa-users"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Team')}">
+
                         <p:menuitem id="teamGoals" value="Team Goals"
-                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
-                                    outcome="/pages/goals/TeamGoalView" />
+                                    outcome="/pages/goals/TeamGoalView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/TeamGoalView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="teamKPIs" value="Team KPIs"
-                                    outcome="/pages/kpis/TeamKPIView" />
+                                    outcome="/pages/kpis/TeamKPIView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/TeamKPIView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="teamActivities" value="Team Activities"
-                                    outcome="/pages/activities/TeamActivitiesView" />
+                                    outcome="/pages/activities/TeamActivitiesView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/TeamActivitiesView.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
 
 
                     <p:menuitem id="organizationStructure" value="Organization Structure"
                                 icon="pi pi-sitemap"
-                                styleClass="p-my-3"
-                                outcome="/pages/organizationstructure/OrganizationStructure" />
+                                outcome="/pages/organizationstructure/OrganizationStructure"
+                                styleClass="#{facesContext.viewRoot.viewId eq '/pages/organizationstructure/OrganizationStructure.xhtml' ? 'active-menu' : ''}" />
+
 
                     <p:submenu id="settings" label="Manage Users"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3"
-                               style="color:#0d6efd"
-                               icon="pi pi-fw pi-user">
+                               icon="pi pi-fw pi-user"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'users')}">
+
                         <p:menuitem id="users" value="Users" icon="pi pi-fw pi-users"
-                                    outcome="/pages/users/UsersView" />
+                                    outcome="/pages/users/UsersView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/UsersView.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem id="roles" value="Roles" icon="pi pi-fw pi-lock"
-                                    outcome="/pages/users/RolesView"/>
+                                    outcome="/pages/users/RolesView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/RolesView.xhtml' ? 'active-menu' : ''}" />
+                    </p:submenu>
+                    <p:submenu label="My goals"
+                               icon="pi pi-fw pi-cog"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'goals')}">
+
+                        <p:menuitem value="Goals"
+                                    outcome="/pages/goals/IndividualGoalsView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/IndividualGoalsView.xhtml' ? 'active-menu' : ''}" />
+
+
                     </p:submenu>
 
                     <p:submenu label="Organization Configuration"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3"
-                               icon="pi pi-fw pi-cog">
+                               icon="pi pi-fw pi-cog"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'systemSetup')}">
+
                         <p:menuitem value="Manage Global Weights"
-                                    outcome="/pages/systemSetup/GlobalWeightTable" />
+                                    outcome="/pages/systemSetup/GlobalWeightTable"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/GlobalWeightTable.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem value="Organizational Fit Categories"
-                                    outcome="/pages/systemSetup/OrgFitCategoryTable" />
+                                    outcome="/pages/systemSetup/OrgFitCategoryTable"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/OrgFitCategoryTable.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem value="Review Cycles"
-                                    outcome="/pages/systemSetup/ReviewCycleTable" />
+                                    outcome="/pages/systemSetup/ReviewCycleTable"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ReviewCycleTable.xhtml' ? 'active-menu' : ''}" />
+
                         <p:menuitem value="Manage Thresholds"
-                                    outcome="/pages/systemSetup/ThresholdTable" />
+                                    outcome="/pages/systemSetup/ThresholdTable"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ThresholdTable.xhtml' ? 'active-menu' : ''}" />
                     </p:submenu>
 
+
                     <p:menuitem id="logout" value="Logout" icon="pi pi-sign-out"
-                                style="margin-bottom: 0"
-                                url="#{request.contextPath}/ServiceLogout"/>
+                                url="#{request.contextPath}/ServiceLogout"
+                                style="margin-bottom: 0" />
                 </pc:menu>
             </h:form>
 
         </div>
-
-
     </div>
-
-
 </ui:composition>
