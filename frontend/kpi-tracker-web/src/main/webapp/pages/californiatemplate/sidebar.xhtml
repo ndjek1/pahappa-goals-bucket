@@ -21,11 +21,14 @@
                                style="color:#0d6efd"
                                icon="fa fa-bullseye">
                         <p:menuitem id="orgGoals" value="Organization Goals"
+                                    icon="fa fa-bullseye"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/goals/OrganizationGoalsView" />
                         <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
+                                    icon="pi pi-chart-line"
                                     outcome="/pages/kpis/OrganizationalKPIView" />
                         <p:menuitem id="organizationalActivities" value="Organizational Activities"
+                                    icon="pi pi-calendar"
                                     outcome="/pages/activities/OrganizationalActivitiesView" />
                     </p:submenu>
 
@@ -34,9 +37,11 @@
                                style="color:#0d6efd"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="allKPIs" value="All KPIs"
+                                    icon="pi pi-chart-line"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/kpis/KPIView" />
                         <p:menuitem id="individualKPI" value="Individual KPI"
+                                    icon="pi pi-user"
                                     outcome="/pages/kpis/IndividualKPIForm" />
                     </p:submenu>
 
@@ -45,9 +50,11 @@
                                style="color:#0d6efd"
                                icon="pi pi-fw pi-calendar">
                         <p:menuitem id="allActivities" value="All Activities"
+                                    icon="pi pi-calendar"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/activities/ActivitiesView" />
                         <p:menuitem id="individualActivity" value="Individual Activity"
+                                    icon="pi pi-user"
                                     outcome="/pages/activities/IndividualActivityFormDialog" />
                     </p:submenu>
 
@@ -57,10 +64,13 @@
                                style="color:#0d6efd"
                                icon="fa fa-building">
                         <p:menuitem id="departmentGoals" value="Goals"
+                                    icon="fa fa-bullseye"
                                     outcome="/pages/goals/DepartmentGoalView" />
                         <p:menuitem id="departmentKPIs" value="Department KPIs"
+                                    icon="pi pi-chart-line"
                                     outcome="/pages/kpis/DepartmentKPIView" />
                         <p:menuitem id="departmentActivities" value="Department Activities"
+                                    icon="pi pi-calendar"
                                     outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
                     <p:submenu id="team" label="Manage Team"
@@ -69,11 +79,14 @@
                                style="color:#0d6efd"
                                icon="fa fa-users">
                         <p:menuitem id="teamGoals" value="Team Goals"
+                                    icon="fa fa-bullseye"
                                     rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                     outcome="/pages/goals/TeamGoalView" />
                         <p:menuitem id="teamKPIs" value="Team KPIs"
+                                    icon="pi pi-chart-line"
                                     outcome="/pages/kpis/TeamKPIView" />
                         <p:menuitem id="teamActivities" value="Team Activities"
+                                    icon="pi pi-calendar"
                                     outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
@@ -99,12 +112,16 @@
                                styleClass="p-my-3"
                                icon="pi pi-fw pi-cog">
                         <p:menuitem value="Manage Global Weights"
+                                    icon="pi pi-cog"
                                     outcome="/pages/systemSetup/GlobalWeightTable" />
                         <p:menuitem value="Organizational Fit Categories"
+                                    icon="pi pi-cog"
                                     outcome="/pages/systemSetup/OrgFitCategoryTable" />
                         <p:menuitem value="Review Cycles"
+                                    icon="pi pi-cog"
                                     outcome="/pages/systemSetup/ReviewCycleTable" />
                         <p:menuitem value="Manage Thresholds"
+                                    icon="pi pi-cog"
                                     outcome="/pages/systemSetup/ThresholdTable" />
                     </p:submenu>
 
