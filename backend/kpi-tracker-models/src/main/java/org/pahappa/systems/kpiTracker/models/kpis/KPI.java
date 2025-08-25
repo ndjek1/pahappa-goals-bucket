@@ -3,6 +3,7 @@ package org.pahappa.systems.kpiTracker.models.kpis;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.BaseEntity;
@@ -36,6 +37,10 @@ public class KPI extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_goal_id", nullable = true)
     private TeamGoal teamGoal;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "individual_goal_id", nullable = true)
+    private IndividualGoal individualGoal;
 
     // Constructors
     public KPI() {
@@ -151,6 +156,14 @@ public class KPI extends BaseEntity {
 
     public void setTeamGoal(TeamGoal teamGoal) {
         this.teamGoal = teamGoal;
+    }
+
+    public IndividualGoal getIndividualGoal() {
+        return individualGoal;
+    }
+
+    public void setIndividualGoal(IndividualGoal individualGoal) {
+        this.individualGoal = individualGoal;
     }
 
     @Override
