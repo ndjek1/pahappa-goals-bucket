@@ -53,12 +53,14 @@
         <mapping class="org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal" />
         <mapping class="org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal" />
         <mapping class="org.pahappa.systems.kpiTracker.models.goals.TeamGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.IndividualGoal" />
+
 
         <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KPI" />
 
         <mapping class="org.pahappa.systems.kpiTracker.models.activities.Activity" />
 
-        <mapping class="org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.systemUsers.Staff" />
 
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
