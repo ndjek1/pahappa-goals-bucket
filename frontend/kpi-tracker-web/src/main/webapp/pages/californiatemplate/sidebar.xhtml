@@ -32,6 +32,7 @@
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, 'organization')}">
 
                         <p:menuitem id="orgGoals" value="Organization Goals"
+
                                     outcome="/pages/goals/OrganizationGoalsView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/OrganizationGoalsView.xhtml' ? 'active-menu' : ''}" />
 
@@ -42,6 +43,13 @@
                         <p:menuitem id="organizationalActivities" value="Organizational Activities"
                                     outcome="/pages/activities/OrganizationalActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/OrganizationalActivitiesView.xhtml' ? 'active-menu' : ''}" />
+                                
+                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
+                                    icon="pi pi-chart-line"
+                                    outcome="/pages/kpis/OrganizationalKPIView" />
+                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
+                                    icon="pi pi-calendar"
+                                    outcome="/pages/activities/OrganizationalActivitiesView" />
                     </p:submenu>
 
 
@@ -53,6 +61,11 @@
                                     outcome="/pages/kpis/KPIView"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-menu' : ''}" />
+                                 
+                        <p:menuitem id="individualKPI" value="Individual KPI"
+                                    icon="pi pi-user"
+                                    outcome="/pages/kpis/IndividualKPIForm" />
+
                     </p:submenu>
 
 
@@ -64,6 +77,10 @@
                                     outcome="/pages/activities/ActivitiesView"
 
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/ActivitiesView.xhtml' ? 'active-menu' : ''}" />
+                                  
+                        <p:menuitem id="individualActivity" value="Individual Activity"
+                                    icon="pi pi-user"
+                                    outcome="/pages/activities/IndividualActivityFormDialog" />
                     </p:submenu>
 
 
@@ -83,6 +100,12 @@
                         <p:menuitem id="departmentActivities" value="Department Activities"
                                     outcome="/pages/activities/DepartmentActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-menu' : ''}" />
+                        <p:menuitem id="departmentKPIs" value="Department KPIs"
+                                    icon="pi pi-chart-line"
+                                    outcome="/pages/kpis/DepartmentKPIView" />
+                        <p:menuitem id="departmentActivities" value="Department Activities"
+                                    icon="pi pi-calendar"
+                                    outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
 
 
@@ -102,6 +125,12 @@
                         <p:menuitem id="teamActivities" value="Team Activities"
                                     outcome="/pages/activities/TeamActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/TeamActivitiesView.xhtml' ? 'active-menu' : ''}" />
+                        <p:menuitem id="teamKPIs" value="Team KPIs"
+                                    icon="pi pi-chart-line"
+                                    outcome="/pages/kpis/TeamKPIView" />
+                        <p:menuitem id="teamActivities" value="Team Activities"
+                                    icon="pi pi-calendar"
+                                    outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
 
@@ -155,6 +184,16 @@
                         <p:menuitem value="Manage Thresholds"
                                     outcome="/pages/systemSetup/ThresholdTable"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ThresholdTable.xhtml' ? 'active-menu' : ''}" />
+                                  
+                        <p:menuitem value="Organizational Fit Categories"
+                                    icon="pi pi-cog"
+                                    outcome="/pages/systemSetup/OrgFitCategoryTable" />
+                        <p:menuitem value="Review Cycles"
+                                    icon="pi pi-cog"
+                                    outcome="/pages/systemSetup/ReviewCycleTable" />
+                        <p:menuitem value="Manage Thresholds"
+                                    icon="pi pi-cog"
+                                    outcome="/pages/systemSetup/ThresholdTable" />
                     </p:submenu>
 
 

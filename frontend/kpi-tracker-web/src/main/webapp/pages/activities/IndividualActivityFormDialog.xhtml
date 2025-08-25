@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <title>Add Individual Activity</title>
+        <h:form id="individualActivityForm" style="height: 750px" styleClass="card">
+            <div class="p-grid ui-fluid" style="display:flex">
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Title *</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText value="#{activityFormDialog.model.title}" required="true" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Status</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{activityFormDialog.selectedStatus}"
+                                         converter="activityStatusConverter" filter="true"
+                                         required="true" effect="fold">
+                            <f:selectItem itemLabel="Select status" itemValue="" />
+                            <f:selectItems value="#{activityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Assigned User *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{activityFormDialog.selectedUser}"
+                                         converter="userConverter" filter="true"
+                                         required="true" effect="fold">
+                            <f:selectItem itemLabel="Select user" itemValue="" />
+                            <f:selectItems value="#{activityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-12">
+                    <h5>Description</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputTextarea value="#{activityFormDialog.model.description}" rows="3" />
+                    </div>
+                </div>
+
+                <hr></hr>
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Individual Goal *</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu value="#{activityFormDialog.selectedIndividualGoal}"
+                                         converter="individualGoalConverter" filter="true"
+                                         required="true" effect="fold">
+                            <f:selectItem itemLabel="Select individual goal" itemValue="" />
+                            <f:selectItems value="#{activityFormDialog.individualGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
+                            <p:ajax event="change" listener="#{activityFormDialog.onIndividualGoalChange}" />
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <hr></hr>
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Planned Start Date</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{activityFormDialog.model.plannedStartDate}" showTime="false" pattern="MM/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Planned End Date</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{activityFormDialog.model.plannedEndDate}" showTime="false" pattern="MM/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Actual Start Date</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{activityFormDialog.model.actualStartDate}" showTime="false" pattern="MM/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-4">
+                    <h5>Actual End Date</h5>
+                    <div class="ui-inputgroup">
+                        <p:calendar value="#{activityFormDialog.model.actualEndDate}" showTime="false" pattern="MM/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="ui-col-12 ui-md-12" style="margin-top: 20px; align-self: flex-end !important;">
+                    <div class="p-grid p-justify-end">
+                        <div class="p-col-1" style="margin-right: 10px;">
+                            <p:commandButton value="Cancel" 
+                                             validateClient="false"
+                                             process="@this"
+                                             action="#{activityFormDialog.hide}"
+                                             styleClass="ui-button-outlined ui-button-help"
+                                             style="min-width: 80px; padding: 8px 16px;" />
+                        </div>
+                        <div class="p-col-1">
+                            <p:commandButton value="Save" 
+                                             process="@form"
+                                             actionListener="#{activityFormDialog.save}"
+                                             update="@form" validateClient="true"
+                                             style="min-width: 80px; padding: 8px 16px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

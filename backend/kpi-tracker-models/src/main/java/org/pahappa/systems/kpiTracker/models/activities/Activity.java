@@ -3,6 +3,7 @@ package org.pahappa.systems.kpiTracker.models.activities;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityPriority;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
@@ -40,6 +41,10 @@ public class Activity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_goal_id", nullable = true)
     private TeamGoal teamGoal;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "individual_goal_id", nullable = true)
+    private IndividualGoal individualGoal;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -185,6 +190,14 @@ public class Activity extends BaseEntity {
 
     public void setTeamGoal(TeamGoal teamGoal) {
         this.teamGoal = teamGoal;
+    }
+    
+    public IndividualGoal getIndividualGoal() {
+        return individualGoal;
+    }
+
+    public void setIndividualGoal(IndividualGoal individualGoal) {
+        this.individualGoal = individualGoal;
     }
 
     public User getUser() {

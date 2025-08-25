@@ -1,7 +1,6 @@
 package org.pahappa.systems.kpiTracker.models.goals;
 
-import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
-import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
+import org.sers.webutils.model.security.User;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
@@ -15,10 +14,12 @@ public class IndividualGoal extends BaseEntity {
     private GoalStatus status;
     private DepartmentGoal parent;
     private TeamGoal teamGoal;
+
     private Staff staff;
     public IndividualGoal() {
         this.status = GoalStatus.PENDING;
     }
+
     @Column(name = "name",nullable = false)
     public String getName() {
         return name;
@@ -76,13 +77,13 @@ public class IndividualGoal extends BaseEntity {
         this.teamGoal = teamGoal;
     }
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     public Staff getStaff() {
-        return staff;
-    }
 
-    public void setStaff(Staff staff) {
+
+    public void setStaff(User staff) {
         this.staff = staff;
     }
 }
