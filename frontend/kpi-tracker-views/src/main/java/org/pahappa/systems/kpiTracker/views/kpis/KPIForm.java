@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
@@ -32,8 +34,11 @@ public class KPIForm extends DialogForm<KPI> {
     private KpisService kpisService;
     private DepartmentGoalService departmentGoalService;
     private TeamGoalService teamGoalService;
+    private IndividualGoalService individualGoalService;
     private List<DepartmentGoal> departmentGoals;
     private List<TeamGoal> teamGoals;
+    private List<IndividualGoal> individualGoals;
+    private IndividualGoal selectedIndividualGoal;
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
     
@@ -49,6 +54,7 @@ public class KPIForm extends DialogForm<KPI> {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
+        this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         loadData();
     }
 
@@ -57,12 +63,19 @@ public class KPIForm extends DialogForm<KPI> {
         this.teamGoals = this.teamGoalService.getAllInstances();
         this.measurementUnits = Arrays.asList(MeasurementUnit.values());
         this.frequencies = Arrays.asList(Frequency.values());
+        this.individualGoals = this.individualGoalService.getAllInstances();
     }
 
     @Override
     public void persist() throws ValidationFailedException, OperationFailedException {
         try {
             validateForm();
+            // Ensure only one goal association is set
+            if (selectedIndividualGoal != null) {
+                model.setIndividualGoal(selectedIndividualGoal);
+                model.setDepartmentGoal(null);
+                model.setTeamGoal(null);
+            }
             kpisService.saveInstance(super.model);
         } catch (Exception e) {
             throw new OperationFailedException("Failed to save KPI: " + e.getMessage());
@@ -106,6 +119,9 @@ public class KPIForm extends DialogForm<KPI> {
         super.setFormProperties();
         if (super.model != null && super.model.getId() != null) {
             setEdit(true);
+            if (model.getIndividualGoal() != null) {
+                selectedIndividualGoal = model.getIndividualGoal();
+            }
         } else {
             setEdit(false);
         }
