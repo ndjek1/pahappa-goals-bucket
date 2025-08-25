@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,22 +57,33 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
                             "Please select both review cycle type and start date."));
             return;
         }
+
+    if(super.model.getStatus() == ReviewCycleStatus.ACTIVE) {
         Search search = new Search();
         search.addFilterAnd(
-                Filter.equal("type", model.getType() ),
                 Filter.equal("status", ReviewCycleStatus.ACTIVE),
                 Filter.equal("recordStatus", RecordStatus.ACTIVE)
         );
         List<ReviewCycle> reviewCycleList = this.reviewCycleService.getInstances(search,0,0);
-
         if (reviewCycleList.isEmpty()) {
             // Auto-set end date based on type
             model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
             reviewCycleService.saveInstance(super.model);
+            UiUtils.showMessageBox("Action successful", "Review cycle save successfully");
+            super.resetModal();
+            hide();
         }else {
             UiUtils.ComposeFailure("Duplicate review cycles", "Cannot have two active review cycles of the same type");
-            return;
         }
+    }else{
+        // Auto-set end date based on type
+        model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
+        reviewCycleService.saveInstance(super.model);
+        UiUtils.showMessageBox("Action successful", "Review cycle save successfully");
+        super.resetModal();
+        hide();
+    }
+
 
     }
 

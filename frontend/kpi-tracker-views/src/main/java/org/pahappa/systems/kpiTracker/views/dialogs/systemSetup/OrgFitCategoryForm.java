@@ -36,7 +36,7 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
         this.orgFitCategoryService = ApplicationContextProvider.getBean(OrgFitCategoryService.class);
         this.globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
         this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
-        this.globalWeight = getGlobalWeightForActiveCycle().getOrgFitWeight();
+        loadGlobalWeight();
     }
 
     @Override
@@ -57,6 +57,13 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
     public GlobalWeight getGlobalWeightForActiveCycle() {
         ReviewCycle activeReviewCycle = this.reviewCycleService.searchUniqueByPropertyEqual("status", ReviewCycleStatus.ACTIVE);
         return this.globalWeightService.searchUniqueByPropertyEqual("reviewCycle", activeReviewCycle);
+    }
+    public void loadGlobalWeight(){
+        if(getGlobalWeightForActiveCycle() != null){
+            this.globalWeight = getGlobalWeightForActiveCycle().getOrgFitWeight();
+        }else {
+            UiUtils.showMessageBox("Weight limit reached","The weight don't match config");
+        }
     }
 
 

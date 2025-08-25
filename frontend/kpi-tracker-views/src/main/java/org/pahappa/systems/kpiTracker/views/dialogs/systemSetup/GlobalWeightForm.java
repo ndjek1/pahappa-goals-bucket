@@ -30,6 +30,7 @@ public class GlobalWeightForm extends DialogForm<GlobalWeight> {
     private GlobalWeightService globalWeightService;
     private List<ReviewCycle> reviewCycleList;
     private ReviewCycleService reviewCycleService;
+    private ReviewCycle activeReviewCycle;
 
     public GlobalWeightForm() {
         super(HyperLinks.GLOBAL_WEIGHT_DIALOG, 500, 400);
@@ -40,11 +41,16 @@ public class GlobalWeightForm extends DialogForm<GlobalWeight> {
         globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
         reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         loadReviewCycles();
+        loadActiveReviewCycle();
     }
 
     @Override
     public void persist() throws Exception {
-        globalWeightService.saveInstance(super.model);
+        if(this.activeReviewCycle != null) {
+            super.model.setReviewCycle(this.activeReviewCycle);
+            globalWeightService.saveInstance(super.model);
+        }
+
     }
 
 
@@ -58,6 +64,10 @@ public class GlobalWeightForm extends DialogForm<GlobalWeight> {
     // In your globalWeightsForm backing bean
     public void loadReviewCycles() {
         this.reviewCycleList = reviewCycleService.getAllInstances();
+    }
+
+    public void loadActiveReviewCycle() {
+        this.activeReviewCycle = this.reviewCycleService.searchUniqueByPropertyEqual("status", ReviewCycleStatus.ACTIVE);
     }
 
     public void updateMboWeight() {
