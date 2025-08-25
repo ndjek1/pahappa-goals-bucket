@@ -6,27 +6,27 @@ import org.pahappa.systems.kpiTracker.core.services.activities.ActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
-import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
-import org.sers.webutils.server.shared.SharedAppData;
+ 
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @ManagedBean(name = "activityFormDialog", eager = true)
@@ -41,17 +41,20 @@ public class ActivityFormDialog extends DialogForm<Activity> {
     private OrganizationGoalService organizationGoalService;
     private DepartmentGoalService departmentGoalService;
     private TeamGoalService teamGoalService;
+    private IndividualGoalService individualGoalService;
     private UserService userService;
     
     private List<OrganizationGoal> organizationGoals;
     private List<DepartmentGoal> departmentGoals;
     private List<TeamGoal> teamGoals;
+    private List<IndividualGoal> individualGoals;
     private List<ActivityStatus> activityStatuses;
     private List<User> users;
     
     private OrganizationGoal selectedOrganizationGoal;
     private DepartmentGoal selectedDepartmentGoal;
     private TeamGoal selectedTeamGoal;
+    private IndividualGoal selectedIndividualGoal;
     private User selectedUser;
     private ActivityStatus selectedStatus;
     
@@ -68,6 +71,7 @@ public class ActivityFormDialog extends DialogForm<Activity> {
         this.organizationGoalService = ApplicationContextProvider.getBean(OrganizationGoalService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
+        this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         
         loadData();
@@ -91,6 +95,12 @@ public class ActivityFormDialog extends DialogForm<Activity> {
             this.teamGoals = teamGoalService.getAllInstances();
         } catch (Exception e) {
             this.teamGoals = Arrays.asList();
+        }
+        
+        try {
+            this.individualGoals = individualGoalService.getAllInstances();
+        } catch (Exception e) {
+            this.individualGoals = Arrays.asList();
         }
         
         try {
@@ -129,6 +139,8 @@ public class ActivityFormDialog extends DialogForm<Activity> {
                 model.setDepartmentGoal(selectedDepartmentGoal);
             } else if (selectedTeamGoal != null) {
                 model.setTeamGoal(selectedTeamGoal);
+            } else if (selectedIndividualGoal != null) {
+                model.setIndividualGoal(selectedIndividualGoal);
             }
             
             // Set status if selected
@@ -169,6 +181,8 @@ public class ActivityFormDialog extends DialogForm<Activity> {
                 selectedDepartmentGoal = model.getDepartmentGoal();
             } else if (model.getTeamGoal() != null) {
                 selectedTeamGoal = model.getTeamGoal();
+            } else if (model.getIndividualGoal() != null) {
+                selectedIndividualGoal = model.getIndividualGoal();
             }
             selectedUser = model.getUser();
             selectedStatus = model.getStatus();
@@ -181,6 +195,7 @@ public class ActivityFormDialog extends DialogForm<Activity> {
         selectedOrganizationGoal = null;
         selectedDepartmentGoal = null;
         selectedTeamGoal = null;
+        selectedIndividualGoal = null;
         selectedUser = null;
         selectedStatus = null;
     }
@@ -201,6 +216,14 @@ public class ActivityFormDialog extends DialogForm<Activity> {
         // Clear other goal selections when team goal is selected
         selectedOrganizationGoal = null;
         selectedDepartmentGoal = null;
+        selectedIndividualGoal = null;
+    }
+    
+    public void onIndividualGoalChange() {
+        // Clear other goal selections when individual goal is selected
+        selectedOrganizationGoal = null;
+        selectedDepartmentGoal = null;
+        selectedTeamGoal = null;
     }
     
     public void show() {
