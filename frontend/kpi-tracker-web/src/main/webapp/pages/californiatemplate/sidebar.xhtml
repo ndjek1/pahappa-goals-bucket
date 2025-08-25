@@ -36,6 +36,8 @@
                         <p:menuitem id="allKPIs" value="All KPIs"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/kpis/KPIView" />
+                        <p:menuitem id="individualKPI" value="Individual KPI"
+                                    outcome="/pages/kpis/IndividualKPIForm" />
                     </p:submenu>
 
                     <p:submenu id="activities" label="Manage Activities"
@@ -45,6 +47,8 @@
                         <p:menuitem id="allActivities" value="All Activities"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/activities/ActivitiesView" />
+                        <p:menuitem id="individualActivity" value="Individual Activity"
+                                    outcome="/pages/activities/IndividualActivityFormDialog" />
                     </p:submenu>
 
                     <p:submenu id="department" label="Manage Department"
