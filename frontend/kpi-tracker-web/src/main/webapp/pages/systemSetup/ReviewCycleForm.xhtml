@@ -8,7 +8,7 @@
     <ui:define name="content">
         <h:form id="reviewCycleDialogForm">
 
-            <p:growl id="growl" showDetail="true" life="4000" />
+            <p:growl id="growl" showDetail="true" life="5000" />
 
             <h3 class="p-m-4">Add Review Cycle</h3>
 
@@ -20,15 +20,22 @@
                     <p:selectOneMenu id="type" value="#{reviewCycleForm.model.type}">
                         <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{reviewCycleForm.reviewCycleTypes}" />
-                        <p:ajax event="change" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                        <p:ajax event="change" update="endDate " listener="#{reviewCycleForm.updateEndDate}" />
                     </p:selectOneMenu>
                 </div>
 
+                <div class="field col-12 md:col-6 p-m-4">
+
+                    <p:inputText value="#{reviewCycleForm.model.title}"
+                                 required="true"
+                                 placeholder="Title"
+                                 styleClass="p-inputtext-sm w-full"/>
+                </div>
                 <!-- Start Date -->
                 <div class="field col-12 md:col-6 p-m-4">
 
                     <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}" placeholder="Start Date" showIcon="true">
-                        <p:ajax event="dateSelect" update="endDate growl" listener="#{reviewCycleForm.updateEndDate}" />
+                        <p:ajax event="dateSelect" update="endDate" listener="#{reviewCycleForm.updateEndDate}" />
                     </p:datePicker>
                 </div>
 
@@ -55,7 +62,7 @@
 
                     <p:commandButton value="Save"
                                      process="@form"
-                                     actionListener="#{reviewCycleForm.save}"
+                                     actionListener="#{reviewCycleForm.persist}"
                                      update="@form growl"
                                      styleClass="ui-button-primary p-mx-5" />
                 </div>
