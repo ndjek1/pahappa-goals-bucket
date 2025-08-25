@@ -13,9 +13,10 @@ import javax.faces.bean.SessionScoped;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
-import org.pahappa.systems.kpiTracker.core.services.systemUsers.SystemUserService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
-import org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser;
+import org.pahappa.systems.kpiTracker.models.security.RoleConstants;
+import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
@@ -40,7 +41,7 @@ public class UserFormDialog extends DialogForm<User> {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(UserFormDialog.class.getSimpleName());
     private UserService userService;
-    private SystemUserService systemUserService;
+    private StaffService staffService;
     private DepartmentService departmentService;
     private List<Department> departments;
     private Department selectedDepartment;
@@ -55,7 +56,7 @@ public class UserFormDialog extends DialogForm<User> {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         this.listOfGenders = Arrays.asList(Gender.values());
         this.databaseRoles = userService.getRoles();
-        this.systemUserService = ApplicationContextProvider.getBean(SystemUserService.class);
+        this.staffService = ApplicationContextProvider.getBean(StaffService.class);
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         loadDepartments();
     }
@@ -72,14 +73,24 @@ public class UserFormDialog extends DialogForm<User> {
         // 2. Save and get managed User
         User savedUser = this.userService.saveUser(super.model);
 
-        // 3. Create SystemUser linked to managed User
-        SystemUser systemUser = new SystemUser();
-        systemUser.setUser(savedUser);
-        systemUser.setDepartment(selectedDepartment);
+        // 3. Create Staff linked to managed User
+        Staff staff = new Staff();
+        staff.setUser(savedUser);
+        staff.setDepartment(selectedDepartment);
 
-        // 4. Save SystemUser
-        this.systemUserService.saveInstance(systemUser);
+        // 4. If user has Department Lead role, set them as lead of department
+        boolean isDepartmentLead = userRoles.stream()
+                .anyMatch(r -> r.getName().equals(RoleConstants.ROLE_DEPARTMENT_LEAD));
+
+        if (isDepartmentLead && selectedDepartment != null) {
+            selectedDepartment.setDepartmentHead(savedUser);
+            departmentService.saveInstance(selectedDepartment);  // persist change
+        }
+
+        // 5. Save Staff
+        this.staffService.saveInstance(staff);
     }
+
 
     @Override
     public void resetModal() {
