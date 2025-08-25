@@ -4,9 +4,10 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
+
     <ui:define name="head">
         <style>
-            /* Remove default background */
+            /* Custom button styling remains as requested */
             .custom-btn {
                 background: transparent !important;
                 border: none !important;
@@ -15,291 +16,179 @@
                 align-items: center;
                 padding: 6px 10px;
             }
-
-            /* Background only on hover */
             .custom-btn:hover {
                 background: #f0f0f0 !important;
                 border-radius: 8px;
             }
-
-            /* Icon colors */
-            .custom-icon {
-                font-size: 1.2rem;
-            }
-            .custom-icon-edit {
-                color: orange;
-                font-size: 1.2rem;
-            }
-
+            .custom-icon { font-size: 1.2rem; }
+            .custom-icon-edit { color: orange; font-size: 1.2rem; }
         </style>
-
-
     </ui:define>
 
     <ui:define name="content">
         <h:form id="goalForm">
 
-            <p:growl id="growl" showDetail="true" life="4000" />
+            <p:growl id="growl" showDetail="true" life="4000"/>
 
-            <!-- Page Title -->
+            <!-- Page Title & Main Action Button -->
             <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
                 <h2>Goals</h2>
                 <p:commandButton value="Set Goal" icon="pi pi-plus"
-                                 styleClass="ui-button-success"
+                                 style="background: #6DBE46"
                                  actionListener="#{organizationGoalForm.show}">
                     <f:setPropertyActionListener value="#{null}" target="#{organizationGoalForm.model}"/>
                     <p:ajax event="dialogReturn" listener="#{organizationGoalsView.reloadFilterReset}" update="goalForm"/>
                 </p:commandButton>
             </div>
 
-            <!-- Filters -->
-            <div class="p-d-flex p-ai-center p-mb-4">
-                <p:commandButton value="All" styleClass="ui-button-primary p-mr-2" />
-                <p:selectOneMenu value="..." style="margin-right:1rem;">
-                    <f:selectItem itemLabel="Level" itemValue=""/>
-                    <f:selectItems value="..."/>
-                </p:selectOneMenu>
-                <p:selectOneMenu value="..." style="margin-right:1rem;">
-                    <f:selectItem itemLabel="Status" itemValue=""/>
-                    <f:selectItems value="..."/>
-                </p:selectOneMenu>
-                <p:inputText placeholder="Search Goal"  style="flex:1"/>
-            </div>
-
-            <!-- Goal Cards -->
             <p:tabView>
+                <!-- =============================== -->
+                <!-- TAB 1: ORGANIZATION GOALS       -->
+                <!-- =============================== -->
                 <p:tab title="Organization Goals">
-
-                    <!-- Two-column layout -->
-                    <div class="p-grid p-nogutter p-mt-2">
-                        <ui:repeat value="#{organizationGoalsView.dataModels}" var="goal">
-                            <div class="p-col-12 p-md-6 p-p-2">
-                                <div class="p-card p-p-3 p-mb-3"
-                                     style="border: 1px solid #dee2e6; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-
-                                    <!-- Goal Title -->
-                                    <h4 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
-                                        #{goal.name}
-                                    </h4>
-
-                                    <!-- Divider -->
-                                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5rem 0 1rem 0;" />
-
-                                    <!-- Details Row -->
-                                    <div class="p-d-flex p-flex-wrap p-mb-2" style="font-size: 0.9rem; color: #444;">
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3"
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                            <span style="font-weight: 600;">Weight</span>
-                                            <span style="color: #2155A3; margin: 5px">#{goal.contributionWeight}%</span>
-                                        </div>
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                            <span style="font-weight: 600;">Created by</span>
-                                            <span style="color: #2155A3; margin: 5px">#{goal.createdBy}</span>
-                                        </div>
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-mx-3">
-                                            <span style="font-weight: 600;">Created on</span>
-                                            <h:outputText value="#{goal.dateCreated}" style="color: #2155A3; margin: 5px">
-                                                <f:convertDateTime pattern="dd MMM yyyy"/>
-                                            </h:outputText>
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Actions -->
-                                    <div class="p-d-flex p-jc-end p-mt-2">
-                                        <p:commandLink styleClass="custom-btn"
-                                                       ajax="false"
-                                                       action="#{goalDetailsView.prepareForCategory(goal.id)}">
-                                            <i class="pi pi-eye custom-icon"></i>
-                                            <span class="p-ml-2">View</span>
-                                        </p:commandLink>
-
-
-
-                                        <!-- Edit button -->
-                                        <p:link styleClass="custom-btn">
-                                            <i class="pi pi-pencil custom-icon-edit"></i>
-                                            <span class="p-ml-2">Edit</span>
-                                        </p:link>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </ui:repeat>
+                    <!-- Filters for Organization Goals -->
+                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
+                        <p:inputText placeholder="Search Organization Goal" style="flex:1" styleClass="p-mr-2"/>
+                        <p:selectOneMenu value="..." styleClass="p-mr-2">
+                            <f:selectItem itemLabel="Status" itemValue=""/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Search" icon="pi pi-search"/>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="p-d-flex p-jc-between p-mt-3">
-                        <p:commandLink value="← Previous" update="@form"/>
-                        <p:commandLink value="Next →" update="@form"/>
-                    </div>
+                    <p:dataTable id="organizationGoalsTable" var="model" value="#{organizationGoalsView.dataModels}"
+                                 paginator="true" rows="10" lazy="true" paginatorPosition="bottom"
+                                 emptyMessage="No organization goals found.">
 
+                        <p:column headerText="No." width="50">
+                            <h:outputText value="#{row + 1}"/>
+                        </p:column>
+                        <p:column headerText="Title" >
+                            <h:outputText value="#{model.name}"/>
+                        </p:column>
+                        <p:column headerText="Created by" >
+                            <h:outputText value="#{model.createdBy}"/>
+                        </p:column>
+                        <p:column headerText="Created on" >
+                            <h:outputText value="#{model.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Review Cycle" >
+                            <h:outputText value="#{model.reviewCycle.title}"/>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" width="150" style="text-align: center">
+                            <!-- Action buttons here -->
+                            <p:commandLink styleClass="custom-btn"
+                                                                                   ajax="false"
+                                                                                   action="#{goalDetailsView.prepareForCategory(model.id)}">
+                                                                        <i class="pi pi-eye custom-icon"></i>
+                                                                        <span class="p-ml-2">View</span>
+                                                                    </p:commandLink>
+                                                                    <!-- Edit button -->
+                                                                    <p:link styleClass="custom-btn">
+                                                                        <i class="pi pi-pencil custom-icon-edit"></i>
+                                                                        <span class="p-ml-2">Edit</span>
+                                                                    </p:link>
+                        </p:column>
+                    </p:dataTable>
                 </p:tab>
 
+                <!-- =============================== -->
+                <!-- TAB 2: DEPARTMENT GOALS         -->
+                <!-- =============================== -->
                 <p:tab title="Department Goals">
-                    <div class="p-grid p-nogutter p-mt-2">
-                    <ui:repeat value="#{organizationGoalsView.departmentGoals}" var="depatGoal">
-                        <div class="p-col-12 p-md-6 p-p-2">
-                        <div class="p-card p-p-3 p-mb-3"
-                             style="border: 1px solid #dee2e6; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-
-                            <!-- Goal Title -->
-                            <h4 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
-                                #{depatGoal.name}
-                            </h4>
-
-                            <!-- Horizontal Divider -->
-                            <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5rem 0 1rem 0;" />
-                            <!-- Details Row -->
-                            <div class="p-d-flex p-flex-wrap p-mb-2" style="font-size: 0.9rem; color: #444;">
-
-                                <div class="p-d-flex p-flex-column p-ai-center p-pr-3 "
-                                     style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                    <span style="font-weight: 600;">Weight</span>
-                                    <span style="color: #2155A3 ; margin: 5px" >#{depatGoal.contributionWeight}%</span>
-                                </div>
-
-                                <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                     style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                    <span style="font-weight: 600;">Created by</span>
-                                    <span style="color: #2155A3 ; margin: 5px"  >#{depatGoal.createdBy}</span>
-                                </div>
-
-                                <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                     style="border-right: 1px solid #ccc; margin-right: 1rem;"
-                                >
-                                    <span style="font-weight: 600;">Created on</span>
-                                    <h:outputText value="#{depatGoal.dateCreated}" style="color: #2155A3 ; margin: 5px" >
-                                        <f:convertDateTime pattern="dd MMM yyyy"/>
-                                    </h:outputText>
-                                </div>
-                                <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                     style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                    <span style="font-weight: 600;">Status</span>
-                                    <p style="color: #2155A3; margin: 5px; display: flex; align-items: center;">
-        <span style="display: inline-block;
-                     border-radius: 50%;
-                     width: 10px;
-                     height: 10px;
-                     margin-right: 8px;
-                     background-color: #{depatGoal.status.toString() eq 'ACTIVE' ? 'green' :
-                                         depatGoal.status.toString() eq 'PENDING' ? 'orange' : 'blue'};">
-        </span>
-                                        #{depatGoal.status.name()}
-                                    </p>
-                                </div>
-
-                            </div>
-
-
-                            <!-- Actions -->
-                            <div class="p-d-flex p-jc-end p-mt-2">
-                                <p:commandLink styleClass="custom-btn"
-                                               ajax="false"
-                                              >
-                                    <i class="pi pi-eye custom-icon"></i>
-                                    <span class="p-ml-2">View</span>
-                                </p:commandLink>
-                            </div>
-                        </div>
-
-                        </div>
-                    </ui:repeat>
+                    <!-- Filters for Department Goals -->
+                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
+                        <p:inputText placeholder="Search Department Goal" style="flex:1" styleClass="p-mr-2"/>
+                        <p:selectOneMenu value="..." styleClass="p-mr-2">
+                            <f:selectItem itemLabel="Department" itemValue=""/>
+                        </p:selectOneMenu>
+                        <p:selectOneMenu value="..." styleClass="p-mr-2">
+                            <f:selectItem itemLabel="Status" itemValue=""/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Search" icon="pi pi-search"/>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="p-d-flex p-jc-between p-mt-3">
-                        <p:commandLink value="← Previous" update="@form"/>
-                        <p:commandLink value="Next →" update="@form"/>
-                    </div>
+                    <p:dataTable id="departmentGoalsTable" var="depatGoal" value="#{organizationGoalsView.departmentGoals}"
+                                 paginator="true" rows="10" lazy="true" paginatorPosition="bottom"
+                                 emptyMessage="No department goals found.">
 
+                        <p:column headerText="Title" >
+                            <h:outputText value="#{depatGoal.name}"/>
+                        </p:column>
+                        <p:column headerText="Weight"  width="100">
+                            <h:outputText value="#{depatGoal.contributionWeight}%"/>
+                        </p:column>
+                        <p:column headerText="Status" width="150">
+                            <p:badge value="#{depatGoal.status.name()}"
+                                     severity="#{depatGoal.status.toString() eq 'ACTIVE' ? 'success' : (depatGoal.status.toString() eq 'PENDING' ? 'warning' : 'info')}"/>
+                        </p:column>
+                        <p:column headerText="Created by" >
+                            <h:outputText value="#{depatGoal.createdBy}"/>
+                        </p:column>
+                        <p:column headerText="Created on" >
+                            <h:outputText value="#{depatGoal.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
+                            <h:link styleClass="custom-btn" outcome="/pages/goals/GoalDetails.xhtml">
+                                <f:param name="goalId" value="#{depatGoal.id}"/>
+                                <i class="pi pi-eye custom-icon"></i>
+                                <span class="p-ml-2">View</span>
+                            </h:link>
+                        </p:column>
+                    </p:dataTable>
                 </p:tab>
+
+                <!-- =============================== -->
+                <!-- TAB 3: TEAM GOALS               -->
+                <!-- =============================== -->
                 <p:tab title="Team Goals">
-                    <div class="p-grid p-nogutter p-mt-2">
-                        <ui:repeat value="#{organizationGoalsView.teamGoals}" var="teamGoal">
-                            <div class="p-col-12 p-md-6 p-p-2">
-                                <div class="p-card p-p-3 p-mb-3"
-                                     style="border: 1px solid #dee2e6; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-
-                                    <!-- Goal Title -->
-                                    <h4 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
-                                        #{teamGoal.name}
-                                    </h4>
-
-                                    <!-- Horizontal Divider -->
-                                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5rem 0 1rem 0;" />
-                                    <!-- Details Row -->
-                                    <div class="p-d-flex p-flex-wrap p-mb-2" style="font-size: 0.9rem; color: #444;">
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 "
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                            <span style="font-weight: 600;">Weight</span>
-                                            <span style="color: #2155A3 ; margin: 5px" >#{teamGoal.contributionWeight}%</span>
-                                        </div>
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                            <span style="font-weight: 600;">Created by</span>
-                                            <span style="color: #2155A3 ; margin: 5px"  >#{teamGoal.createdBy}</span>
-                                        </div>
-
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;"
-                                        >
-                                            <span style="font-weight: 600;">Created on</span>
-                                            <h:outputText value="#{teamGoal.dateCreated}" style="color: #2155A3 ; margin: 5px" >
-                                                <f:convertDateTime pattern="dd MMM yyyy"/>
-                                            </h:outputText>
-                                        </div>
-                                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                                            <span style="font-weight: 600;">Status</span>
-                                            <p style="color: #2155A3; margin: 5px; display: flex; align-items: center;">
-        <span style="display: inline-block;
-                     border-radius: 50%;
-                     width: 10px;
-                     height: 10px;
-                     margin-right: 8px;
-                     background-color: #{teamGoal.status.toString() eq 'ACTIVE' ? 'green' :
-                                         teamGoal.status.toString() eq 'PENDING' ? 'orange' : 'blue'};">
-        </span>
-                                                #{teamGoal.status.name()}
-                                            </p>
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- Actions -->
-                                    <div class="p-d-flex p-jc-end p-mt-2">
-                                        <p:commandLink styleClass="custom-btn"
-                                                       ajax="false"
-                                        >
-                                            <i class="pi pi-eye custom-icon"></i>
-                                            <span class="p-ml-2">View</span>
-                                        </p:commandLink>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </ui:repeat>
+                    <!-- Filters for Team Goals -->
+                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
+                        <p:inputText placeholder="Search Team Goal" style="flex:1" styleClass="p-mr-2"/>
+                        <p:selectOneMenu value="..." styleClass="p-mr-2">
+                            <f:selectItem itemLabel="Team" itemValue=""/>
+                        </p:selectOneMenu>
+                        <p:selectOneMenu value="..." styleClass="p-mr-2">
+                            <f:selectItem itemLabel="Status" itemValue=""/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Search" icon="pi pi-search"/>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="p-d-flex p-jc-between p-mt-3">
-                        <p:commandLink value="← Previous" update="@form"/>
-                        <p:commandLink value="Next →" update="@form"/>
-                    </div>
+                    <p:dataTable id="teamGoalsTable" var="teamGoal" value="#{organizationGoalsView.teamGoals}"
+                                 paginator="true" rows="10" lazy="true" paginatorPosition="bottom"
+                                 emptyMessage="No team goals found.">
 
+                        <p:column headerText="Title" >
+                            <h:outputText value="#{teamGoal.name}"/>
+                        </p:column>
+                        <p:column headerText="Weight" width="100">
+                            <h:outputText value="#{teamGoal.contributionWeight}%"/>
+                        </p:column>
+                        <p:column headerText="Status"  width="150">
+                            <p:badge value="#{teamGoal.status.name()}"
+                                     severity="#{teamGoal.status.toString() eq 'ACTIVE' ? 'success' : (teamGoal.status.toString() eq 'PENDING' ? 'warning' : 'info')}"/>
+                        </p:column>
+                        <p:column headerText="Created by" >
+                            <h:outputText value="#{teamGoal.createdBy}"/>
+                        </p:column>
+                        <p:column headerText="Created on">
+                            <h:outputText value="#{teamGoal.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
+                            <h:link styleClass="custom-btn" outcome="/pages/goals/GoalDetails.xhtml">
+                                <f:param name="goalId" value="#{teamGoal.id}"/>
+                                <i class="pi pi-eye custom-icon"></i>
+                                <span class="p-ml-2">View</span>
+                            </h:link>
+                        </p:column>
+                    </p:dataTable>
                 </p:tab>
             </p:tabView>
-
-
         </h:form>
     </ui:define>
 </ui:composition>

@@ -63,13 +63,6 @@ public class OrganizationGoalForm extends DialogForm<OrganizationGoal> {
                 Filter.equal("reviewCycle.id", this.reviewCycle.getId()),
                 Filter.equal("recordStatus", RecordStatus.ACTIVE)
         );
-        double totalWeight = this.organizationGoalService.getInstances(search,0,0).stream()
-                .mapToDouble(OrganizationGoal::getContributionWeight)
-                .sum();
-        if (totalWeight + super.model.getContributionWeight() > 100) {
-            UiUtils.showMessageBox("Total contribution weight too high","Sum of all goals contribution weights is greater than 100");
-            return;
-        }
 
         model.setReviewCycle(this.reviewCycle);
         organizationGoalService.saveInstance(super.model);

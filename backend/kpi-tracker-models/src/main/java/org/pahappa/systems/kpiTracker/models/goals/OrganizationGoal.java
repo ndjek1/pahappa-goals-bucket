@@ -10,7 +10,6 @@ import javax.persistence.*;
 public class OrganizationGoal extends BaseEntity {
     private String name;
     private String description;
-    private double contributionWeight;
     private ReviewCycle reviewCycle;
 
     @Column(name = "name",nullable = false,unique = true)
@@ -31,14 +30,6 @@ public class OrganizationGoal extends BaseEntity {
         this.description = description;
     }
 
-    @Column(name = "contribution_weight", nullable = false)
-    public double getContributionWeight() {
-        return contributionWeight;
-    }
-
-    public void setContributionWeight(double contributionWeight) {
-        this.contributionWeight = contributionWeight;
-    }
     @ManyToOne
     @JoinColumn(
             name = "review_cycle_Id",
