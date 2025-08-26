@@ -6,17 +6,22 @@
                 template="/pages/californiatemplate/dialog-template.xhtml">
 
     <ui:define name="content">
-        <h:form id="globalWeightDialog" styleClass="ui-fluid formgrid grid" >
+        <title>Manage Global Weight</title>
+        <h:form id="globalWeightDialog" styleClass="ui-fluid formgrid grid"
+        rendered="#{globalWeightsForm.activeReviewCycle != null}">
 
-            <h3 class="form-title p-mx-4">Manage Global Weight</h3>
             <p:growl id="growl" showDetail="true" life="4000" />
 
             <div class="field col-12 p-m-4">
+                <div class="field col-12 " >
+                    <h:outputText
+                            value="#{globalWeightsForm.model.reviewCycle == null
+              ? 'Current review cycle: '
+              : 'Review cycle: '}#{globalWeightsForm.activeReviewCycle.title}" />
 
-                <p:selectOneMenu id="reviewCycle" value="#{globalWeightsForm.model.reviewCycle}" converter="reviewCycleConverter" >
-                    <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
-                    <f:selectItems value="#{globalWeightsForm.reviewCycleList}" var="review"  itemLabel="#{review.title}" itemValue="#{review}"/>
-                </p:selectOneMenu>
+
+                </div>
+
             </div>
 
             <!-- Business Goal Weight -->
@@ -65,5 +70,10 @@
             </div>
 
         </h:form>
+        <!-- Case: Active review cycle is null -->
+        <h:panelGroup rendered="#{globalWeightsForm.activeReviewCycle == null}">
+            <h:outputText value="No active review cycle available. Please create one first."
+                          style="color: red; font-weight: bold; font-size: 1.1em;" />
+        </h:panelGroup>
     </ui:define>
 </ui:composition>

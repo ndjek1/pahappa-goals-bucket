@@ -26,11 +26,14 @@
             <h:form id="menuform">
                 <pc:menu widgetVar="CaliforniaMenuWidget" styleClass="custom-sidebar-menu">
 
+
                     <p:menuitem id="dashboard" value="Dashboard"
                                 icon="pi pi-th-large"
                                 styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/dashboard/Dashboard.xhtml' ? 'active-link' : ''}"
                                 outcome="/pages/dashboard/Dashboard" />
-                    <p:submenu id="goals" label="Manage Goals"
+
+
+                    <p:submenu id="goals" label="Manage Organization"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'goals') ? 'active-submenu' : ''}"
                                icon="fa fa-bullseye">
@@ -49,15 +52,17 @@
                                     outcome="/pages/activities/OrganizationalActivitiesView" />
                     </p:submenu>
 
+
                     <p:submenu id="kpis" label="Manage KPIs"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'kpis') ? 'active-submenu' : ''}"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="allKPIs" value="All KPIs"
-                                    icon="pi pi-chart-line"
+                                    outcome="/pages/kpis/KPIView"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/kpis/KPIView" />
                     </p:submenu>
+
 
                     <p:submenu id="activities" label="Manage Activities"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'activities') ? 'active-submenu' : ''}"
@@ -82,6 +87,7 @@
                                     outcome="/pages/activities/IndividualActivityFormDialog" />
                     </p:submenu>
 
+
                     <p:submenu id="department" label="Manage Department"
                                rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Department') ? 'active-submenu' : ''}"
@@ -99,6 +105,8 @@
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
+
+
                     <p:submenu id="team" label="Manage Team"
                                rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Team') ? 'active-submenu' : ''}"
@@ -158,16 +166,13 @@
                                     outcome="/pages/systemSetup/ThresholdTable" />
                     </p:submenu>
 
+
                     <p:menuitem id="logout" value="Logout" icon="pi pi-sign-out"
-                                style="margin-bottom: 0"
-                                url="#{request.contextPath}/ServiceLogout"/>
+                                url="#{request.contextPath}/ServiceLogout"
+                                style="margin-bottom: 0" />
                 </pc:menu>
             </h:form>
 
         </div>
-
-
     </div>
-
-
 </ui:composition>

@@ -1,9 +1,10 @@
 package org.pahappa.systems.kpiTracker.views.users;
 
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
-import org.pahappa.systems.kpiTracker.core.services.systemUsers.SystemUserService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
-import org.pahappa.systems.kpiTracker.models.systemUsers.SystemUser;
+import org.pahappa.systems.kpiTracker.models.security.RoleConstants;
+import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
 import org.pahappa.systems.kpiTracker.views.dialogs.MessageComposer;
 import org.sers.webutils.model.Gender;
 import org.sers.webutils.model.RecordStatus;
@@ -32,7 +33,7 @@ public class RegistrationView implements Serializable { // Implement Serializabl
     private transient UserService userService; // transient is good practice for injected services
     private List<Gender> listOfGenders;
     private User user;
-    private SystemUserService systemUserService;
+    private StaffService staffService;
     private DepartmentService departmentService;
     private List<Department> departments;
     private Department selectedDepartment;
@@ -44,14 +45,14 @@ public class RegistrationView implements Serializable { // Implement Serializabl
     public void init() {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         this.listOfGenders = Arrays.asList(Gender.values());
-        this.systemUserService = ApplicationContextProvider.getBean(SystemUserService.class);
+        this.staffService = ApplicationContextProvider.getBean(StaffService.class);
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         this.user = new User();
         loadDepartments();
     }
 
     public User persist() throws ValidationFailedException {
-        Role role  = userService.getRoleByRoleName(Role.DEFAULT_WEB_ACCESS_ROLE);
+        Role role  = userService.getRoleByRoleName(RoleConstants.ROLE_INDIVIDUAL);
         this.user.addRole(role);
         this.user.setRecordStatus(RecordStatus.ACTIVE_LOCKED);
         return this.userService.saveUser(user);   // return managed entity
@@ -75,10 +76,10 @@ public class RegistrationView implements Serializable { // Implement Serializabl
     }
 
     public void saveSystemUser(User managedUser) throws ValidationFailedException, OperationFailedException {
-        SystemUser systemUser = new SystemUser();
-        systemUser.setUser(managedUser);   // ✅ ensure managed user is set
-        systemUser.setDepartment(selectedDepartment);
-        this.systemUserService.saveInstance(systemUser);
+        Staff staff = new Staff();
+        staff.setUser(managedUser);   // ✅ ensure managed user is set
+        staff.setDepartment(selectedDepartment);
+        this.staffService.saveInstance(staff);
     }
 
 

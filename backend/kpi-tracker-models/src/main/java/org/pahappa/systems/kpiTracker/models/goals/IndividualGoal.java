@@ -14,7 +14,11 @@ public class IndividualGoal extends BaseEntity {
     private GoalStatus status;
     private DepartmentGoal parent;
     private TeamGoal teamGoal;
-    private User staff;
+
+    private Staff staff;
+    public IndividualGoal() {
+        this.status = GoalStatus.PENDING;
+    }
 
     @Column(name = "name",nullable = false)
     public String getName() {
@@ -53,7 +57,7 @@ public class IndividualGoal extends BaseEntity {
         this.status = status;
     }
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_goal_id")
     public DepartmentGoal getParent() {
         return parent;
@@ -63,8 +67,8 @@ public class IndividualGoal extends BaseEntity {
         this.parent = parent;
     }
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "team_goal_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "team_goal_id", nullable = true)
     public TeamGoal getTeamGoal() {
         return teamGoal;
     }
@@ -73,11 +77,11 @@ public class IndividualGoal extends BaseEntity {
         this.teamGoal = teamGoal;
     }
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    public User getStaff() {
-        return staff;
-    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "staff_id")
+    public Staff getStaff() {
+
 
     public void setStaff(User staff) {
         this.staff = staff;
