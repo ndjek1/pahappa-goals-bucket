@@ -4,6 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
             .capitalized {
@@ -11,53 +12,77 @@
             }
         </style>
     </ui:define>
-    <ui:define name="content">
-        <title>Add Goal</title>
 
-        <h:form id="orgGoalForm" styleClass="dialog-card">
+    <ui:define name="content">
+        <title>Add Individual Goal</title>
+
+        <h:form id="individualGoalForm" styleClass="dialog-card">
             <p:growl id="growl" showDetail="true" life="4000" />
 
             <div class="ui-fluid formgrid grid p-m-4">
 
-                <!-- Type -->
+                <!-- Goal Name -->
                 <div class="field col-12 p-m-4">
-
-                    <p:inputText value="#{individualGoalForm.model.name}"
+                    <p:outputLabel for="goalName" value="Goal Name" />
+                    <p:inputText id="goalName"
+                                 value="#{individualGoalForm.model.name}"
                                  required="true"
-                                 placeholder="Name"
+                                 placeholder="Enter goal name"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-
+                <!-- Description -->
                 <div class="field col-12 md:col-6 p-m-4">
-
-                    <p:inputText value="#{individualGoalForm.model.description}"
+                    <p:outputLabel for="goalDesc" value="Description" />
+                    <p:inputText id="goalDesc"
+                                 value="#{individualGoalForm.model.description}"
                                  required="true"
-                                 placeholder="Description"
+                                 placeholder="Enter description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
+
+                <!-- Contribution Weight -->
                 <div class="field col-12 md:col-6 p-m-4">
-                    <p:inputText value="#{individualGoalForm.model.contributionWeight}" required="true"
-                                 placeholder="Weight"
-                                 styleClass="p-inputtext-sm w-full"
-                    />
+                    <p:outputLabel for="weight" value="Weight (%)" />
+                    <p:inputText id="weight"
+                                 value="#{individualGoalForm.model.contributionWeight}"
+                                 required="true"
+                                 placeholder="Enter weight"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <div class="field col-12 p-m-4">
 
-                    <p:selectOneMenu id="deptParentGoal" value="#{individualGoalForm.model.parent}" converter="departmentGoalConverter"
-                    rendered="#{individualGoalForm.team eq null}">
-                        <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{individualGoalForm.departmentGoals}" var="parentGoal"  itemLabel="#{parentGoal.name} " itemValue="#{parentGoal}"/>
-                    </p:selectOneMenu>
-                </div>
-                <div class="field col-12 p-m-4">
+                <!-- Department Parent Goal -->
+                <h:panelGroup rendered="#{individualGoalForm.team eq null}">
+                    <div class="field col-12 p-m-4">
+                        <p:outputLabel for="deptParentGoal" value="Department Parent Goal" />
+                        <p:selectOneMenu id="deptParentGoal"
+                                         value="#{individualGoalForm.model.parent}"
+                                         converter="departmentGoalConverter">
+                            <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{individualGoalForm.departmentGoals}"
+                                           var="parentGoal"
+                                           itemLabel="#{parentGoal.name}"
+                                           itemValue="#{parentGoal}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </h:panelGroup>
 
-                    <p:selectOneMenu id="teamGoal" value="#{individualGoalForm.model.teamGoal}" converter="teamGoalConverter"
-                                     rendered="#{individualGoalForm.team ne null}">
-                        <f:selectItem itemLabel="Select team goal" itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{individualGoalForm.teamGoals}" var="teamGoal"  itemLabel="#{teamGoal.name} " itemValue="#{teamGoal}"/>
-                    </p:selectOneMenu>
-                </div>
+                <!-- Team Goal -->
+                <h:panelGroup rendered="#{individualGoalForm.team ne null}">
+                    <div class="field col-12 p-m-4">
+                        <p:outputLabel for="teamGoal" value="Team Goal" />
+                        <p:selectOneMenu id="teamGoal"
+                                         value="#{individualGoalForm.model.teamGoal}"
+                                         converter="teamGoalConverter">
+                            <f:selectItem itemLabel="Select team goal" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{individualGoalForm.teamGoals}"
+                                           var="teamGoal"
+                                           itemLabel="#{teamGoal.name}"
+                                           itemValue="#{teamGoal}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </h:panelGroup>
+
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">
                     <p:commandButton value="Cancel"
@@ -73,7 +98,6 @@
                 </div>
 
             </div>
-
         </h:form>
     </ui:define>
 </ui:composition>

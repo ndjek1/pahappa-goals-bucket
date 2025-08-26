@@ -30,16 +30,6 @@
 
             <p:growl id="growl" showDetail="true" life="4000"/>
 
-            <!-- Page Title & Main Action Button -->
-            <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
-                <h2>Goals</h2>
-                <p:commandButton value="Set Goal" icon="pi pi-plus"
-                                 style="background: #6DBE46"
-                                 actionListener="#{organizationGoalForm.show}">
-                    <f:setPropertyActionListener value="#{null}" target="#{organizationGoalForm.model}"/>
-                    <p:ajax event="dialogReturn" listener="#{organizationGoalsView.reloadFilterReset}" update="goalForm"/>
-                </p:commandButton>
-            </div>
 
             <p:tabView>
                 <!-- =============================== -->
@@ -47,13 +37,27 @@
                 <!-- =============================== -->
                 <p:tab title="Organization Goals">
                     <!-- Filters for Organization Goals -->
-                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
-                        <p:inputText placeholder="Search Organization Goal" style="flex:1" styleClass="p-mr-2"/>
-                        <p:selectOneMenu value="..." styleClass="p-mr-2">
-                            <f:selectItem itemLabel="Status" itemValue=""/>
-                        </p:selectOneMenu>
-                        <p:commandButton value="Search" icon="pi pi-search"/>
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+
+                        <!-- Left side: search/filter controls -->
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Organization Goal" styleClass="p-mr-2"/>
+                            <p:selectOneMenu value="..." styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Search" icon="pi pi-search"/>
+                        </div>
+
+                        <!-- Right side: set goal button -->
+                        <p:commandButton value="Set Goal" icon="pi pi-plus"
+                                         style="background:#6DBE46"
+                                         actionListener="#{organizationGoalForm.show}">
+                            <f:setPropertyActionListener value="#{null}" target="#{organizationGoalForm.model}"/>
+                            <p:ajax event="dialogReturn" listener="#{organizationGoalsView.reloadFilterReset}" update="goalForm"/>
+                        </p:commandButton>
+
                     </div>
+
 
                     <p:dataTable id="organizationGoalsTable" var="model" value="#{organizationGoalsView.dataModels}"
                                  paginator="true" rows="10" lazy="true" paginatorPosition="bottom"
@@ -76,20 +80,21 @@
                         <p:column headerText="Review Cycle" >
                             <h:outputText value="#{model.reviewCycle.title}"/>
                         </p:column>
-                        <p:column headerText="Action" exportable="false" width="150" style="text-align: center">
-                            <!-- Action buttons here -->
-                            <p:commandLink styleClass="custom-btn"
-                                                                                   ajax="false"
-                                                                                   action="#{goalDetailsView.prepareForCategory(model.id)}">
-                                                                        <i class="pi pi-eye custom-icon"></i>
-                                                                        <span class="p-ml-2">View</span>
-                                                                    </p:commandLink>
-                                                                    <!-- Edit button -->
-                                                                    <p:link styleClass="custom-btn">
-                                                                        <i class="pi pi-pencil custom-icon-edit"></i>
-                                                                        <span class="p-ml-2">Edit</span>
-                                                                    </p:link>
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                            <!-- View Button -->
+                            <p:commandButton title="View"
+                                             icon="pi pi-eye"
+                                             styleClass="p-button-sm p-mr-2"
+                                             action="#{goalDetailsView.prepareForCategory(model.id)}"
+                                              />
+
+                            <!-- Edit Button -->
+                            <p:commandButton title="Edit"
+                                             icon="pi pi-pencil"
+                                             styleClass="p-button-sm p-button-warning"
+                                             />
                         </p:column>
+
                     </p:dataTable>
                 </p:tab>
 
@@ -97,16 +102,24 @@
                 <!-- TAB 2: DEPARTMENT GOALS         -->
                 <!-- =============================== -->
                 <p:tab title="Department Goals">
-                    <!-- Filters for Department Goals -->
-                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
-                        <p:inputText placeholder="Search Department Goal" style="flex:1" styleClass="p-mr-2"/>
-                        <p:selectOneMenu value="..." styleClass="p-mr-2">
-                            <f:selectItem itemLabel="Department" itemValue=""/>
-                        </p:selectOneMenu>
-                        <p:selectOneMenu value="..." styleClass="p-mr-2">
-                            <f:selectItem itemLabel="Status" itemValue=""/>
-                        </p:selectOneMenu>
+
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+
+                        <!-- Left side: search/filter controls -->
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Department Goal" style="flex:1" styleClass="p-mr-2"/>
+                            <p:selectOneMenu value="..." styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Department" itemValue=""/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu value="..." styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                            </p:selectOneMenu>
+
+                        </div>
+
+                        <!-- Right side: set goal button -->
                         <p:commandButton value="Search" icon="pi pi-search"/>
+
                     </div>
 
                     <p:dataTable id="departmentGoalsTable" var="depatGoal" value="#{organizationGoalsView.departmentGoals}"
@@ -132,11 +145,11 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
-                            <h:link styleClass="custom-btn" outcome="/pages/goals/GoalDetails.xhtml">
-                                <f:param name="goalId" value="#{depatGoal.id}"/>
-                                <i class="pi pi-eye custom-icon"></i>
-                                <span class="p-ml-2">View</span>
-                            </h:link>
+                            <p:commandButton title="View"
+                                             icon="pi pi-eye"
+                                             styleClass="p-button-sm p-mr-2"
+
+                            />
                         </p:column>
                     </p:dataTable>
                 </p:tab>
@@ -146,15 +159,23 @@
                 <!-- =============================== -->
                 <p:tab title="Team Goals">
                     <!-- Filters for Team Goals -->
-                    <div class="p-d-flex p-ai-center p-mb-3 card p-p-3">
-                        <p:inputText placeholder="Search Team Goal" style="flex:1" styleClass="p-mr-2"/>
-                        <p:selectOneMenu value="..." styleClass="p-mr-2">
-                            <f:selectItem itemLabel="Team" itemValue=""/>
-                        </p:selectOneMenu>
-                        <p:selectOneMenu value="..." styleClass="p-mr-2">
-                            <f:selectItem itemLabel="Status" itemValue=""/>
-                        </p:selectOneMenu>
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+
+                        <!-- Left side: search/filter controls -->
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Team Goal" style="flex:1" styleClass="p-mr-2"/>
+                            <p:selectOneMenu value="..." styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Team" itemValue=""/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu value="..." styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                            </p:selectOneMenu>
+
+                        </div>
+
+                        <!-- Right side: set goal button -->
                         <p:commandButton value="Search" icon="pi pi-search"/>
+
                     </div>
 
                     <p:dataTable id="teamGoalsTable" var="teamGoal" value="#{organizationGoalsView.teamGoals}"
@@ -180,11 +201,10 @@
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
-                            <h:link styleClass="custom-btn" outcome="/pages/goals/GoalDetails.xhtml">
-                                <f:param name="goalId" value="#{teamGoal.id}"/>
-                                <i class="pi pi-eye custom-icon"></i>
-                                <span class="p-ml-2">View</span>
-                            </h:link>
+                            <p:commandButton title="View"
+                                             icon="pi pi-eye"
+                                             styleClass="p-button-sm p-mr-2"
+                            />
                         </p:column>
                     </p:dataTable>
                 </p:tab>

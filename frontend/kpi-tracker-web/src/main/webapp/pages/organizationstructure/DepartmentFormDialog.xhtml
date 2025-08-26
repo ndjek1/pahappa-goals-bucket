@@ -4,57 +4,83 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .capitalized {
+                text-transform: capitalize;
+            }
+        </style>
+    </ui:define>
+
     <ui:define name="content">
-        <h:form id="departmentFormDialog" styleClass="card">
-            <div class="p-grid ui-fluid">
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Department Name</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{departmentFormDialog.model.departmentName}" required="true" />
-                    </div>
+        <title>Add Department</title>
+        <h:form id="departmentFormDialog" styleClass="dialog-card">
+            <p:growl id="growl" showDetail="true" life="4000" />
+
+            <div class="ui-fluid formgrid grid p-m-4">
+
+                <!-- Department Name -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="deptName" value="Department Name" />
+                    <p:inputText id="deptName" value="#{departmentFormDialog.model.departmentName}"
+                                 required="true"
+                                 placeholder="Enter department name"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Department Description</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{departmentFormDialog.model.departmentDescription}" />
-                    </div>
+
+                <!-- Department Description -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="deptDesc" value="Department Description" />
+                    <p:inputTextarea id="deptDesc" value="#{departmentFormDialog.model.departmentDescription}"
+                                 placeholder="Enter department description"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Department Head</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{departmentFormDialog.model.departmentHead}" converter="userConverter" filter="true" filterMatchMode="contains" placeholder="Select Department Head">
-                            <f:selectItem itemLabel="Select Department Head" itemValue="" />
-                            <f:selectItems value="#{departmentFormDialog.completeUsers}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}" />
-                        </p:selectOneMenu>
-                    </div>
+
+                <!-- Department Head -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="deptHead" value="Department Head" />
+                    <p:selectOneMenu id="deptHead"
+                                     value="#{departmentFormDialog.model.departmentHead}"
+                                     converter="userConverter"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     placeholder="Select Department Head"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select Department Head" itemValue="" />
+                        <f:selectItems value="#{departmentFormDialog.completeUsers}" var="user"
+                                       itemLabel="#{user.fullName}" itemValue="#{user}" />
+                    </p:selectOneMenu>
                 </div>
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Status</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{departmentFormDialog.model.recordStatus}" required="true">
-                            <f:selectItem itemLabel="Select Status" itemValue="" />
-                            <f:selectItem itemLabel="Active" itemValue="ACTIVE" />
-                            <f:selectItem itemLabel="Inactive" itemValue="INACTIVE" />
-                        </p:selectOneMenu>
-                    </div>
+
+                <!-- Status -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="recordStatus" value="Status" />
+                    <p:selectOneMenu id="recordStatus" value="#{departmentFormDialog.model.recordStatus}"
+                                     required="true"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select Status" itemValue="" />
+                        <f:selectItem itemLabel="Active" itemValue="ACTIVE" />
+                        <f:selectItem itemLabel="Inactive" itemValue="INACTIVE" />
+                    </p:selectOneMenu>
                 </div>
-                <div class="ui-col-12 ui-md-12" style="margin-top: 60px;">
-                    <div class="p-grid p-justify-end">
-                        <div class="p-col-2">
-                            <p:commandButton value="Cancel"
-                                             process="@this"
-                                             action="#{departmentFormDialog.hide}"
-                                             styleClass="ui-button-outlined ui-button-help" />
-                        </div>
-                        <div class="p-col-2">
-                            <p:commandButton value="Save"
-                                             process="@form"
-                                             actionListener="#{departmentFormDialog.save}"
-                                             update="@form" validateClient="true"
-                                             oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();"/>
-                        </div>
-                    </div>
+
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between">
+                    <p:commandButton value="Cancel"
+                                     process="@this"
+                                     action="#{departmentFormDialog.hide}"
+                                     styleClass="ui-button-danger p-mx-5" />
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     actionListener="#{departmentFormDialog.save}"
+                                     update="@form growl"
+                                     validateClient="true"
+                                     styleClass="ui-button-primary p-mx-5"
+                                     oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();" />
                 </div>
+
             </div>
         </h:form>
     </ui:define>
