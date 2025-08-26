@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
-import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
+import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
@@ -73,7 +73,7 @@ public class DepartmentMembersView implements Serializable {
 
 
         // Filter and load dataModels based on search/filter criteria
-        this.departmentMembers = staffService.getInstances(departmentMembersSearch, 0, 1000);
+        this.departmentMembers = staffService.getInstances(departmentMembersSearch, 0, 0);
 
     }
 
