@@ -74,10 +74,12 @@
 
                     <!-- Actions -->
                     <div class="p-d-flex p-jc-end p-mt-2">
-                        <p:commandButton value="View" icon="pi pi-eye"
-                                         styleClass="ui-button-secondary p-mr-2" />
-                        <p:commandButton value="Edit" icon="pi pi-pencil"
-                                         styleClass="ui-button-info" />
+                        <p:commandLink styleClass="custom-btn"
+                                       ajax="false"
+                                       action="#{teamGoalDetails.prepareForTeamGoal(goal.id)}">
+                            <i class="pi pi-eye custom-icon"></i>
+                            <span class="p-ml-2">View</span>
+                        </p:commandLink>
                     </div>
 
                 </div>
