@@ -4,7 +4,7 @@ import org.pahappa.systems.kpiTracker.core.services.organization_structure_servi
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.security.RoleConstants;
-import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
+import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.views.dialogs.MessageComposer;
 import org.sers.webutils.model.Gender;
 import org.sers.webutils.model.RecordStatus;

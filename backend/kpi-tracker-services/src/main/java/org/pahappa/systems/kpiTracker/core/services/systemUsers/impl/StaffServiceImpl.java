@@ -5,7 +5,7 @@ import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
 
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
-import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
+import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.utils.Validate;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;

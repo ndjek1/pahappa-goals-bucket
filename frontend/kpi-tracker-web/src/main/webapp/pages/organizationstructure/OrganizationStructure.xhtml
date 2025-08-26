@@ -93,12 +93,10 @@
 
                                 <div>
                                     <p:commandButton value="View Teams" process="@this"
-                                                     styleClass="ui-button-secondary" immediate="true"
+                                                     styleClass="ui-button-secondary"
                                                      style="background-color: white; color: #337ab7; border: 1px solid #337ab7; border-radius: 4px;"
-                                                     actionListener="#{departmentTeamsView.show(department)}">
-                                        <f:setPropertyActionListener value="#{department}"
-                                                                     target="#{departmentTeamsView.selectedDepartment}" />
-                                    </p:commandButton>
+                                                     action="#{departmentTeamsView.show(department)}" />
+
                                 </div>
 
                                 <div>

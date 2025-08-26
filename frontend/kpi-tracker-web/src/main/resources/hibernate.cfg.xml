@@ -61,6 +61,7 @@
         <mapping class="org.pahappa.systems.kpiTracker.models.activities.Activity" />
 
         <!-- Removed obsolete Staff mapping; using org.sers.webutils.model.security.User -->
+        <mapping class="org.pahappa.systems.kpiTracker.models.staff.Staff" />
 
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
