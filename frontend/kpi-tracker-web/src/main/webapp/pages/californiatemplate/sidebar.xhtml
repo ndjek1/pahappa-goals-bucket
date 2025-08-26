@@ -43,13 +43,7 @@
                         <p:menuitem id="organizationalActivities" value="Organizational Activities"
                                     outcome="/pages/activities/OrganizationalActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/OrganizationalActivitiesView.xhtml' ? 'active-menu' : ''}" />
-                                
-                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
-                                    icon="pi pi-chart-line"
-                                    outcome="/pages/kpis/OrganizationalKPIView" />
-                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
-                                    icon="pi pi-calendar"
-                                    outcome="/pages/activities/OrganizationalActivitiesView" />
+
                     </p:submenu>
 
 
@@ -88,6 +82,10 @@
                                rendered="#{dashboard.loggedinUser.hasRole('Department Lead')}"
                                icon="fa fa-building"
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Department')}">
+                        <p:menuitem id="teams" value="Teams"
+                                    outcome="/pages/organizationstructure/TeamsView"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/organizationstructure/TeamsView.xhtml' ? 'active-menu' : ''}"
+                        />
 
                         <p:menuitem id="departmentGoals" value="Goals"
                                     outcome="/pages/goals/DepartmentGoalView"
@@ -100,12 +98,6 @@
                         <p:menuitem id="departmentActivities" value="Department Activities"
                                     outcome="/pages/activities/DepartmentActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-menu' : ''}" />
-                        <p:menuitem id="departmentKPIs" value="Department KPIs"
-                                    icon="pi pi-chart-line"
-                                    outcome="/pages/kpis/DepartmentKPIView" />
-                        <p:menuitem id="departmentActivities" value="Department Activities"
-                                    icon="pi pi-calendar"
-                                    outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
 
 
@@ -125,12 +117,6 @@
                         <p:menuitem id="teamActivities" value="Team Activities"
                                     outcome="/pages/activities/TeamActivitiesView"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/TeamActivitiesView.xhtml' ? 'active-menu' : ''}" />
-                        <p:menuitem id="teamKPIs" value="Team KPIs"
-                                    icon="pi pi-chart-line"
-                                    outcome="/pages/kpis/TeamKPIView" />
-                        <p:menuitem id="teamActivities" value="Team Activities"
-                                    icon="pi pi-calendar"
-                                    outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
 
