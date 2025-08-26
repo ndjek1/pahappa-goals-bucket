@@ -14,7 +14,7 @@ import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
-import org.pahappa.systems.kpiTracker.models.systemUsers.Staff;
+import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
@@ -25,7 +25,6 @@ import org.sers.webutils.server.shared.SharedAppData;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import java.util.List;
 
 @ManagedBean(name = "individualGoalForm")
