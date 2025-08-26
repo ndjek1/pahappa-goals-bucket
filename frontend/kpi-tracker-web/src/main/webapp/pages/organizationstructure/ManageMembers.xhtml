@@ -14,8 +14,16 @@
 
                 <!-- 1. HEADER: Title with search options -->
                 <div class="p-d-flex p-jc-between p-ai-start p-mb-4">
+                    <div class="p-d-flex p-ai-center p-gap-2">
+                        <p:commandButton icon="pi pi-arrow-left"
+                                         styleClass="ui-button-text ui-button-outlined p-mr-3 "
+                                         action="#{departmentTeamsView.cancel}"
+                                         immediate="true"
+                        />
+                        <h2 style="margin: 0; color: #6c757d;">Department Members</h2>
+                    </div>
                     <div>
-                        <h1 style="margin: 0; color: #6c757d;">Department Members</h1>
+
                     </div>
                     <div>
                         <p:inputText id="searchTerm" required="false"
