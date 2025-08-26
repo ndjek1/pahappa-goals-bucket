@@ -16,6 +16,83 @@
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
+            .nav-card {
+                background: #f9fafb;
+            }
+            .icon-circle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                margin-bottom: 0;
+                color: #fff;
+                flex-shrink: 0;
+                font-size: 10px;
+            }
+            .bg-green { background: #22c55e; }
+            .bg-blue { background: #3b82f6; }
+            .bg-purple { background: #8b5cf6; }
+            .bg-orange { background: #f59e0b; }
+            .bg-cyan { background: #06b6d4; }
+            .bg-indigo { background: #6366f1; }
+            .bg-success { background: #10b981; }
+            .bg-info { background: #06b6d4; }
+            .bg-warning { background: #f59e0b; }
+            .bg-secondary { background: #6b7280; }
+            .bg-light-blue { background: #93c5fd; }
+            .bg-light-green { background: #86efac; }
+            .bg-light-purple { background: #c4b5fd; }
+            .bg-light-orange { background: #fcd34d; }
+            .bg-light-red { background: #fca5a5; }
+            .nav-card h6 { margin: 0; font-size: 0.72rem; }
+            .nav-card p { margin: 0; font-size: 0.66rem; color: #6b7280; line-height: 1.2; }
+            
+            /* Statistics card specific styles */
+            .nav-card h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+            .stat-value { margin-left: auto; font-size: 1rem; font-weight: 600; }
+            
+            /* Text color classes for statistics */
+            .text-primary { color: #3b82f6; }
+            .text-success { color: #10b981; }
+            .text-info { color: #06b6d4; }
+            .text-warning { color: #f59e0b; }
+            .text-secondary { color: #6b7280; }
+            
+            /* Filter input styles */
+            .filter-input, .filter-select, .filter-calendar {
+                width: 100%;
+                font-size: 0.72rem;
+                padding: 0.16rem 0.28rem;
+                border: 1px solid #d1d5db;
+                border-radius: 0.3rem;
+            }
+            
+            /* Horizontal layout styles */
+            .d-flex { display: flex; }
+            .align-items-center { align-items: center; }
+            .flex-grow-1 { flex-grow: 1; }
+            .me-3 { margin-right: 0.35rem; }
+            .mb-1 { margin-bottom: 0.12rem; }
+            .mb-0 { margin-bottom: 0; }
+            .small { font-size: 0.875em; }
+            
+            /* Custom column width for 5 cards in one row */
+            .p-md-2-4 { 
+                flex: 0 0 20%; 
+                max-width: 20%; 
+            }
+
+            /* Compact rows and cards spacing */
+            .card { padding: 4px; }
+            .p-grid { margin: 0 -0.2rem; }
+            [class*='p-col-'] { padding: 0 0.2rem; }
+
+            /* Compact breadcrumb at top */
+            .breadcrumb-card { padding: 3px 5px; margin: 0 0 4px 0; }
+            .breadcrumb-card .ui-breadcrumb { font-size: 0.76rem; padding: 0; margin: 0; }
+            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link { padding: 1px 5px; }
         </style>
     </ui:define>
 
@@ -24,49 +101,231 @@
             <div class="ui-g-12">
                 <h:form id="kpiView" enctype="multipart/form-data">
 
+                    <!-- Breadcrumb Navigation -->
+                    <div class="card breadcrumb-card">
+                        <p:breadCrumb>
+                            <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
+                            <p:menuitem value="KPI Management" icon="pi pi-chart-line" />
+                        </p:breadCrumb>
+                    </div>
+
                     <!-- KPI Type Navigation -->
                     <div class="card">
-                        <h5>KPI Management</h5>
-                        <p>Select the type of KPIs you want to manage:</p>
-                        
+                        <div class="p-grid" style="margin-top: -4px;">
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/OrganizationalKPIView.xhtml'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-green me-3"><i class="pi pi-globe"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Organizational KPIs</h6>
+                                            <p class="text-500 mb-0 small">Manage organization-wide KPIs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/DepartmentKPIView.xhtml'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-blue me-3"><i class="pi pi-building"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Department KPIs</h6>
+                                            <p class="text-500 mb-0 small">Manage department-level KPIs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/TeamKPIView.xhtml'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-purple me-3"><i class="pi pi-users"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="h6 mb-1">Team KPIs</h6>
+                                            <p class="text-500 mb-0 small">Manage team-level KPIs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/KPIView.xhtml'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-orange me-3"><i class="pi pi-list"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">All KPIs</h6>
+                                            <p class="text-500 mb-0 small">View all system KPIs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/IndividualKPIForm.xhtml'">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-cyan me-3"><i class="pi pi-user"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Individual KPIs</h6>
+                                            <p class="text-500 mb-0 small">Create/manage individual KPIs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Statistics -->
+                    <div class="card">
+                        <div class="p-grid" style="margin-top: -4px;">
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-indigo me-3"><i class="pi pi-chart-bar"></i></div>
+                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                            <h6 class="mb-0">Total KPIs</h6>
+                                            <span class="stat-value text-primary">#{kpiView.dataModels.size()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-success me-3"><i class="pi pi-check-circle"></i></div>
+                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                            <h6 class="mb-0">Active KPIs</h6>
+                                            <span class="stat-value text-success">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-info me-3"><i class="pi pi-globe"></i></div>
+                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                            <h6 class="mb-0">Organizational KPIs</h6>
+                                            <span class="stat-value text-info">#{kpiView.dataModels.stream().filter(k -> k.organizationGoal != null).count()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-warning me-3"><i class="pi pi-building"></i></div>
+                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                            <h6 class="mb-0">Department KPIs</h6>
+                                            <span class="stat-value text-warning">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-col-12 p-md-2-4">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-secondary me-3"><i class="pi pi-users"></i></div>
+                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                            <h6 class="mb-0">Team KPIs</h6>
+                                            <span class="stat-value text-secondary">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters Section -->
+                    <div class="card">
                         <div class="p-grid">
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/OrganizationalKPIView.xhtml'">
-                                    <div class="text-center">
-                                        <i class="pi pi-globe text-green-500 text-4xl mb-3"></i>
-                                        <h6>Organizational KPIs</h6>
-                                        <p class="text-500">Manage organization-wide KPIs</p>
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Search</h6>
+                                            <p:inputText id="searchTerm" required="false"
+                                                         value="#{kpiView.searchTerm}" placeholder="Search KPIs..."
+                                                         styleClass="filter-input">
+                                                <p:ajax event="keyup"
+                                                        update="kpisTable"
+                                                        listener="#{kpiView.reloadFilterReset()}" />
+                                            </p:inputText>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/DepartmentKPIView.xhtml'">
-                                    <div class="text-center">
-                                        <i class="pi pi-building text-blue-500 text-4xl mb-3"></i>
-                                        <h6>Department KPIs</h6>
-                                        <p class="text-500">Manage department-level KPIs</p>
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Unit</h6>
+                                            <p:selectOneMenu id="measurementUnit" value="#{kpiView.selectedMeasurementUnit}"
+                                                             styleClass="filter-select" converter="measurementUnitConverter">
+                                                <f:selectItem itemLabel="All Units" value="#{null}" />
+                                                <f:selectItems value="#{kpiView.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                                                <p:ajax event="change" update="kpisTable"
+                                                        listener="#{kpiView.reloadFilterReset()}" />
+                                            </p:selectOneMenu>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/TeamKPIView.xhtml'">
-                                    <div class="text-center">
-                                        <i class="pi pi-users text-purple-500 text-4xl mb-3"></i>
-                                        <h6>Team KPIs</h6>
-                                        <p class="text-500">Manage team-level KPIs</p>
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Frequency</h6>
+                                            <p:selectOneMenu id="frequency" value="#{kpiView.selectedFrequency}"
+                                                             styleClass="filter-select" converter="frequencyConverter">
+                                                <f:selectItem itemLabel="All Frequencies" value="#{null}" />
+                                                <f:selectItems value="#{kpiView.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
+                                                <p:ajax event="change" update="kpisTable"
+                                                        listener="#{kpiView.reloadFilterReset()}" />
+                                            </p:selectOneMenu>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/KPIView.xhtml'">
-                                    <div class="text-center">
-                                        <i class="pi pi-list text-orange-500 text-4xl mb-3"></i>
-                                        <h6>All KPIs</h6>
-                                        <p class="text-500">View all system KPIs</p>
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-light-orange me-3"><i class="pi pi-calendar-plus"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">From Date</h6>
+                                            <p:calendar value="#{kpiView.createdFrom}" 
+                                                        styleClass="filter-calendar"
+                                                        navigator="true" pattern="dd MMM, yyyy" />
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-light-red me-3"><i class="pi pi-calendar-minus"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">To Date</h6>
+                                            <p:calendar value="#{kpiView.createdTo}" 
+                                                        styleClass="filter-calendar"
+                                                        navigator="true" pattern="dd MMM, yyyy" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-col-12 p-md-2">
+                                <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
+                                    <p:commandButton value="Clear Filters" icon="fa fa-times" 
+                                                     styleClass="ui-button-outlined ui-button-secondary" 
+                                                     actionListener="#{kpiView.clearFilters}" 
+                                                     update="kpisTable" />
                                 </div>
                             </div>
                         </div>
@@ -300,10 +559,11 @@
         </p:confirmDialog>
         
         <script type="text/javascript">
+//<![CDATA[
             function refreshKpiTable() {
                 console.log('Refreshing KPI table...');
                 // Refresh the KPI table after dialog is closed
-                if (typeof PF !== 'undefined' &amp;&amp; PF('kpisTable')) {
+                if (typeof PF !== 'undefined' && PF('kpisTable')) {
                     PF('kpisTable').filter();
                 }
                 // Also trigger a server-side refresh
@@ -313,6 +573,7 @@
                     }
                 }, 100);
             }
+//]]>
         </script>
     </ui:define>
 </ui:composition>
