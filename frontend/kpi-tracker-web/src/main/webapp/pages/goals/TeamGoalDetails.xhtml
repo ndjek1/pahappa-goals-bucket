@@ -6,12 +6,13 @@
                 template="/pages/californiatemplate/template.xhtml">
     <ui:define name="content">
         <h:form>
-            <h:panelGroup rendered="#{not empty departmentGoalDetails.selectedGoal}">
+            <p:growl id="messages" life="5000"/>
+            <h:panelGroup rendered="#{not empty teamGoalDetails.selectedGoal}">
                 <!-- Back arrow + Title -->
                 <div class="p-d-flex p-ai-center p-gap-2">
                     <p:commandButton icon="pi pi-arrow-left"
                                      styleClass="ui-button-text ui-button-outlined p-mr-3 "
-                                     action="#{departmentGoalDetails.backToGoals}"
+                                     action="#{teamGoalDetails.backToGoals}"
                                      immediate="true"
                     />
                     <h2>Goal Details</h2>
@@ -20,19 +21,19 @@
                     <!-- Left section -->
                     <div class="p-col-12 p-md-8">
                         <div class="p-card p-p-3 p-mb-3">
-                            <h3>#{departmentGoalDetails.selectedGoal.name}</h3>
+                            <h3>#{teamGoalDetails.selectedGoal.name}</h3>
                             <div class="p-d-flex p-flex-column">
-                                <span style="margin: 5px 0"><b>Level:</b> #{departmentGoalDetails.goalLevel}</span>
-                                <span style="margin: 5px 0"><b>Weight:</b> #{departmentGoalDetails.selectedGoal.contributionWeight}%</span>
+                                <span style="margin: 5px 0"><b>Level:</b> #{teamGoalDetails.goalLevel}</span>
+                                <span style="margin: 5px 0"><b>Weight:</b> #{teamGoalDetails.selectedGoal.contributionWeight}%</span>
                                 <span style="margin: 5px 0"><b>Created On:</b>
 
-                                <h:outputText  value="#{departmentGoalDetails.selectedGoal.dateCreated}">
+                                <h:outputText  value="#{teamGoalDetails.selectedGoal.dateCreated}">
                                     <f:convertDateTime pattern="dd MMM yyyy"/>
                                 </h:outputText>
                             </span>
                             </div>
                             <hr/>
-                            <p><b>Description:</b> #{departmentGoalDetails.selectedGoal.description}</p>
+                            <p><b>Description:</b> #{teamGoalDetails.selectedGoal.description}</p>
                         </div>
                     </div>
                     <!-- Right section: Activities -->
@@ -43,11 +44,11 @@
                     </div>
                 </div>
             </h:panelGroup>
-            <h:panelGroup rendered="#{empty departmentGoalDetails.selectedGoal}">
+            <h:panelGroup rendered="#{empty teamGoalDetails.selectedGoal}">
                 <h:outputText value="No goal selected."/>
             </h:panelGroup>
             <h:panelGroup>
-                <p:dataTable id="childGoals" var="model" value="#{departmentGoalDetails.teamGoalGoalList}"
+                <p:dataTable id="childGoals" var="model" value="#{teamGoalDetails.individualGoalsList}"
                              widgetVar="deptGoalsTable"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              paginator="true" lazy="true" rows="20"
@@ -77,14 +78,14 @@
                                          ajax="false"
                                          title="Approve"
                                          rendered="#{model.status.toString()  eq 'PENDING'}"
-                                         actionListener="#{departmentGoalDetails.approveTeamGoal(model)}">
-                            <p:ajax event="dialogReturn" update="childGoals" />
+                                         actionListener="#{teamGoalDetails.approveIndividualGoal(model)}">
+                            <p:ajax event="dialogReturn" update="childGoals gowl" />
                         </p:commandButton>
                         <p:commandButton icon="fa fa-trash" title="Delete"
                                          styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
                                          rendered="#{model.status.toString()  eq 'PENDING'}"
                                          actionListener="#{usersView.deleteSelectedUser(model)}"
-                                         update="childGoals">
+                                         update="childGoals gowl">
                             <p:confirm header="Confirmation"
                                        message="You are about to delete a user. Do you wish to continue?"
                                        icon="ui-icon-alert" />
