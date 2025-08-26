@@ -15,16 +15,46 @@
             .activity-nav-card {
                 cursor: pointer;
                 transition: all 0.3s ease;
+                border: 1px solid #e0e0e0;
+                padding: 8px;
+                min-height: 90px;
+                border-radius: 8px;
             }
             .activity-nav-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
+            .nav-card { background: #f9fafb; }
+            .icon-circle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                margin-bottom: 6px;
+                color: #fff;
+            }
+            .bg-green { background: #22c55e; }
+            .bg-blue { background: #3b82f6; }
+            .bg-purple { background: #8b5cf6; }
+            .bg-orange { background: #f59e0b; }
+            .bg-cyan { background: #06b6d4; }
+            .nav-card h6 { margin: 4px 0 2px 0; font-size: 0.85rem; }
+            .nav-card p { margin: 0; font-size: 0.75rem; color: #6b7280; }
         </style>
     </ui:define>
 
     <ui:define name="content">
         <h:form id="activitiesForm" enctype="multipart/form-data">
+            
+            <!-- Breadcrumb Navigation -->
+            <div class="card">
+                <p:breadCrumb>
+                    <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
+                    <p:menuitem value="Activity Management" icon="pi pi-calendar" />
+                </p:breadCrumb>
+            </div>
             
             <!-- Activity Type Navigation -->
             <div class="card">
@@ -33,9 +63,9 @@
                 
                 <div class="p-grid">
                     <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/OrganizationalActivitiesView.xhtml'">
+                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/OrganizationalActivitiesView.xhtml'">
                             <div class="text-center">
-                                <i class="pi pi-globe text-green-500 text-4xl mb-3"></i>
+                                <div class="icon-circle bg-green"><i class="pi pi-globe"></i></div>
                                 <h6>Organizational Activities</h6>
                                 <p class="text-500">Manage organization-wide activities</p>
                             </div>
@@ -43,9 +73,9 @@
                     </div>
                     
                     <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/DepartmentActivitiesView.xhtml'">
+                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/DepartmentActivitiesView.xhtml'">
                             <div class="text-center">
-                                <i class="pi pi-building text-blue-500 text-4xl mb-3"></i>
+                                <div class="icon-circle bg-blue"><i class="pi pi-building"></i></div>
                                 <h6>Department Activities</h6>
                                 <p class="text-500">Manage department-level activities</p>
                             </div>
@@ -53,9 +83,9 @@
                     </div>
                     
                     <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/TeamActivitiesView.xhtml'">
+                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/TeamActivitiesView.xhtml'">
                             <div class="text-center">
-                                <i class="pi pi-users text-purple-500 text-4xl mb-3"></i>
+                                <div class="icon-circle bg-purple"><i class="pi pi-users"></i></div>
                                 <h6>Team Activities</h6>
                                 <p class="p-500">Manage team-level activities</p>
                             </div>
@@ -63,11 +93,21 @@
                     </div>
                     
                     <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/ActivitiesView.xhtml'">
+                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/ActivitiesView.xhtml'">
                             <div class="text-center">
-                                <i class="pi pi-list text-orange-500 text-4xl mb-3"></i>
+                                <div class="icon-circle bg-orange"><i class="pi pi-list"></i></div>
                                 <h6>All Activities</h6>
                                 <p class="text-500">View all system activities</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/IndividualActivityFormDialog.xhtml'">
+                            <div class="text-center">
+                                <div class="icon-circle bg-cyan"><i class="pi pi-user"></i></div>
+                                <h6>Individual Activities</h6>
+                                <p class="text-500">Create/manage individual activities</p>
                             </div>
                         </div>
                     </div>

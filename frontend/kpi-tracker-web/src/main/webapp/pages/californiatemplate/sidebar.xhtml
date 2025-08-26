@@ -40,9 +40,6 @@
                                     icon="pi pi-chart-line"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/kpis/KPIView" />
-                        <p:menuitem id="individualKPI" value="Individual KPI"
-                                    icon="pi pi-user"
-                                    outcome="/pages/kpis/IndividualKPIForm" />
                     </p:submenu>
 
                     <p:submenu id="activities" label="Manage Activities"
@@ -53,8 +50,17 @@
                                     icon="pi pi-calendar"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     outcome="/pages/activities/ActivitiesView" />
+                    </p:submenu>
+
+                    <p:submenu id="individual" label="Manage Individual"
+                               styleClass="p-my-3"
+                               style="color:#0d6efd"
+                               icon="pi pi-user">
+                        <p:menuitem id="individualKPI" value="Individual KPI"
+                                    icon="pi pi-chart-line"
+                                    outcome="/pages/kpis/IndividualKPIForm" />
                         <p:menuitem id="individualActivity" value="Individual Activity"
-                                    icon="pi pi-user"
+                                    icon="pi pi-calendar"
                                     outcome="/pages/activities/IndividualActivityFormDialog" />
                     </p:submenu>
 
