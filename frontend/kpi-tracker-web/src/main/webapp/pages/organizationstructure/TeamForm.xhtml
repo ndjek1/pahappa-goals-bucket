@@ -36,6 +36,32 @@
                                  placeholder="Description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
+                <div class="ui-col-12 ui-md-12">
+                    <h5>Team lead</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu id="teamLead" value="#{teamForm.teamLead}"
+                                         converter="staffConverter" style="width: 100%"
+                                         onchange="PF('teamMembersWidget').clearFilters()"> <!-- reset member list if lead changes -->
+                            <f:selectItem itemLabel="-- Select Team Lead --" itemValue="#{null}" />
+                            <f:selectItems value="#{teamForm.departmentMembers}"
+                                           var="member"
+                                           itemValue="#{member}"
+                                           itemLabel="#{member.user.fullName}" />
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="ui-col-12 ui-md-12">
+                    <h5>Users</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectManyCheckbox id="rolesGrid" value="#{teamForm.selectedTeamMembers}"
+                                              converter="staffConverter"
+                                              layout="grid" columns="3" >
+                            <f:selectItems value="#{teamForm.departmentMembers}" var="staff" itemLabel="#{staff.user.fullName}" itemValue="#{staff}"/>
+                        </p:selectManyCheckbox>
+                    </div>
+                </div>
+
+
 
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">
