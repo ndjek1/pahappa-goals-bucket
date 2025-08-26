@@ -9,47 +9,34 @@
     <ui:define name="head">
         <title>System Activities</title>
         <style>
-            .capitalized {
-                text-transform: capitalize;
-            }
+            .capitalized { text-transform: capitalize; }
             .activity-nav-card {
                 cursor: pointer;
                 transition: all 0.3s ease;
                 border: 1px solid #e0e0e0;
-                padding: 8px;
-                min-height: 90px;
+                padding: 4px;
                 border-radius: 8px;
+                background: #f9fafb;
             }
-            .activity-nav-card:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .nav-card { background: #f9fafb; }
-            .icon-circle {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                margin-bottom: 6px;
-                color: #fff;
-            }
-            .bg-green { background: #22c55e; }
-            .bg-blue { background: #3b82f6; }
-            .bg-purple { background: #8b5cf6; }
-            .bg-orange { background: #f59e0b; }
-            .bg-cyan { background: #06b6d4; }
-            .nav-card h6 { margin: 4px 0 2px 0; font-size: 0.85rem; }
-            .nav-card p { margin: 0; font-size: 0.75rem; color: #6b7280; }
+            .activity-nav-card:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .icon-circle { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; color:#fff; font-size:9px; }
+            .bg-green { background:#22c55e; } .bg-blue { background:#3b82f6; } .bg-purple { background:#8b5cf6; } .bg-orange { background:#f59e0b; } .bg-cyan { background:#06b6d4; }
+            .nav-card h6 { margin:0; font-size:0.7rem; }
+            .nav-card p { margin:0; font-size:0.64rem; color:#6b7280; }
+            .stat-value { margin-left:auto; font-size:0.95rem; font-weight:600; }
+            .text-primary { color:#3b82f6; } .text-success { color:#10b981; } .text-warning { color:#f59e0b; }
+            .p-grid { margin:0 -0.2rem; } [class*='p-col-'] { padding:0 0.2rem; }
+            .filter-input, .filter-select, .filter-calendar { width:100%; font-size:0.7rem; padding:0.16rem 0.28rem; border:1px solid #d1d5db; border-radius:0.3rem; }
+            .breadcrumb-card { padding:3px 5px; margin:0 0 4px 0; }
+            .breadcrumb-card .ui-breadcrumb { font-size:0.76rem; padding:0; margin:0; }
+            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link { padding:1px 5px; }
         </style>
     </ui:define>
 
     <ui:define name="content">
         <h:form id="activitiesForm" enctype="multipart/form-data">
-            
             <!-- Breadcrumb Navigation -->
-            <div class="card">
+            <div class="card breadcrumb-card">
                 <p:breadCrumb>
                     <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
                     <p:menuitem value="Activity Management" icon="pi pi-calendar" />
@@ -58,10 +45,7 @@
             
             <!-- Activity Type Navigation -->
             <div class="card">
-                <h5>Activity Management</h5>
-                <p>Select the type of activities you want to manage:</p>
-                
-                <div class="p-grid">
+                <div class="p-grid" style="margin-top:-4px;">
                     <div class="p-col-12 p-md-3">
                         <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/OrganizationalActivitiesView.xhtml'">
                             <div class="text-center">
@@ -71,7 +55,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="p-col-12 p-md-3">
                         <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/DepartmentActivitiesView.xhtml'">
                             <div class="text-center">
@@ -81,17 +64,15 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="p-col-12 p-md-3">
                         <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/TeamActivitiesView.xhtml'">
                             <div class="text-center">
                                 <div class="icon-circle bg-purple"><i class="pi pi-users"></i></div>
                                 <h6>Team Activities</h6>
-                                <p class="p-500">Manage team-level activities</p>
+                                <p class="text-500">Manage team-level activities</p>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="p-col-12 p-md-3">
                         <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/ActivitiesView.xhtml'">
                             <div class="text-center">
@@ -101,7 +82,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="p-col-12 p-md-3">
                         <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/IndividualActivityFormDialog.xhtml'">
                             <div class="text-center">
@@ -114,96 +94,135 @@
                 </div>
             </div>
             
+            <!-- Statistics Cards as compact nav-cards -->
             <div class="card">
-                <h5>System Activities Overview</h5>
+                <div class="p-grid" style="margin-top:-4px;">
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-blue me-3"><i class="pi pi-chart-bar"></i></div>
+                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                    <h6 class="mb-0">Total Activities</h6>
+                                    <span class="stat-value text-primary">#{activitiesView.activityModels.size()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-green me-3"><i class="pi pi-check-circle"></i></div>
+                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                    <h6 class="mb-0">Active Activities</h6>
+                                    <span class="stat-value text-success">#{activitiesView.activityModels.stream().filter(a -> a.status == 'IN_PROGRESS').count()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-warning me-3"><i class="pi pi-clock"></i></div>
+                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                    <h6 class="mb-0">Pending Activities</h6>
+                                    <span class="stat-value text-warning">#{activitiesView.activityModels.stream().filter(a -> a.status == 'PENDING').count()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle me-3" style="background:#6366f1"><i class="pi pi-check"></i></div>
+                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
+                                    <h6 class="mb-0">Completed Activities</h6>
+                                    <span class="stat-value" style="color:#6366f1">#{activitiesView.activityModels.stream().filter(a -> a.status == 'COMPLETED').count()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <!-- Statistics Cards -->
-            <div class="p-grid overlay-demo">
-                <div class="p-col-12 p-md-3">
-                    <div class="card">
-                        <h:outputText value="Total Activities" />
-                        <h2 class="p-text-right">#{activitiesView.activityModels.size()}</h2>
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-3">
-                    <div class="card">
-                        <h:outputText value="Active Activities" />
-                        <h2 class="p-text-right">#{activitiesView.activityModels.stream().filter(a -> a.status == 'IN_PROGRESS').count()}</h2>
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-3">
-                    <div class="card">
-                        <h:outputText value="Pending Activities" />
-                        <h2 class="text-right">#{activitiesView.activityModels.stream().filter(a -> a.status == 'PENDING').count()}</h2>
-                    </div>
-                </div>
-                <div class="p-col-12 p-md-3">
-                    <div class="card">
-                        <h:outputText value="Completed Activities" />
-                        <h2 class="p-text-right">#{activitiesView.activityModels.stream().filter(a -> a.status == 'COMPLETED').count()}</h2>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-            <!-- Search and Filter Section -->
+            <!-- Filters Section compact single row -->
             <div class="card">
-                <h:outputText value="Filters" />
-                <p:growl id="messages" showDetail="true" />
                 <div class="p-grid">
-                    <div class="p-col-12 p-md-6 p-lg-2">
-                        <p:inputText id="searchTerm" required="false"
-                                     value="#{activitiesView.searchTerm}" placeholder="Search activities ..."
-                                     onkeyup="#{activitiesView.reloadFilterReset()}">
-                            <p:ajax event="keyup"
-                                    update="activitiesTable"
-                                    listener="#{activitiesView.reloadFilterReset()}" />
-                        </p:inputText>
+                    <div class="p-col-12 p-md-2">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Search</h6>
+                                    <p:inputText id="searchTerm" required="false"
+                                                 value="#{activitiesView.searchTerm}" placeholder="Search activities ..."
+                                                 styleClass="filter-input">
+                                        <p:ajax event="keyup"
+                                                update="activitiesTable"
+                                                listener="#{activitiesView.reloadFilterReset()}" />
+                                    </p:inputText>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="p-col-12 p-md-6 p-lg-3">
-                        <p:selectOneMenu id="statusFilter" label="Filter by Status"
-                                         title="Filter by Status" value="#{activitiesView.selectedStatus}"
-                                         style="height: 100%" converter="activityStatusConverter">
-                            <f:selectItem itemLabel="All Statuses" value="#{null}" />
-                            <f:selectItems value="#{activitiesView.activityStatusList}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
-                            <p:ajax event="change" update="activitiesTable"
-                                    listener="#{activitiesView.reloadFilterReset()}" />
-                        </p:selectOneMenu>
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Status</h6>
+                                    <p:selectOneMenu id="statusFilter" value="#{activitiesView.selectedStatus}"
+                                                     styleClass="filter-select" converter="activityStatusConverter">
+                                        <f:selectItem itemLabel="All Statuses" value="#{null}" />
+                                        <f:selectItems value="#{activitiesView.activityStatusList}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
+                                        <p:ajax event="change" update="activitiesTable"
+                                                listener="#{activitiesView.reloadFilterReset()}" />
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-col-12 p-md-6 p-lg-3">
-                        <p:calendar placeholder="From Date Created"
-                                    value="#{activitiesView.createdFrom}" inputStyleClass="Wid100"
-                                    navigator="true" pattern="dd MMM, yyyy" />
-                    </div>
-                    <div class="p-col-12 p-md-6 p-lg-3">
-                        <p:calendar placeholder="To Date Created"
-                                    value="#{activitiesView.createdTo}" inputStyleClass="Wid100"
-                                    navigator="true" pattern="dd MMM, yyyy" />
-                    </div>
-                    <div class="p-col-12 p-md-6 p-lg-1">
-                        <p:commandButton icon="fa fa-search"
-                                         styleClass="ui-button-success" id="searchBtn"
-                                         style="margin-right: 18px" update="activitiesTable"
-                                         actionListener="#{activitiesView.reloadFilterReset()}">
-                        </p:commandButton>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Clear Filters Button -->
-            <div class="p-grid" style="margin-top: 1rem;">
-                <div class="p-col-12">
-                    <p:commandButton value="Clear Filters" 
-                                     icon="fa fa-times"
-                                     styleClass="ui-button-outlined ui-button-secondary"
-                                     actionListener="#{activitiesView.clearFilters}"
-                                     update="activitiesTable" />
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">From Date</h6>
+                                    <p:calendar value="#{activitiesView.createdFrom}" 
+                                                styleClass="filter-calendar"
+                                                navigator="true" pattern="dd MMM, yyyy" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-col-12 p-md-3">
+                        <div class="card activity-nav-card nav-card">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle me-3" style="background:#fca5a5;"><i class="pi pi-calendar"></i></div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">To Date</h6>
+                                    <p:calendar value="#{activitiesView.createdTo}" 
+                                                styleClass="filter-calendar"
+                                                navigator="true" pattern="dd MMM, yyyy" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-col-12 p-md-1">
+                        <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
+                            <p:commandButton value="Clear" icon="fa fa-times"
+                                             styleClass="ui-button-outlined ui-button-secondary"
+                                             actionListener="#{activitiesView.clearFilters}" update="activitiesTable" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Activities List -->
-            <div class="card" style="margin-top:1rem">
+            <div class="card" style="margin-top:0.5rem">
                 <p:dataTable id="activitiesTable" var="activity" value="#{activitiesView.activityModels}"
                              widgetVar="activitiesTable"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
@@ -282,23 +301,21 @@
 
         <!-- Activity Form Dialog -->
         <ui:include src="ActivityFormDialog.xhtml" />
-
-
         
         <script type="text/javascript">
+//<![CDATA[
             function refreshActivityTable() {
                 console.log('Refreshing activity table...');
-                // Refresh the KPI table after dialog is closed
-                if (typeof PF !== 'undefined' &amp;&amp; PF('activitiesTable')) {
+                if (typeof PF !== 'undefined' && PF('activitiesTable')) {
                     PF('activitiesTable').filter();
                 }
-                // Also trigger a server-side refresh
                 setTimeout(function() {
                     if (typeof PrimeFaces !== 'undefined') {
                         PrimeFaces.ab({s: 'activitiesView:activitiesTable', u: 'activitiesView:activitiesTable'});
                     }
                 }, 100);
             }
+//]]>
         </script>
     </ui:define>
 </ui:composition>

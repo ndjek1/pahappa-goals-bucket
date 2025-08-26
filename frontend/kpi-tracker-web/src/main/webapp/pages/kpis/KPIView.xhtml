@@ -27,12 +27,13 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 22px;
-                height: 22px;
+                width: 20px;
+                height: 20px;
                 border-radius: 50%;
                 margin-bottom: 0;
                 color: #fff;
                 flex-shrink: 0;
+                font-size: 10px;
             }
             .bg-green { background: #22c55e; }
             .bg-blue { background: #3b82f6; }
@@ -49,12 +50,12 @@
             .bg-light-purple { background: #c4b5fd; }
             .bg-light-orange { background: #fcd34d; }
             .bg-light-red { background: #fca5a5; }
-            .nav-card h6 { margin: 0; font-size: 0.75rem; }
-            .nav-card p { margin: 0; font-size: 0.68rem; color: #6b7280; line-height: 1.2; }
+            .nav-card h6 { margin: 0; font-size: 0.72rem; }
+            .nav-card p { margin: 0; font-size: 0.66rem; color: #6b7280; line-height: 1.2; }
             
             /* Statistics card specific styles */
-            .nav-card h3 { margin: 0; font-size: 1.05rem; font-weight: 600; }
-            .stat-value { margin-left: auto; font-size: 1.05rem; font-weight: 600; }
+            .nav-card h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+            .stat-value { margin-left: auto; font-size: 1rem; font-weight: 600; }
             
             /* Text color classes for statistics */
             .text-primary { color: #3b82f6; }
@@ -66,18 +67,18 @@
             /* Filter input styles */
             .filter-input, .filter-select, .filter-calendar {
                 width: 100%;
-                font-size: 0.75rem;
-                padding: 0.2rem 0.35rem;
+                font-size: 0.72rem;
+                padding: 0.16rem 0.28rem;
                 border: 1px solid #d1d5db;
-                border-radius: 0.35rem;
+                border-radius: 0.3rem;
             }
             
             /* Horizontal layout styles */
             .d-flex { display: flex; }
             .align-items-center { align-items: center; }
             .flex-grow-1 { flex-grow: 1; }
-            .me-3 { margin-right: 0.5rem; }
-            .mb-1 { margin-bottom: 0.15rem; }
+            .me-3 { margin-right: 0.35rem; }
+            .mb-1 { margin-bottom: 0.12rem; }
             .mb-0 { margin-bottom: 0; }
             .small { font-size: 0.875em; }
             
@@ -88,9 +89,14 @@
             }
 
             /* Compact rows and cards spacing */
-            .card { padding: 8px; }
-            .p-grid { margin: 0 -0.35rem; }
-            [class*='p-col-'] { padding: 0 0.35rem; }
+            .card { padding: 4px; }
+            .p-grid { margin: 0 -0.2rem; }
+            [class*='p-col-'] { padding: 0 0.2rem; }
+
+            /* Compact breadcrumb at top */
+            .breadcrumb-card { padding: 3px 5px; margin: 0 0 4px 0; }
+            .breadcrumb-card .ui-breadcrumb { font-size: 0.76rem; padding: 0; margin: 0; }
+            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link { padding: 1px 5px; }
         </style>
     </ui:define>
 
@@ -100,7 +106,7 @@
                 <h:form id="kpiView" enctype="multipart/form-data">
 
                     <!-- Breadcrumb Navigation -->
-                    <div class="card">
+                    <div class="card breadcrumb-card">
                         <p:breadCrumb>
                             <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
                             <p:menuitem value="KPI Management" icon="pi pi-chart-line" />
@@ -236,7 +242,7 @@
                     <!-- Filters Section -->
                     <div class="card">
                         <div class="p-grid">
-                            <div class="p-col-12 p-md-2-4">
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
@@ -244,8 +250,7 @@
                                             <h6 class="mb-1">Search</h6>
                                             <p:inputText id="searchTerm" required="false"
                                                          value="#{kpiView.searchTerm}" placeholder="Search KPIs..."
-                                                         styleClass="filter-input"
-                                                         onkeyup="#{kpiView.reloadFilterReset()}">
+                                                         styleClass="filter-input">
                                                 <p:ajax event="keyup"
                                                         update="kpisTable"
                                                         listener="#{kpiView.reloadFilterReset()}" />
@@ -255,7 +260,7 @@
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-2-4">
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
@@ -273,7 +278,7 @@
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-2-4">
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
@@ -291,7 +296,7 @@
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-2-4">
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-orange me-3"><i class="pi pi-calendar-plus"></i></div>
@@ -305,7 +310,7 @@
                                 </div>
                             </div>
                             
-                            <div class="p-col-12 p-md-2-4">
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-red me-3"><i class="pi pi-calendar-minus"></i></div>
@@ -318,19 +323,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Buttons inline with filters -->
-                        <div class="p-grid" style="margin-top: 4px;">
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
-                                    <p:commandButton value="Search" icon="fa fa-search"
-                                                     styleClass="ui-button-success" id="searchBtn"
-                                                     update="kpisTable"
-                                                     actionListener="#{kpiView.reloadFilterReset()}" />
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-2-4">
+
+                            <div class="p-col-12 p-md-2">
                                 <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
                                     <p:commandButton value="Clear Filters" icon="fa fa-times" 
                                                      styleClass="ui-button-outlined ui-button-secondary" 
@@ -474,10 +468,11 @@
         </p:confirmDialog>
         
         <script type="text/javascript">
+//<![CDATA[
             function refreshKpiTable() {
                 console.log('Refreshing KPI table...');
                 // Refresh the KPI table after dialog is closed
-                if (typeof PF !== 'undefined' &amp;&amp; PF('kpisTable')) {
+                if (typeof PF !== 'undefined' && PF('kpisTable')) {
                     PF('kpisTable').filter();
                 }
                 // Also trigger a server-side refresh
@@ -487,6 +482,7 @@
                     }
                 }, 100);
             }
+//]]>
         </script>
     </ui:define>
 </ui:composition>
