@@ -1,4 +1,4 @@
-package org.pahappa.systems.kpiTracker.models.systemUsers;
+package org.pahappa.systems.kpiTracker.models.staff;
 
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "system_users")
+@Table(name = "staffs")
 public class Staff extends BaseEntity {
     private static final long serialVersionUID = 1L;
     private Department department;
