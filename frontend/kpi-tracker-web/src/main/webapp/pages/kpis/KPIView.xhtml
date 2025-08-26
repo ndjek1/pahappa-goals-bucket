@@ -174,71 +174,10 @@
                         </div>
                     </div>
 
-                    <!-- KPI Statistics -->
-                    <div class="card">
-                        <div class="p-grid" style="margin-top: -4px;">
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-indigo me-3"><i class="pi pi-chart-bar"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Total KPIs</h6>
-                                            <span class="stat-value text-primary">#{kpiView.dataModels.size()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-success me-3"><i class="pi pi-check-circle"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Active KPIs</h6>
-                                            <span class="stat-value text-success">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-info me-3"><i class="pi pi-globe"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Organizational KPIs</h6>
-                                            <span class="stat-value text-info">#{kpiView.dataModels.stream().filter(k -> k.organizationGoal != null).count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-warning me-3"><i class="pi pi-building"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Department KPIs</h6>
-                                            <span class="stat-value text-warning">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-secondary me-3"><i class="pi pi-users"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Team KPIs</h6>
-                                            <span class="stat-value text-secondary">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Filters Section -->
                     <div class="card">
                         <div class="p-grid">
-                            <div class="p-col-12 p-md-2">
+                            <div class="p-col-12 p-md-3">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
@@ -251,12 +190,22 @@
                                                         update="kpisTable"
                                                         listener="#{kpiView.reloadFilterReset()}" />
                                             </p:inputText>
+                                            <div class="d-flex" style="margin-top:4px;gap:6px;">
+                                                <p:commandButton value="Search" icon="fa fa-search"
+                                                                 styleClass="ui-button-success" id="searchBtn"
+                                                                 update="kpisTable"
+                                                                 actionListener="#{kpiView.reloadFilterReset()}" />
+                                                <p:commandButton value="Clear" icon="fa fa-times"
+                                                                 styleClass="ui-button-outlined ui-button-secondary"
+                                                                 actionListener="#{kpiView.clearFilters}"
+                                                                 update="kpisTable" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="p-col-12 p-md-2">
+
+                            <div class="p-col-12 p-md-3">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
@@ -273,8 +222,8 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="p-col-12 p-md-2">
+
+                            <div class="p-col-12 p-md-3">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
@@ -291,8 +240,8 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="p-col-12 p-md-2">
+
+                            <div class="p-col-12 p-md-3">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-orange me-3"><i class="pi pi-calendar-plus"></i></div>
@@ -305,8 +254,8 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="p-col-12 p-md-2">
+
+                            <div class="p-col-12 p-md-3">
                                 <div class="card activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-light-red me-3"><i class="pi pi-calendar-minus"></i></div>
@@ -319,116 +268,12 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="p-col-12 p-md-2">
-                                <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
-                                    <p:commandButton value="Clear Filters" icon="fa fa-times" 
-                                                     styleClass="ui-button-outlined ui-button-secondary" 
-                                                     actionListener="#{kpiView.clearFilters}" 
-                                                     update="kpisTable" />
-                                </div>
-                            </div>
                         </div>
                     </div>
 
-                    <div class="p-grid overlay-demo">
-                        <div class="p-col-12 p-md-2">
-                            <div class="card">
-                                <h:outputText value="Total KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.size()}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-2">
-                            <div class="card">
-                                <h:outputText value="Active KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-2">
-                            <div class="card">
-                                <h:outputText value="Organizational KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.organizationGoal != null).count()}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-2">
-                            <div class="card">
-                                <h:outputText value="Department KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.departmentGoal != null).count()}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-2">
-                            <div class="card">
-                                <h:outputText value="Team KPIs" />
-                                <h2 class="p-text-right">#{kpiView.dataModels.stream().filter(k -> k.teamGoal != null).count()}</h2>
-                            </div>
-                        </div>
-                    </div>
+                    
 
-                                        <!-- Filters Section -->
-                    <div class="card">
-                        <h:outputText value="Filters" />
-                        <p:growl id="messages" showDetail="true" />
-                        <div class="p-grid">
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:inputText id="searchTerm" required="false"
-                                             value="#{kpiView.searchTerm}" placeholder="Search KPIs ..."
-                                             onkeyup="#{kpiView.reloadFilterReset()}">
-                                                                <p:ajax event="keyup"
-                                    update="kpisTable"
-                                    listener="#{kpiView.reloadFilterReset()}" />
-                                </p:inputText>
-                            </div>
-
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:selectOneMenu id="measurementUnit" label="Filter by Measurement Unit"
-                                                 title="Filter by Measurement Unit" value="#{kpiView.selectedMeasurementUnit}"
-                                                 style="height: 100%" converter="measurementUnitConverter">
-                                    <f:selectItem itemLabel="All Units" value="#{null}" />
-                                    <f:selectItems value="#{kpiView.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
-                                    <p:ajax event="change" update="kpisTable"
-                                            listener="#{kpiView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
-                            </div>
-
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:selectOneMenu id="frequency" label="Filter by Frequency"
-                                                 title="Filter by Frequency" value="#{kpiView.selectedFrequency}"
-                                                 style="height: 100%" converter="frequencyConverter">
-                                    <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                    <f:selectItems value="#{kpiView.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
-                                    <p:ajax event="change" update="kpisTable"
-                                            listener="#{kpiView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:calendar placeholder="From Date Created"
-                                            value="#{kpiView.createdFrom}" inputStyleClass="Wid100 "
-                                            navigator="true" pattern="dd MMM, yyyy" />
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:calendar placeholder="To Date Created"
-                                            value="#{kpiView.createdTo}" inputStyleClass="Wid100 "
-                                            navigator="true" pattern="dd MMM, yyyy" />
-                            </div>
-
-                            <div class="p-col-12 p-md-6 p-lg-1">
-                                <p:commandButton icon="fa fa-search"
-                                                 styleClass="ui-button-success" id="searchBtn"
-                                                 style="margin-right: 18px" update="kpisTable"
-                                                 actionListener="#{kpiView.reloadFilterReset()}">
-                                </p:commandButton>
-                            </div>
-                        </div>
-
-                        <!-- Clear Filters Button -->
-                        <div class="p-grid" style="margin-top: 1rem;">
-                            <div class="p-col-12">
-                                <p:commandButton value="Clear Filters" icon="fa fa-times" styleClass="ui-button-outlined ui-button-secondary" actionListener="#{kpiView.clearFilters}" update="kpisTable" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-top:1rem">
+                    <div class="card" style="margin-top:0.5rem">
                         <p:dataTable id="kpisTable" var="kpi" value="#{kpiView.dataModels}"
                                      widgetVar="kpisTable"
                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"

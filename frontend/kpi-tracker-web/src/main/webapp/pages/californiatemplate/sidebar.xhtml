@@ -57,7 +57,7 @@
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'kpis') ? 'active-submenu' : ''}"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="allKPIs" value="All KPIs"
-                                    outcome="/pages/kpis/KPIView"
+                                    icon="pi pi-chart-line"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/kpis/KPIView" />
