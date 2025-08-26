@@ -1,5 +1,6 @@
 package org.pahappa.systems.kpiTracker.views.organizationstructure;
 
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
@@ -34,13 +35,20 @@ public class DepartmentTeamsView implements Serializable {
         teamService = ApplicationContextProvider.getBean(TeamService.class);
     }
 
-    public void show(Department department) {
+    public String show(Department department) {
         this.selectedDepartment = department;
         if (department != null) {
-            this.teams = teamService.getTeamsByDepartment(department);
+            Search search = new Search(Team.class);
+            search.addFilterEqual("department.id", department.getId());
+
+            this.teams = teamService.getInstances(search,0,0);
         } else {
             this.teams = null;
         }
+        return "/pages/organizationstructure/DepartmentTeams.xhtml";
+    }
+    public String cancel() {
+        return "/pages/organizationstructure/OrganizationStructure.xhtml";
     }
 
 }
