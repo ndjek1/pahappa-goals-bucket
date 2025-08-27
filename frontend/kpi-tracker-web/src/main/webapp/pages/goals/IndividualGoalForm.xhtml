@@ -4,6 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
             .capitalized {
@@ -11,10 +12,11 @@
             }
         </style>
     </ui:define>
-    <ui:define name="content">
-        <title>Add Goal</title>
 
-        <h:form id="orgGoalForm" styleClass="dialog-card">
+    <ui:define name="content">
+        <title>Add Individual Goal</title>
+
+        <h:form id="individualGoalForm" styleClass="dialog-card">
             <p:growl id="growl" showDetail="true" life="4000" />
 
             <div class="ui-fluid formgrid grid p-m-4">
@@ -36,6 +38,8 @@
                                  placeholder="Enter goal description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
+
+                <!-- Contribution Weight -->
                 <div class="field col-12 md:col-6 p-m-4">
                     <label for="weight" class="p-d-block p-mb-2">Weight *</label>
                     <p:inputText id="weight" value="#{individualGoalForm.model.contributionWeight}" 
@@ -85,7 +89,6 @@
                 </div>
 
             </div>
-
         </h:form>
     </ui:define>
 </ui:composition>

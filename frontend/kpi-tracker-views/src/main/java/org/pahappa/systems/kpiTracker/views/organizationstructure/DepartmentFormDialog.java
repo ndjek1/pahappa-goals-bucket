@@ -42,7 +42,7 @@ public class DepartmentFormDialog extends DialogForm<Department> {
     }
 
     public DepartmentFormDialog() {
-        super("DepartmentFormDialog", 700, 300);
+        super("DepartmentFormDialog", 550, 4500);
     }
 
     private Department department = new Department();

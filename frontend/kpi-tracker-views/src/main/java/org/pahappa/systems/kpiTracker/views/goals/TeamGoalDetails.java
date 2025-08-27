@@ -4,11 +4,11 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
-import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
+import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
-import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.model.exception.OperationFailedException;
@@ -18,51 +18,49 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 
-@ManagedBean(name = "departmentGoalDetails")
+@ManagedBean(name = "teamGoalDetails")
 @Getter
 @Setter
 @SessionScoped
-public class DepartmentGoalDetails implements Serializable {
-    private DepartmentGoal selectedGoal;
+public class TeamGoalDetails implements Serializable {
+    private TeamGoal selectedGoal;
     private TeamGoalService teamGoalService;
-    private DepartmentGoalService departmentGoalService;
+    private IndividualGoalService individualGoalService;
     private String goalLevel;
-    List<TeamGoal> teamGoalGoalList;
+    List<IndividualGoal> individualGoalsList;
 
     @PostConstruct
     public void init() {
         teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
-        this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
-
+        this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
     }
 
 
-    public String prepareForCategory(String id) {
-        this.selectedGoal = this.departmentGoalService.getInstanceByID(id);
+    public String prepareForTeamGoal(String id) {
+        this.selectedGoal = this.teamGoalService.getInstanceByID(id);
         this.goalLevel = selectedGoal.getClass().getSimpleName(); // now safe
-        loadTeamGoals(); // only load after goal is set
-        return "/pages/goals/DepartmentGoalDetails.xhtml?faces-redirect=true";
+        loadIndividualGoals(); // only load after goal is set
+        return "/pages/goals/TeamGoalDetails.xhtml?faces-redirect=true";
     }
 
     public String backToGoals(){
-        return "/pages/goals/DepartmentGoalView.xhtml";
+        return "/pages/goals/TeamGoalView.xhtml";
     }
 
-    public void loadTeamGoals(){
+    public void loadIndividualGoals(){
         Search search = new Search();
-        search.addFilterEqual("parent.id",this.selectedGoal.getId());
-        this.teamGoalGoalList = this.teamGoalService.getInstances(search,0,0);
+        search.addFilterEqual("teamGoal.id",this.selectedGoal.getId());
+        this.individualGoalsList = this.individualGoalService.getInstances(search,0,0);
     }
 
-    public void approveTeamGoal(TeamGoal teamGoal) throws ValidationFailedException, OperationFailedException {
-        if(teamGoal != null){
-            teamGoal.setStatus(GoalStatus.APPROVED);
-            this.teamGoalService.saveInstance(teamGoal);
-            UiUtils.showMessageBox("Team Goal Approved", teamGoal.getName());
+    public void approveIndividualGoal(IndividualGoal individualGoal) throws ValidationFailedException, OperationFailedException {
+        if(individualGoal != null){
+            individualGoal.setStatus(GoalStatus.APPROVED);
+            this.individualGoalService.saveInstance(individualGoal);
+            UiUtils.showMessageBox("Team Goal Approved", individualGoal.getName());
         }else {
             UiUtils.showMessageBox("Goal is empty", "You did not select any goal");
         }

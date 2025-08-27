@@ -36,20 +36,13 @@
                     <p:submenu id="goals" label="Manage Organization"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'goals') ? 'active-submenu' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'organization')}"
                                icon="fa fa-bullseye">
                         <p:menuitem id="orgGoals" value="Organization Goals"
                                     icon="fa fa-bullseye"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/OrganizationGoalsView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/goals/OrganizationGoalsView" />
-                        <p:menuitem id="organizationalKPIs" value="Organizational KPIs"
-                                    icon="pi pi-chart-line"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/OrganizationalKPIView.xhtml' ? 'active-link' : ''}"
-                                    outcome="/pages/kpis/OrganizationalKPIView" />
-                        <p:menuitem id="organizationalActivities" value="Organizational Activities"
-                                    icon="pi pi-calendar"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/OrganizationalActivitiesView.xhtml' ? 'active-link' : ''}"
-                                    outcome="/pages/activities/OrganizationalActivitiesView" />
                     </p:submenu>
 
 
@@ -74,8 +67,10 @@
                                     outcome="/pages/activities/ActivitiesView" />
                     </p:submenu>
 
-                    <p:submenu id="individual" label="Manage Individual"
+                    <p:submenu id="individual" label="My goals"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Individual') ? 'active-submenu' : ''}"
+                               rendered="#{dashboard.loggedinUser.hasRole('Individual') and !dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Individual')}"
                                icon="pi pi-user">
                         <p:menuitem id="individualGoals" value="Individual Goals"
                                     icon="fa fa-bullseye"
@@ -93,9 +88,14 @@
 
 
                     <p:submenu id="department" label="Manage Department"
-                               rendered="#{dashboard.loggedinUser.hasRole('DEPT_LEAD')}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Department')}"
+                               rendered="#{dashboard.loggedinUser.hasRole('Department Lead') and !dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR') }"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Department') ? 'active-submenu' : ''}"
                                icon="fa fa-building">
+                        <p:menuitem id="teams" value="Teams"
+                                    icon="fa fa-users"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/organizationstructure/TeamsView.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/organizationstructure/TeamsView" />
                         <p:menuitem id="departmentGoals" value="Goals"
                                     icon="fa fa-bullseye"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/DepartmentGoalView.xhtml' ? 'active-link' : ''}"
@@ -112,12 +112,11 @@
 
 
                     <p:submenu id="team" label="Manage Team"
-                               rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
+                               rendered="#{dashboard.loggedinUser.hasRole('Team Lead') and !dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')} "
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Team') ? 'active-submenu' : ''}"
                                icon="fa fa-users">
                         <p:menuitem id="teamGoals" value="Team Goals"
                                     icon="fa fa-bullseye"
-                                    rendered="#{dashboard.loggedinUser.hasRole('TEAM_LEAD')}"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/TeamGoalView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/goals/TeamGoalView" />
                         <p:menuitem id="teamKPIs" value="Team KPIs"

@@ -43,6 +43,7 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
 
     @PostConstruct
     public void init() {
+        resetModal();
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.teamService = ApplicationContextProvider.getBean(TeamService.class);
@@ -57,12 +58,13 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
             UiUtils.showMessageBox("Missing goal name","Goal must have a type.");
             return;
         }
-        model.setTeam(team);
+        super.model.setTeam(team);
+        super.model.setStatus(GoalStatus.PENDING);
         teamGoalService.saveInstance(super.model);
     }
 
     public void loadDepartment() {
-        if (loggedinUser.hasRole("TEAM_LEAD")) {
+        if (loggedinUser.hasRole("Team Lead")) {
             this.team = teamService.getAllInstances()
                     .stream()
                     .filter(d -> d.getTeamHead() != null

@@ -86,6 +86,10 @@ public class DepartmentMembersView implements Serializable {
         }
     }
 
+    public String cancel() {
+        return "/pages/organizationstructure/OrganizationStructure.xhtml";
+    }
+
     public List<ExcelReport> getExcelReportModels() {
         return Collections.emptyList();
     }

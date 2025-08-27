@@ -4,6 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
             .capitalized {
@@ -11,38 +12,49 @@
             }
         </style>
     </ui:define>
+
     <ui:define name="content">
         <title>Add Organization Goal</title>
 
-        <h:form id="orgGoalForm" styleClass="dialog-card">
+        <h:form id="orgGoalForm" styleClass="dialog-card"  style="max-height: none; overflow: visible;">
             <p:growl id="growl" showDetail="true" life="4000" />
 
             <div class="ui-fluid formgrid grid p-m-4">
 
-                <!-- Type -->
+                <!-- Goal Name -->
                 <div class="field col-12 p-m-4">
-
-                    <p:inputText value="#{organizationGoalForm.model.name}"
+                    <p:outputLabel for="goalName" value="Goal Name" />
+                    <p:inputText id="goalName"
+                                 value="#{organizationGoalForm.model.name}"
                                  required="true"
-                                 placeholder="Name"
+                                 placeholder="Enter goal name"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-
+                <!-- Description -->
                 <div class="field col-12 md:col-6 p-m-4">
-
-                    <p:inputText value="#{organizationGoalForm.model.description}"
+                    <p:outputLabel for="goalDesc" value="Description" />
+                    <p:inputText id="goalDesc"
+                                 value="#{organizationGoalForm.model.description}"
                                  required="true"
-                                 placeholder="Description"
+                                 placeholder="Enter description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <div class="field col-12 p-m-4">
 
-                    <p:selectOneMenu id="orgGoal" value="#{organizationGoalForm.reviewCycle}" converter="reviewCycleConverter" >
+                <!-- Review Cycle -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="orgGoal" value="Review Cycle" />
+                    <p:selectOneMenu id="orgGoal"
+                                     value="#{organizationGoalForm.reviewCycle}"
+                                     converter="reviewCycleConverter">
                         <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{organizationGoalForm.reviewCycles}" var="reviewCycle"  itemLabel="#{reviewCycle.title} " itemValue="#{reviewCycle}"/>
+                        <f:selectItems value="#{organizationGoalForm.reviewCycles}"
+                                       var="reviewCycle"
+                                       itemLabel="#{reviewCycle.title}"
+                                       itemValue="#{reviewCycle}"/>
                     </p:selectOneMenu>
                 </div>
+
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">
                     <p:commandButton value="Cancel"
@@ -58,7 +70,6 @@
                 </div>
 
             </div>
-
         </h:form>
     </ui:define>
 </ui:composition>
