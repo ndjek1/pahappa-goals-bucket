@@ -21,76 +21,67 @@
 
             <div class="ui-fluid formgrid grid p-m-4">
 
-                <!-- Goal Name -->
+                <!-- Name -->
                 <div class="field col-12 p-m-4">
-                    <p:outputLabel for="goalName" value="Goal Name" />
-                    <p:inputText id="goalName"
-                                 value="#{individualGoalForm.model.name}"
+                    <label for="goalName" class="p-d-block p-mb-2">Name *</label>
+                    <p:inputText id="goalName" value="#{individualGoalForm.model.name}"
                                  required="true"
                                  placeholder="Enter goal name"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <!-- Description -->
+                <!-- Description and Weight -->
                 <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="goalDesc" value="Description" />
-                    <p:inputText id="goalDesc"
-                                 value="#{individualGoalForm.model.description}"
+                    <label for="description" class="p-d-block p-mb-2">Description *</label>
+                    <p:inputText id="description" value="#{individualGoalForm.model.description}"
                                  required="true"
-                                 placeholder="Enter description"
+                                 placeholder="Enter goal description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
                 <!-- Contribution Weight -->
                 <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="weight" value="Weight (%)" />
-                    <p:inputText id="weight"
-                                 value="#{individualGoalForm.model.contributionWeight}"
+                    <label for="weight" class="p-d-block p-mb-2">Weight *</label>
+                    <p:inputText id="weight" value="#{individualGoalForm.model.contributionWeight}" 
                                  required="true"
-                                 placeholder="Enter weight"
+                                 placeholder="Enter weight percentage"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
                 <!-- Department Parent Goal -->
-                <h:panelGroup rendered="#{individualGoalForm.team eq null}">
-                    <div class="field col-12 p-m-4">
-                        <p:outputLabel for="deptParentGoal" value="Department Parent Goal" />
-                        <p:selectOneMenu id="deptParentGoal"
-                                         value="#{individualGoalForm.model.parent}"
-                                         converter="departmentGoalConverter">
-                            <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
-                            <f:selectItems value="#{individualGoalForm.departmentGoals}"
-                                           var="parentGoal"
-                                           itemLabel="#{parentGoal.name}"
-                                           itemValue="#{parentGoal}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </h:panelGroup>
+                <div class="field col-12 p-m-4">
+                    <label for="deptParentGoal" class="p-d-block p-mb-2">Department Parent Goal</label>
+                    <p:selectOneMenu id="deptParentGoal" value="#{individualGoalForm.model.parent}" 
+                                     converter="departmentGoalConverter"
+                                     rendered="#{individualGoalForm.team eq null}"
+                                     styleClass="p-inputtext-sm w-full">
+                        <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{individualGoalForm.departmentGoals}" var="parentGoal"  itemLabel="#{parentGoal.name} " itemValue="#{parentGoal}"/>
+                    </p:selectOneMenu>
+                </div>
 
                 <!-- Team Goal -->
-                <h:panelGroup rendered="#{individualGoalForm.team ne null}">
-                    <div class="field col-12 p-m-4">
-                        <p:outputLabel for="teamGoal" value="Team Goal" />
-                        <p:selectOneMenu id="teamGoal"
-                                         value="#{individualGoalForm.model.teamGoal}"
-                                         converter="teamGoalConverter">
-                            <f:selectItem itemLabel="Select team goal" itemValue="#{null}" noSelectionOption="true"/>
-                            <f:selectItems value="#{individualGoalForm.teamGoals}"
-                                           var="teamGoal"
-                                           itemLabel="#{teamGoal.name}"
-                                           itemValue="#{teamGoal}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </h:panelGroup>
+                <div class="field col-12 p-m-4">
+                    <label for="teamGoal" class="p-d-block p-mb-2">Team Goal</label>
+                    <p:selectOneMenu id="teamGoal" value="#{individualGoalForm.model.teamGoal}" 
+                                     converter="teamGoalConverter"
+                                     rendered="#{individualGoalForm.team ne null}"
+                                     styleClass="p-inputtext-sm w-full">
+                        <f:selectItem itemLabel="Select team goal" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{individualGoalForm.teamGoals}" var="teamGoal"  itemLabel="#{teamGoal.name} " itemValue="#{teamGoal}"/>
+                    </p:selectOneMenu>
+                </div>
 
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">
                     <p:commandButton value="Cancel"
+                                     icon="pi pi-times"
                                      immediate="true"
                                      action="#{individualGoalForm.hide}"
                                      styleClass="ui-button-danger p-mx-5" />
 
                     <p:commandButton value="Save"
+                                     icon="pi pi-check"
                                      process="@form"
                                      actionListener="#{individualGoalForm.save}"
                                      update="@form growl"

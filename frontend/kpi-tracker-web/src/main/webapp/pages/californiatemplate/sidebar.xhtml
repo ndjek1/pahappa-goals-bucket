@@ -72,18 +72,18 @@
                                rendered="#{dashboard.loggedinUser.hasRole('Individual') and !dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Individual')}"
                                icon="pi pi-user">
-                        <p:menuitem id="individualKPI" value="Individual KPI"
-                                    icon="pi pi-chart-line"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/IndividualKPIForm.xhtml' ? 'active-link' : ''}"
-                                    outcome="/pages/kpis/IndividualKPIForm" />
-                        <p:menuitem id="individualGoal" value="Individual KPI"
+                        <p:menuitem id="individualGoals" value="Individual Goals"
                                     icon="fa fa-bullseye"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/IndividualGoalsView.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/goals/IndividualGoalsView" />
-                        <p:menuitem id="individualActivity" value="Individual Activity"
+                        <p:menuitem id="individualKPIs" value="Individual KPIs"
+                                    icon="pi pi-chart-line"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/IndividualKPIView.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/kpis/IndividualKPIView" />
+                        <p:menuitem id="individualActivities" value="Individual Activities"
                                     icon="pi pi-calendar"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/IndividualActivityFormDialog.xhtml' ? 'active-link' : ''}"
-                                    outcome="/pages/activities/IndividualActivityFormDialog" />
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/IndividualActivitiesView.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/activities/IndividualActivitiesView" />
                     </p:submenu>
 
 
