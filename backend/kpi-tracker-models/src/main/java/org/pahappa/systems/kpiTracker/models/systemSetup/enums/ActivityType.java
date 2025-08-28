@@ -1,12 +1,8 @@
 package org.pahappa.systems.kpiTracker.models.systemSetup.enums;
 
 public enum ActivityType {
-    STRATEGIC("Strategic"),
-    TACTICAL("Tactical"),
-    OPERATIONAL("Operational"),
-    PROJECT("Project"),
-    MAINTENANCE("Maintenance"),
-    RESEARCH("Research");
+    QUALITATIVE("Qualitative    "),
+    QUANTITATIVE("Quantitative");
 
     private final String displayName;
 
