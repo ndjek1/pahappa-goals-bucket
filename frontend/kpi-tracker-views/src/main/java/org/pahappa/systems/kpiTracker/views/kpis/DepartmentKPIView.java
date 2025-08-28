@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ public class DepartmentKPIView implements Serializable {
     private User loggedinUser;
     private List<KPI> dataModels;
     private String searchTerm;
+    private Date createdFrom, createdTo;
     private String dataEmptyMessage = "No department KPIs found.";
     
     // Filter properties
@@ -62,27 +64,37 @@ public class DepartmentKPIView implements Serializable {
     }
 
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
-        Search search1 = new Search();
+        try {
+            if (department != null) {
+                Search search1 = new Search();
 
-        // Create AND filter for department goal and recordStatus
-        Filter filter = Filter.and(
-                Filter.equal("departmentGoal.department", department),
-                Filter.equal("recordStatus", RecordStatus.ACTIVE)
-        );
+                // Create AND filter for department goal and recordStatus - more defensive approach
+                search1.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+                search1.addFilter(Filter.and(
+                    Filter.isNotNull("departmentGoal"),
+                    Filter.equal("departmentGoal.department", department)
+                ));
+                
+                // Add measurement unit filter
+                if (selectedMeasurementUnit != null) {
+                    search1.addFilterEqual("measurementUnit", selectedMeasurementUnit);
+                }
+                
+                // Add frequency filter
+                if (selectedFrequency != null) {
+                    search1.addFilterEqual("frequency", selectedFrequency);
+                }
 
-        search1.addFilter(filter);
-        
-        // Add measurement unit filter
-        if (selectedMeasurementUnit != null) {
-            search1.addFilterEqual("measurementUnit", selectedMeasurementUnit);
+                this.dataModels = kpisService.getInstances(search1, i, i1);
+            } else {
+                this.dataModels = Arrays.asList(); // Empty list if no department
+            }
+        } catch (Exception e) {
+            System.err.println("Error in reloadFromDB: " + e.getMessage());
+            e.printStackTrace();
+            this.dataModels = Arrays.asList(); // Return empty list on error
+            throw e; // Re-throw for proper error handling
         }
-        
-        // Add frequency filter
-        if (selectedFrequency != null) {
-            search1.addFilterEqual("frequency", selectedFrequency);
-        }
-
-        this.dataModels = kpisService.getInstances(search1, i, i1);
     }
 
     public List<ExcelReport> getExcelReportModels() {
@@ -98,26 +110,48 @@ public class DepartmentKPIView implements Serializable {
     }
 
     public void reloadFilterReset() {
-        if (department != null) {
-            Search search = new Search();
-            search.addFilterEqual("departmentGoal.department", department);
-            search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-            
-            if (searchTerm != null && !searchTerm.isEmpty()) {
-                search.addFilterILike("name", "%" + searchTerm + "%");
+        try {
+            if (department != null) {
+                Search search = new Search();
+                search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+                
+                // Try to filter by department - using a more defensive approach
+                search.addFilter(Filter.and(
+                    Filter.isNotNull("departmentGoal"),
+                    Filter.equal("departmentGoal.department", department)
+                ));
+                
+                if (searchTerm != null && !searchTerm.isEmpty()) {
+                    search.addFilterILike("name", "%" + searchTerm + "%");
+                }
+                
+                // Add measurement unit filter
+                if (selectedMeasurementUnit != null) {
+                    search.addFilterEqual("measurementUnit", selectedMeasurementUnit);
+                }
+                
+                // Add frequency filter
+                if (selectedFrequency != null) {
+                    search.addFilterEqual("frequency", selectedFrequency);
+                }
+                
+                // Add date filters
+                if (createdFrom != null) {
+                    search.addFilterGreaterOrEqual("dateCreated", createdFrom);
+                }
+                
+                if (createdTo != null) {
+                    search.addFilterLessOrEqual("dateCreated", createdTo);
+                }
+                
+                this.dataModels = kpisService.getInstances(search, 0, 1000);
+            } else {
+                this.dataModels = Arrays.asList(); // Empty list if no department
             }
-            
-            // Add measurement unit filter
-            if (selectedMeasurementUnit != null) {
-                search.addFilterEqual("measurementUnit", selectedMeasurementUnit);
-            }
-            
-            // Add frequency filter
-            if (selectedFrequency != null) {
-                search.addFilterEqual("frequency", selectedFrequency);
-            }
-            
-            this.dataModels = kpisService.getInstances(search, 0, 1000);
+        } catch (Exception e) {
+            System.err.println("Error loading department KPIs: " + e.getMessage());
+            e.printStackTrace();
+            this.dataModels = Arrays.asList(); // Return empty list on error
         }
     }
 
@@ -136,6 +170,14 @@ public class DepartmentKPIView implements Serializable {
         this.searchTerm = null;
         this.selectedMeasurementUnit = null;
         this.selectedFrequency = null;
+        this.createdFrom = null;
+        this.createdTo = null;
         reloadFilterReset();
+    }
+    
+    public void viewKPI(KPI kpi) {
+        // This method can be implemented to show KPI details
+        // For now, it's a placeholder that could be expanded
+        System.out.println("Viewing KPI: " + (kpi != null ? kpi.getName() : "null"));
     }
 }

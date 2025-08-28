@@ -15,105 +15,135 @@
 
     <ui:define name="content">
         <title>Add Team KPI</title>
-        <h:form id="teamKpiForm" style="height: 600px" styleClass="card">
-            <div class="p-grid ui-fluid" style="display:flex">
+        <h:form id="teamKpiForm" styleClass="dialog-card">
+            <p:growl id="growl" showDetail="true" life="4000" />
+            
+            <div class="ui-fluid formgrid grid p-m-4">
                 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>KPI Name *</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{teamKpiForm.model.name}" required="true" styleClass="ui-fluid" />
-                    </div>
+                <!-- KPI Name -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="kpiName" value="KPI Name *" />
+                    <p:inputText id="kpiName"
+                                 value="#{teamKpiForm.model.name}"
+                                 required="true"
+                                 placeholder="Enter KPI name"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Team Goal *</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamKpiForm.selectedTeamGoal}"
-                                         converter="teamGoalConverter" filter="true"
-                                         effect="fold" required="true">
-                            <f:selectItem itemLabel="Select team goal" itemValue="" />
-                            <f:selectItems value="#{teamKpiForm.teamGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Team Goal -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="teamGoal" value="Team Goal *" />
+                    <p:selectOneMenu id="teamGoal"
+                                     value="#{teamKpiForm.selectedTeamGoal}"
+                                     converter="teamGoalConverter"
+                                     filter="true"
+                                     required="true"
+                                     styleClass="p-inputtext-sm w-full">
+                        <f:selectItem itemLabel="Select team goal" itemValue="" />
+                        <f:selectItems value="#{teamKpiForm.teamGoals}"
+                                       var="goal"
+                                       itemLabel="#{goal.name}"
+                                       itemValue="#{goal}"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Measurement Unit *</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamKpiForm.model.measurementUnit}"
-                                         converter="measurementUnitConverter" effect="fold" required="true">
-                            <f:selectItem itemLabel="Select measurement unit" itemValue="" />
-                            <f:selectItems value="#{teamKpiForm.measurementUnits}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Measurement Unit -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="measurementUnit" value="Measurement Unit *" />
+                    <p:selectOneMenu id="measurementUnit"
+                                     value="#{teamKpiForm.model.measurementUnit}"
+                                     converter="measurementUnitConverter"
+                                     required="true"
+                                     styleClass="p-inputtext-sm w-full">
+                        <f:selectItem itemLabel="Select measurement unit" itemValue="" />
+                        <f:selectItems value="#{teamKpiForm.measurementUnits}"
+                                       var="unit"
+                                       itemLabel="#{unit.displayName}"
+                                       itemValue="#{unit}"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Frequency *</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamKpiForm.model.frequency}"
-                                         converter="frequencyConverter" effect="fold" required="true">
-                            <f:selectItem itemLabel="Select frequency" itemValue="" />
-                            <f:selectItems value="#{teamKpiForm.frequencies}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Frequency -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="frequency" value="Frequency *" />
+                    <p:selectOneMenu id="frequency"
+                                     value="#{teamKpiForm.model.frequency}"
+                                     converter="frequencyConverter"
+                                     required="true"
+                                     styleClass="p-inputtext-sm w-full">
+                        <f:selectItem itemLabel="Select frequency" itemValue="" />
+                        <f:selectItems value="#{teamKpiForm.frequencies}"
+                                       var="freq"
+                                       itemLabel="#{freq.displayName}"
+                                       itemValue="#{freq}"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <hr></hr>
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Target Value *</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber value="#{teamKpiForm.model.targetValue}" required="true" minValue="0" decimalPlaces="2" styleClass="ui-fluid" />
-                    </div>
+                <!-- Target Value -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="targetValue" value="Target Value *" />
+                    <p:inputNumber id="targetValue"
+                                   value="#{teamKpiForm.model.targetValue}"
+                                   required="true"
+                                   minValue="0"
+                                   decimalPlaces="2"
+                                   styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Current Value</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber value="#{teamKpiForm.model.currentValue}" minValue="0" decimalPlaces="2" styleClass="ui-fluid" />
-                    </div>
+                <!-- Current Value -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="currentValue" value="Current Value" />
+                    <p:inputNumber id="currentValue"
+                                   value="#{teamKpiForm.model.currentValue}"
+                                   minValue="0"
+                                   decimalPlaces="2"
+                                   styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Accomplishment %</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber value="#{teamKpiForm.model.accomplishmentPercentage}" 
-                                       minValue="0" maxValue="100" styleClass="ui-fluid" />
-                    </div>
+                <!-- Accomplishment % -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="accomplishmentPercentage" value="Accomplishment %" />
+                    <p:inputNumber id="accomplishmentPercentage"
+                                   value="#{teamKpiForm.model.accomplishmentPercentage}"
+                                   minValue="0" maxValue="100"
+                                   styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Start Date *</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamKpiForm.model.startDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
+                <!-- Start Date -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="startDate" value="Start Date *" />
+                    <p:calendar id="startDate"
+                                value="#{teamKpiForm.model.startDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                required="true"
+                                styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>End Date *</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamKpiForm.model.endDate}" required="true" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
+                <!-- End Date -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="endDate" value="End Date *" />
+                    <p:calendar id="endDate"
+                                value="#{teamKpiForm.model.endDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                required="true"
+                                styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-12" style="margin-top: 30px; align-self: flex-end !important;">
-                    <div class="p-grid p-justify-between">
-                        <div class="p-col-2">
-                            <p:commandButton value="Cancel" 
-                                             validateClient="false"
-                                             process="@this"
-                                             action="#{teamKpiForm.hide}"
-                                             styleClass="ui-button-outlined ui-button-help"
-                                             style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: left;" />
-                        </div>
-                        <div class="p-col-2">
-                            <p:commandButton value="Save" 
-                                             process="@form"
-                                             actionListener="#{teamKpiForm.save}"
-                                             update="@form" validateClient="true"
-                                             style="min-width: 90px; padding: 10px 20px; font-size: 14px; float: right;" />
-                        </div>
-                    </div>
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between p-mt-4">
+                    <p:commandButton value="Cancel"
+                                     icon="pi pi-times"
+                                     immediate="true"
+                                     action="#{teamKpiForm.hide}"
+                                     styleClass="ui-button-danger p-mx-5" />
+                    <p:commandButton value="Save"
+                                     icon="pi pi-check"
+                                     process="@form"
+                                     actionListener="#{teamKpiForm.save}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" />
                 </div>
             </div>
         </h:form>

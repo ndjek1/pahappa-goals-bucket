@@ -2,7 +2,7 @@ package org.pahappa.systems.kpiTracker.views.activities;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.activitiesba.DepartmentActivityService;
+import org.pahappa.systems.kpiTracker.core.services.activities.DepartmentActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity;

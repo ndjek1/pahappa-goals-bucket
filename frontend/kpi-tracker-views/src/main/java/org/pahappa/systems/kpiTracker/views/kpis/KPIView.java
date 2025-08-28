@@ -157,4 +157,10 @@ public class KPIView implements Serializable {
         this.createdTo = null;
         reloadFilterReset();
     }
+    
+    public void viewKPI(KPI kpi) {
+        // This method can be implemented to show KPI details
+        // For now, it's a placeholder that could be expanded
+        System.out.println("Viewing KPI: " + (kpi != null ? kpi.getName() : "null"));
+    }
 }

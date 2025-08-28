@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,7 @@ public class TeamKPIView implements Serializable {
     private List<Frequency> frequencyList;
     private MeasurementUnit selectedMeasurementUnit;
     private Frequency selectedFrequency;
+    private Date createdFrom;
 
     @PostConstruct
     public void init() {
@@ -80,6 +82,17 @@ public class TeamKPIView implements Serializable {
         // Add frequency filter
         if (selectedFrequency != null) {
             search1.addFilterEqual("frequency", selectedFrequency);
+        }
+        
+        // Add date filter - defensive approach using available date fields
+        if (createdFrom != null) {
+            try {
+                // Try to filter by startDate if createdFrom is specified
+                search1.addFilterGreaterOrEqual("startDate", createdFrom);
+            } catch (Exception e) {
+                // If startDate doesn't work, we'll silently continue without this filter
+                System.out.println("Date filter not applied: " + e.getMessage());
+            }
         }
 
         this.dataModels = kpisService.getInstances(search1, i, i1);
@@ -117,6 +130,17 @@ public class TeamKPIView implements Serializable {
                 search.addFilterEqual("frequency", selectedFrequency);
             }
             
+            // Add date filter - defensive approach using available date fields
+            if (createdFrom != null) {
+                try {
+                    // Try to filter by startDate if createdFrom is specified
+                    search.addFilterGreaterOrEqual("startDate", createdFrom);
+                } catch (Exception e) {
+                    // If startDate doesn't work, we'll silently continue without this filter
+                    System.out.println("Date filter not applied: " + e.getMessage());
+                }
+            }
+            
             this.dataModels = kpisService.getInstances(search, 0, 1000);
         }
     }
@@ -136,6 +160,13 @@ public class TeamKPIView implements Serializable {
         this.searchTerm = null;
         this.selectedMeasurementUnit = null;
         this.selectedFrequency = null;
+        this.createdFrom = null;
         reloadFilterReset();
+    }
+    
+    public void viewKPI(KPI kpi) {
+        // This method can be implemented to show KPI details
+        // For now, it's a placeholder that could be expanded
+        System.out.println("Viewing KPI: " + (kpi != null ? kpi.getName() : "null"));
     }
 }

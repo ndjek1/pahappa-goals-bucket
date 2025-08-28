@@ -6,64 +6,47 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <style type="text/css">
+        <title>Team KPIs</title>
+        <style>
+            .capitalized { text-transform: capitalize; }
             .activity-nav-card {
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: 1px solid #e0e0e0;
-                padding: 6px;
-                height: auto;
-                min-height: auto;
-                border-radius: 8px;
-                background: #f9fafb;
+                cursor:pointer; transition:all .3s ease;
+                border:1px solid #e0e0e0; padding:6px;
+                border-radius:8px; background:#f9fafb;
+                margin-bottom:0.5rem;
             }
             .activity-nav-card:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                transform:translateY(-2px);
+                box-shadow:0 2px 6px rgba(0,0,0,.1);
             }
             .icon-circle {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                margin-bottom: 0;
-                color: #fff;
-                flex-shrink: 0;
-                font-size: 10px;
+                display:inline-flex; align-items:center; justify-content:center;
+                width:22px; height:22px; border-radius:50%; color:#fff; font-size:11px; margin-right:6px;
             }
-            .bg-green { background: #10b981; }
-            .bg-blue { background: #3b82f6; }
-            .bg-warning { background: #f59e0b; }
-            .bg-secondary { background: #6b7280; }
-            .bg-light-blue { background: #93c5fd; }
-            .bg-light-green { background: #86efac; }
-            .bg-light-purple { background: #c4b5fd; }
-            .nav-card h6{margin:0;font-size:.72rem;} .nav-card p{margin:0;font-size:.66rem;color:#6b7280}
-            .stat-value{margin-left:auto;font-size:0.95rem;font-weight:600}
-            .text-primary { color: #3b82f6; }
-            .text-success { color: #10b981; }
-            .text-warning { color: #f59e0b; }
-            .text-secondary { color: #6b7280; }
+            .bg-blue{background:#3b82f6;}
+            .bg-green{background:#10b981;}
+            .bg-warning{background:#f59e0b;}
+            .bg-indigo{background:#6366f1;}
+            .bg-red{background:#ef4444;}
 
-            .filter-input,.filter-select,.filter-calendar{width:100%;font-size:.72rem;padding:.16rem .28rem;border:1px solid #d1d5db;border-radius:.3rem}
-            .d-flex { display: flex; }
-            .align-items-center { align-items: center; }
-            .flex-grow-1 { flex-grow: 1; }
-            .me-3 { margin-right: 0.5rem; }
-            .mb-1 { margin-bottom: 0.15rem; }
-            .mb-0 { margin-bottom: 0; }
-            .p-grid{margin:0 -0.2rem;} [class*='p-col-']{padding:0 0.2rem}
-            .breadcrumb-card{padding:3px 5px;margin:0 0 4px 0;} .breadcrumb-card .ui-breadcrumb{font-size:.76rem;padding:0;margin:0} .breadcrumb-card .ui-breadcrumb .ui-menuitem-link{padding:1px 5px}
-            .activity-nav-card { padding: 4px; }
+            .nav-card h6{margin:0;font-size:.78rem;font-weight:600;}
+            .nav-card p{margin:0;font-size:.68rem;color:#6b7280}
+            .stat-value{margin-left:auto;font-size:.95rem;font-weight:600}
+            .p-grid{margin:0 -0.3rem;} [class*='p-col-']{padding:0 0.3rem}
+            .filter-input,.filter-select,.filter-calendar{width:100%;font-size:.75rem;padding:.25rem .4rem;border:1px solid #d1d5db;border-radius:.3rem}
+
+            .breadcrumb-card{padding:3px 6px;margin-bottom:8px;}
+            .breadcrumb-card .ui-breadcrumb{font-size:.8rem;padding:0;margin:0}
+            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link{padding:1px 6px}
+
+            .table-header-text { font-size:1rem; font-weight:600; }
         </style>
     </ui:define>
 
     <ui:define name="content">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
-                <h:form id="teamKPIView" enctype="multipart/form-data">
+                <h:form id="teamKPIForm" enctype="multipart/form-data">
 
                     <!-- Breadcrumb -->
                     <div class="card breadcrumb-card">
@@ -73,70 +56,20 @@
                         </p:breadCrumb>
                     </div>
 
-                    <!-- Statistics as compact nav-cards -->
-                    <div class="card">
-                        <div class="p-grid" style="margin-top:-4px;">
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-blue me-3"><i class="pi pi-chart-bar"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Total</h6>
-                                            <span class="stat-value text-primary">#{teamKPIView.dataModels.size()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-green me-3"><i class="pi pi-check-circle"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Active</h6>
-                                            <span class="stat-value text-success">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'ACTIVE').count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-warning me-3"><i class="pi pi-check"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Completed</h6>
-                                            <span class="stat-value text-warning">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'COMPLETED').count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-secondary me-3"><i class="pi pi-clock"></i></div>
-                                        <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                            <h6 class="mb-0">Pending</h6>
-                                            <span class="stat-value text-secondary">#{teamKPIView.dataModels.stream().filter(k -> k.recordStatus == 'PENDING').count()}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filters Section aligned with KPIView -->
+                    <!-- Filters Section -->
                     <div class="card">
                         <div class="p-grid">
-                            <div class="p-col-12 p-md-4">
-                                <div class="card activity-nav-card nav-card">
+
+                            <!-- Search -->
+                            <div class="p-col-12 p-md-2">
+                                <div class="activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
+                                        <div class="icon-circle bg-blue" title="Search"><i class="pi pi-search"></i></div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1">Search</h6>
-                                            <p:inputText id="searchTerm" required="false"
-                                                         value="#{teamKPIView.searchTerm}" placeholder="Search Team KPIs ..."
-                                                         styleClass="filter-input">
-                                                <p:ajax event="keyup"
-                                                        update="teamKPIsTable"
+                                            <h6>Search</h6>
+                                            <p:inputText id="searchTerm" value="#{teamKPIView.searchTerm}"
+                                                         placeholder="Search KPIs ..." styleClass="filter-input">
+                                                <p:ajax event="keyup" update="teamKPIsTable"
                                                         listener="#{teamKPIView.reloadFilterReset()}" />
                                             </p:inputText>
                                         </div>
@@ -144,17 +77,18 @@
                                 </div>
                             </div>
 
+                            <!-- Measurement Unit -->
                             <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
+                                <div class="activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
+                                        <div class="icon-circle bg-green" title="Unit"><i class="pi pi-cog"></i></div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1">Unit</h6>
-                                            <p:selectOneMenu id="measurementUnit" label="Filter by Unit"
-                                                             title="Filter by Measurement Unit" value="#{teamKPIView.selectedMeasurementUnit}"
+                                            <h6>Unit</h6>
+                                            <p:selectOneMenu id="measurementUnit" value="#{teamKPIView.selectedMeasurementUnit}"
                                                              styleClass="filter-select" converter="measurementUnitConverter">
                                                 <f:selectItem itemLabel="All Units" value="#{null}" />
-                                                <f:selectItems value="#{teamKPIView.measurementUnitList}" var="unit" itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                                                <f:selectItems value="#{teamKPIView.measurementUnitList}" var="unit" 
+                                                              itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
                                                 <p:ajax event="change" update="teamKPIsTable"
                                                         listener="#{teamKPIView.reloadFilterReset()}" />
                                             </p:selectOneMenu>
@@ -163,17 +97,18 @@
                                 </div>
                             </div>
 
+                            <!-- Frequency -->
                             <div class="p-col-12 p-md-3">
-                                <div class="card activity-nav-card nav-card">
+                                <div class="activity-nav-card nav-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
+                                        <div class="icon-circle bg-indigo" title="Frequency"><i class="pi pi-calendar"></i></div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1">Frequency</h6>
-                                            <p:selectOneMenu id="frequency" label="Filter by Frequency"
-                                                             title="Filter by Frequency" value="#{teamKPIView.selectedFrequency}"
+                                            <h6>Frequency</h6>
+                                            <p:selectOneMenu id="frequency" value="#{teamKPIView.selectedFrequency}"
                                                              styleClass="filter-select" converter="frequencyConverter">
                                                 <f:selectItem itemLabel="All Frequencies" value="#{null}" />
-                                                <f:selectItems value="#{teamKPIView.frequencyList}" var="freq" itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
+                                                <f:selectItems value="#{teamKPIView.frequencyList}" var="freq" 
+                                                              itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
                                                 <p:ajax event="change" update="teamKPIsTable"
                                                         listener="#{teamKPIView.reloadFilterReset()}" />
                                             </p:selectOneMenu>
@@ -182,47 +117,58 @@
                                 </div>
                             </div>
 
-                            <div class="p-col-12 p-md-2">
-                                <div class="card activity-nav-card nav-card d-flex align-items-center" style="justify-content:center;">
-                                    <p:commandButton value="Clear Filters" icon="fa fa-times" styleClass="ui-button-outlined ui-button-secondary" actionListener="#{teamKPIView.clearFilters}" update="teamKPIsTable" />
+                            <!-- From Date -->
+                            <div class="p-col-12 p-md-3">
+                                <div class="activity-nav-card nav-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-warning" title="From Date"><i class="pi pi-calendar"></i></div>
+                                        <div class="flex-grow-1">
+                                            <h6>From Date</h6>
+                                            <p:calendar value="#{teamKPIView.createdFrom}"
+                                                        styleClass="filter-calendar"
+                                                        navigator="true" pattern="dd MMM, yyyy" />
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- Clear Button -->
+                            <div class="p-col-12 p-md-1 d-flex align-items-center">
+                                <p:commandButton value="Clear" icon="pi pi-times"
+                                                 styleClass="ui-button-outlined ui-button-secondary"
+                                                 actionListener="#{teamKPIView.clearFilters}"
+                                                 update="teamKPIsTable" />
                             </div>
                         </div>
                     </div>
 
                     <!-- Team KPIs Data Table -->
-                    <div class="card" style="margin-top:0.5rem">
+                    <div class="card">
                         <p:dataTable id="teamKPIsTable" var="kpi" value="#{teamKPIView.dataModels}"
-                                     widgetVar="teamKPIsTable"
+                                     widgetVar="teamKPIsTable" paginator="true" lazy="false" rows="10"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                                     paginator="true" lazy="true" rows="20"
                                      emptyMessage="#{teamKPIView.dataEmptyMessage}"
-                                     paginatorPosition="bottom" paginatorAlwaysVisible="false"
+                                     paginatorPosition="bottom" paginatorAlwaysVisible="true"
                                      rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
 
                             <f:facet name="header">
                                 <div class="p-d-flex p-jc-between">
-                                    <div>
-                                        <span class="table-header-text">Team Key Performance Indicators</span>
-                                    </div>
-                                    <div>
-                                        <p:commandButton value="Add Team KPI" process="@this"
-                                                         icon="fa fa-plus"
-                                                         ajax="false"
-                                                         styleClass="ui-button-success" immediate="true"
-                                                         actionListener="#{teamKpiForm.show}">
-                                            <f:setPropertyActionListener value="#{null}" target="#{teamKpiForm.model}" />
-                                            <p:ajax event="dialogReturn"
-                                                    listener="#{teamKPIView.reloadFilterReset}"
-                                                    update="teamKPIsTable" />
-                                        </p:commandButton>
-                                    </div>
+                                    <span class="table-header-text">Team KPIs</span>
+                                    <p:commandButton value="Add Team KPI" process="@this" icon="pi pi-plus"
+                                                     styleClass="ui-button-success ui-button-sm" immediate="true"
+                                                     style="width: auto; white-space: nowrap;"
+                                                     actionListener="#{teamKpiForm.show}">
+                                        <f:setPropertyActionListener value="#{null}" target="#{teamKpiForm.model}" />
+                                        <p:ajax event="dialogReturn"
+                                                listener="#{teamKPIView.reloadFilterReset}"
+                                                update="teamKPIsTable" />
+                                    </p:commandButton>
                                 </div>
                             </f:facet>
 
-                                <p:column width="30" headerText="No.">
-                                    <h:outputText value="#{row + 1}" />
-                                </p:column>
+                            <p:column width="30" headerText="No.">
+                                <h:outputText value="#{row + 1}" />
+                            </p:column>
 
                             <!-- KPI Name Column -->
                             <p:column headerText="KPI Name">
@@ -261,32 +207,21 @@
                                 </h:outputText>
                             </p:column>
 
-                            <!-- End Date Column -->
-                            <p:column headerText="End Date">
-                                <h:outputText value="#{kpi.endDate}">
-                                    <f:convertDateTime pattern="dd MMM, yyyy" />
-                                </h:outputText>
-                            </p:column>
-
-                            <!-- Status Column -->
-                            <p:column headerText="Status">
-                                <h:outputText value="#{kpi.recordStatus}" />
-                            </p:column>
-
-                            <!-- Actions Column -->
-                            <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
-                                                            <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
-                                             ajax="false"
-                                             actionListener="#{teamKpiForm.show}">
-                                <f:setPropertyActionListener value="#{kpi}" target="#{teamKpiForm.model}" />
-                                <p:ajax event="dialogReturn" update="teamKPIsTable" />
-                            </p:commandButton>
-                                <p:commandButton icon="fa fa-trash" title="Delete"
-                                                 styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
-                                                 onclick="PF('confirmDelete').show()">
-                                    <f:setPropertyActionListener target="#{teamKPIView.selectedKPI}" value="#{kpi}" />
+                            <p:column headerText="Action" width="150" style="text-align:center"
+                                      exportable="false">
+                                <p:button title="View" icon="pi pi-eye" styleClass="ui-button-sm p-mr-2"
+                                          outcome="/pages/kpis/KpiDetailView">
+                                    <f:param name="kpiId" value="#{kpi.id}" />
+                                    <f:param name="returnPage" value="/pages/kpis/TeamKPIView" />
+                                </p:button>
+                                <p:commandButton title="Update" icon="pi pi-pencil"
+                                                 styleClass="ui-button-primary ui-button-sm"
+                                                 actionListener="#{teamKpiForm.show}">
+                                    <f:setPropertyActionListener value="#{kpi}" target="#{teamKpiForm.model}" />
+                                    <p:ajax event="dialogReturn" update="teamKPIsTable" />
                                 </p:commandButton>
                             </p:column>
+
                         </p:dataTable>
                     </div>
                 </h:form>
@@ -296,15 +231,5 @@
         <!-- Team KPI Form Dialog -->
         <ui:include src="TeamKPIForm.xhtml" />
 
-        <!-- Delete Confirmation Dialog -->
-        <p:confirmDialog header="Confirm Delete" message="Are you sure you want to delete this KPI?" 
-                         widgetVar="confirmDelete" showEffect="fade" hideEffect="fade" 
-                         responsive="true" width="350">
-            <p:commandButton value="Yes" type="button" styleClass="ui-button-success" 
-                            action="#{teamKPIView.deleteKPI(teamKPIView.selectedKPI)}"
-                            oncomplete="PF('confirmDelete').hide()" />
-            <p:commandButton value="No" type="button" styleClass="p-button-secondary" 
-                            onclick="PF('confirmDelete').hide()" />
-        </p:confirmDialog>
     </ui:define>
 </ui:composition>

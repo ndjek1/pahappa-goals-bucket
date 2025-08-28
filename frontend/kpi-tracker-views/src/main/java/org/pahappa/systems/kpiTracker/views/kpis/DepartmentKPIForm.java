@@ -42,7 +42,7 @@ public class DepartmentKPIForm extends DialogForm<KPI> {
     private boolean edit;
 
     public DepartmentKPIForm() {
-        super(HyperLinks.DEPARTMENT_KPI_FORM_DIALOG, 700, 600);
+        super(HyperLinks.DEPARTMENT_KPI_FORM_DIALOG, 750, 400);
     }
 
     @PostConstruct
