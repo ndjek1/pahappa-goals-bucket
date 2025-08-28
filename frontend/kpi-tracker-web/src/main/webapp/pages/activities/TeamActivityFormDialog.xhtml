@@ -4,6 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
             .capitalized {
@@ -11,132 +12,159 @@
             }
         </style>
     </ui:define>
+
     <ui:define name="content">
         <title>Add Team Activity</title>
-        <h:form id="teamActivityForm" style="height: 750px" styleClass="card">
-            <div class="p-grid ui-fluid" style="display:flex">
-                
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Title *</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{teamActivityFormDialog.model.title}" required="true" />
-                    </div>
+
+        <h:form id="departmentActivityForm" styleClass="dialog-card">
+
+            <p:growl id="growl" showDetail="true" life="4000"/>
+
+            <div class="ui-fluid formgrid grid p-m-4">
+
+                <!-- Title -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="title" value="Title *"/>
+                    <p:inputText id="title" value="#{teamActivityFormDialog.model.title}"
+                                 required="true"
+                                 placeholder="Enter activity title"
+                                 styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Status</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamActivityFormDialog.selectedStatus}"
-                                         converter="activityStatusConverter" filter="true"
-                                         required="true" effect="fold">
-                            <f:selectItem itemLabel="Select status" itemValue="" />
-                            <f:selectItems value="#{teamActivityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Status -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="status" value="Status"/>
+                    <p:selectOneMenu id="status"
+                                     value="#{teamActivityFormDialog.selectedStatus}"
+                                     converter="activityStatusConverter"
+                                     filter="true" effect="fold"
+                                     required="true"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select status" itemValue=""/>
+                        <f:selectItems value="#{teamActivityFormDialog.activityStatuses}"
+                                       var="status"
+                                       itemLabel="#{status.displayName}"
+                                       itemValue="#{status}"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Assigned User *</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamActivityFormDialog.selectedUser}"
-                                         converter="userConverter" filter="true"
-                                         required="true" effect="fold">
-                            <f:selectItem itemLabel="Select user" itemValue="" />
-                            <f:selectItems value="#{teamActivityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Description -->
+                <div class="field col-12 p-m-4">
+                    <p:outputLabel for="desc" value="Description"/>
+                    <p:inputTextarea id="desc"
+                                     value="#{teamActivityFormDialog.model.description}"
+                                     rows="3"
+                                     styleClass="w-full"/>
                 </div>
 
-                <div class="ui-col-12 ui-md-12">
-                    <h5>Description</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputTextarea value="#{teamActivityFormDialog.model.description}" rows="3" />
-                    </div>
+                <!-- Department Goal -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="teamGoal" value="Team Goal"/>
+                    <p:selectOneMenu id="teamGoal"
+                                     value="#{teamActivityFormDialog.teamGoal}"
+                                     converter="teamGoalConverter"
+                                     filter="true" effect="fold"
+                                     required="true"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select team goal" itemValue=""/>
+                        <f:selectItems value="#{teamActivityFormDialog.teamGoals}"
+                                       var="goal"
+                                       itemLabel="#{goal.name}"
+                                       itemValue="#{goal}"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <hr></hr>
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Team Goal *</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamActivityFormDialog.selectedTeamGoal}"
-                                         converter="teamGoalConverter" filter="true"
-                                         effect="fold" required="true">
-                            <f:selectItem itemLabel="Select team goal" itemValue="" />
-                            <f:selectItems value="#{teamActivityFormDialog.teamGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                        </p:selectOneMenu>
-                    </div>
+                <!-- Activity Type -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="actType" value="Activity Type"/>
+                    <p:selectOneMenu id="actType"
+                                     value="#{teamActivityFormDialog.selectedActivityType}"
+                                     converter="activityTypeConverter"
+                                     effect="fold"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select activity type" itemValue=""/>
+                        <f:selectItems value="#{teamActivityFormDialog.activityTypes}"
+                                       var="type"
+                                       itemLabel="#{type.displayName}"
+                                       itemValue="#{type}"/>
+                        <!-- Process this field and re-render the target panel -->
+                        <p:ajax event="change"
+                                process="@this"
+                                update="departmentActivityForm:targetValuePanel"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Activity Type</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamActivityFormDialog.selectedActivityType}"
-                                         effect="fold" converter="activityTypeConverter">
-                            <f:selectItem itemLabel="Select activity type" itemValue="" />
-                            <f:selectItems value="#{teamActivityFormDialog.activityTypes}" var="type" itemLabel="#{type.displayName}" itemValue="#{type}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </div>
-
-                <hr></hr>
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Planned Start Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamActivityFormDialog.model.plannedStartDate}" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Planned End Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamActivityFormDialog.model.plannedEndDate}" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Priority</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu value="#{teamActivityFormDialog.selectedPriority}"
-                                         effect="fold" converter="activityPriorityConverter">
-                            <f:selectItem itemLabel="Select priority" itemValue="" />
-                            <f:selectItems value="#{teamActivityFormDialog.priorities}" var="priority" itemLabel="#{priority.displayName}" itemValue="#{priority}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Actual Start Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamActivityFormDialog.model.actualStartDate}" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-4">
-                    <h5>Actual End Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar value="#{teamActivityFormDialog.model.actualEndDate}" showTime="false" pattern="MM/dd/yyyy" />
-                    </div>
-                </div>
-
-                <div class="ui-col-12 ui-md-12" style="margin-top: 20px; align-self: flex-end !important;">
-                    <div class="p-grid p-justify-end">
-                        <div class="p-col-1" style="margin-right: 10px;">
-                            <p:commandButton value="Cancel" 
-                                             validateClient="false"
-                                             process="@this"
-                                             action="#{teamActivityFormDialog.hide}"
-                                             styleClass="ui-button-outlined ui-button-help"
-                                             style="min-width: 80px; padding: 8px 16px;" />
+                <!-- Target Value (only for quantitative) -->
+                <h:panelGroup id="targetValuePanel" layout="block">
+                    <h:panelGroup rendered="#{teamActivityFormDialog.quantitativeSelected}">
+                        <div class="field col-12 md:col-6 p-m-4">
+                            <p:outputLabel for="targetValue" value="Target Value"/>
+                            <p:inputNumber id="targetValue"
+                                           value="#{teamActivityFormDialog.model.targetValue}"
+                                           decimalPlaces="2"
+                                           minValue="0"
+                                           required="#{teamActivityFormDialog.quantitativeSelected}"
+                                           requiredMessage="Target value is required for quantitative activities."
+                                           placeholder="Enter target value"
+                                           styleClass="w-full"/>
+                            <p:message for="targetValue"/>
                         </div>
-                        <div class="p-col-1">
-                            <p:commandButton value="Save" 
-                                             process="@form"
-                                             actionListener="#{teamActivityFormDialog.save}"
-                                             update="@form" validateClient="true"
-                                             style="min-width: 80px; padding: 8px 16px;" />
-                        </div>
-                    </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+
+                <!-- Planned Start Date -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="startDate" value="Planned Start Date"/>
+                    <p:calendar id="startDate"
+                                value="#{teamActivityFormDialog.model.plannedStartDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                styleClass="w-full"/>
                 </div>
+
+                <!-- Planned End Date -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="endDate" value="Planned End Date"/>
+                    <p:calendar id="endDate"
+                                value="#{teamActivityFormDialog.model.plannedEndDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                styleClass="w-full"/>
+                </div>
+
+                <!-- Priority -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="priority" value="Priority"/>
+                    <p:selectOneMenu id="priority"
+                                     value="#{teamActivityFormDialog.selectedPriority}"
+                                     converter="activityPriorityConverter"
+                                     effect="fold"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select priority" itemValue=""/>
+                        <f:selectItems value="#{teamActivityFormDialog.priorities}"
+                                       var="priority"
+                                       itemLabel="#{priority.displayName}"
+                                       itemValue="#{priority}"/>
+                    </p:selectOneMenu>
+                </div>
+
+                <!-- Buttons -->
+                <div class="field col-12 p-d-flex p-jc-between p-mt-4">
+                    <p:commandButton value="Cancel"
+                                     process="@this"
+                                     action="#{teamActivityFormDialog.hide}"
+                                     validateClient="false"
+                                     styleClass="ui-button-outlined ui-button-help p-mx-5"/>
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     actionListener="#{teamActivityFormDialog.persist}"
+                                     update="@form growl"
+                                     validateClient="true"
+                                     styleClass="ui-button-primary p-mx-5"/>
+                </div>
+
             </div>
         </h:form>
     </ui:define>

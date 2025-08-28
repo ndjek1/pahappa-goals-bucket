@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="content">
+        <title>#{updateTeamActivity.model.id ne null ? 'Update Activity' : 'Add Activity'}</title>
+
+        <h:form id="updateActivityForm">
+
+            <!-- ===== Activity Info ===== -->
+            <p:fieldset legend="Activity Information" toggleable="true" collapsed="false"
+                        rendered="#{not empty updateTeamActivity.model}" styleClass="p-mb-3">
+                <p:panelGrid columns="2" columnClasses="p-col-4,p-col-8" styleClass="p-fluid">
+                    <p:outputLabel value="Title:"/>
+                    <h:outputText value="#{updateTeamActivity.model.title}" />
+
+                    <p:outputLabel value="Description:"/>
+                    <h:outputText value="#{updateTeamActivity.model.description}" />
+
+                    <p:outputLabel value="Priority:"/>
+                    <h:outputText value="#{updateTeamActivity.model.priority}" />
+
+                    <p:outputLabel value="Status:"/>
+                    <h:outputText value="#{updateTeamActivity.model.status}" />
+                </p:panelGrid>
+            </p:fieldset>
+
+            <!-- ===== Qualitative Section ===== -->
+            <p:fieldset legend="Qualitative" toggleable="true" collapsed="false"
+                        rendered="#{updateTeamActivity.qualitative}" styleClass="p-mb-3">
+                <p:selectBooleanCheckbox id="completed"
+                                         value="#{updateTeamActivity.completed}" />
+                <p:outputLabel for="completed" value="Mark as Completed" />
+            </p:fieldset>
+
+            <!-- ===== Quantitative Section ===== -->
+            <p:fieldset legend="Quantitative" toggleable="true" collapsed="false"
+                        rendered="#{updateTeamActivity.quantitative}" styleClass="p-mb-3">
+                <p:panelGrid columns="2" columnClasses="p-col-4,p-col-8" styleClass="p-fluid">
+                    <p:outputLabel for="actualValue" value="Actual Value"/>
+                    <p:inputNumber id="actualValue"
+                                   value="#{updateTeamActivity.model.actualValue}"
+                                   decimalPlaces="2"
+                                   minValue="0"/>
+                </p:panelGrid>
+            </p:fieldset>
+
+            <!-- ===== Action Buttons ===== -->
+            <p:toolbar styleClass="p-mt-3">
+                <p:toolbarGroup align="right">
+                    <p:commandButton value="Save"
+                                     actionListener="#{updateTeamActivity.persist}"
+                                     styleClass="ui-button-primary p-mr-2"/>
+                    <p:commandButton value="Cancel"
+                                     actionListener="#{updateTeamActivity.hide}"
+                                     styleClass="ui-button-outlined ui-button-secondary"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
