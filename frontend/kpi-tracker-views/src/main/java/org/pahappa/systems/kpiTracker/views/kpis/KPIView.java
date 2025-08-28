@@ -4,7 +4,9 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
@@ -20,6 +22,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,7 @@ public class KPIView implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(KPIView.class.getSimpleName());
 
     private KpisService kpisService;
+    private ReviewCycleService reviewCycleService;
     private List<KPI> dataModels;
     private String searchTerm;
     private Date createdFrom, createdTo;
@@ -46,18 +50,33 @@ public class KPIView implements Serializable {
     // Filter properties
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
+    private List<ReviewCycle> reviewCycles;
     private MeasurementUnit selectedMeasurementUnit;
     private Frequency selectedFrequency;
+    private ReviewCycle selectedReviewCycle;
 
     @PostConstruct
     public void init() {
         kpisService = ApplicationContextProvider.getBean(KpisService.class);
+        reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         
         // Initialize enum lists for filters
         this.measurementUnits = Arrays.asList(MeasurementUnit.values());
         this.frequencies = Arrays.asList(Frequency.values());
         
+        // Load review cycles
+        loadReviewCycles();
+        
         reloadFilterReset();
+    }
+
+    private void loadReviewCycles() {
+        try {
+            this.reviewCycles = reviewCycleService.getAllInstances();
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Error loading review cycles", e);
+            this.reviewCycles = new ArrayList<>();
+        }
     }
 
     public void reloadFilterReset() {
@@ -77,6 +96,11 @@ public class KPIView implements Serializable {
             // Add frequency filter
             if (selectedFrequency != null) {
                 kpiSearch.addFilterEqual("frequency", selectedFrequency);
+            }
+            
+            // Add review cycle filter
+            if (selectedReviewCycle != null) {
+                kpiSearch.addFilterEqual("reviewCycle", selectedReviewCycle);
             }
             
             if (createdFrom != null) {
@@ -153,6 +177,7 @@ public class KPIView implements Serializable {
         this.searchTerm = null;
         this.selectedMeasurementUnit = null;
         this.selectedFrequency = null;
+        this.selectedReviewCycle = null;
         this.createdFrom = null;
         this.createdTo = null;
         reloadFilterReset();
@@ -162,5 +187,10 @@ public class KPIView implements Serializable {
         // This method can be implemented to show KPI details
         // For now, it's a placeholder that could be expanded
         System.out.println("Viewing KPI: " + (kpi != null ? kpi.getName() : "null"));
+    }
+    
+    public String viewKpiDetails(KPI kpi) {
+        this.selectedKPI = kpi;
+        return HyperLinks.KPI_DETAIL_VIEW + "?kpiId=" + kpi.getId();
     }
 }

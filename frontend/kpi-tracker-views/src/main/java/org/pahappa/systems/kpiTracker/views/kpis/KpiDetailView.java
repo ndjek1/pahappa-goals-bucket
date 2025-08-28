@@ -3,9 +3,9 @@ package org.pahappa.systems.kpiTracker.views.kpis;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.ChartSeries;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
@@ -26,10 +26,12 @@ public class KpiDetailView implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private KpisService kpisService;
+    private ReviewCycleService reviewCycleService;
     private KPI selectedKpi;
-    private LineChartModel chartModel;
     private List<KpiUpdate> kpiUpdates;
+    private List<ReviewCycle> reviewCycles;
     private User loggedInUser;
+    private List<ChartDataPoint> chartDataPoints;
     
     // Update form fields
     private Double newValue;
@@ -39,7 +41,11 @@ public class KpiDetailView implements Serializable {
     @PostConstruct
     public void init() {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
+        this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         this.loggedInUser = SharedAppData.getLoggedInUser();
+        
+        // Load review cycles
+        loadReviewCycles();
         
         // Get KPI ID from request parameter
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -51,11 +57,19 @@ public class KpiDetailView implements Serializable {
                 this.selectedKpi = kpisService.getInstanceByID(kpiId);
                 if (this.selectedKpi != null) {
                     loadKpiUpdates();
-                    createChartModel();
+                    createChartData();
                 }
             } catch (Exception e) {
                 // Handle invalid ID
             }
+        }
+    }
+
+    private void loadReviewCycles() {
+        try {
+            this.reviewCycles = reviewCycleService.getAllInstances();
+        } catch (Exception e) {
+            this.reviewCycles = new ArrayList<>();
         }
     }
 
@@ -82,26 +96,35 @@ public class KpiDetailView implements Serializable {
         kpiUpdates.sort((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()));
     }
 
-    private void createChartModel() {
-        chartModel = new LineChartModel();
-        ChartSeries series = new ChartSeries();
-        series.setLabel("KPI Progress");
-
-        // Add sample data points
+    private void createChartData() {
+        chartDataPoints = new ArrayList<>();
+        
+        // Add sample data points for the last 6 months
         Calendar cal = Calendar.getInstance();
         Random random = new Random();
         
-        for (int i = 0; i < 6; i++) {
-            cal.add(Calendar.MONTH, -1);
+        for (int i = 5; i >= 0; i--) {
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.add(Calendar.MONTH, -i);
             String monthLabel = getMonthLabel(cal.get(Calendar.MONTH));
-            series.set(monthLabel, random.nextInt(100) + 20);
+            Double value = Double.valueOf(random.nextInt(100) + 20);
+            
+            ChartDataPoint point = new ChartDataPoint();
+            point.setLabel(monthLabel);
+            point.setValue(value);
+            chartDataPoints.add(point);
         }
-
-        chartModel.addSeries(series);
-        chartModel.setTitle("Updates Overtime");
-        chartModel.setLegendPosition("ne");
-        chartModel.setShowPointLabels(true);
-        chartModel.setAnimate(true);
+    }
+    
+    // Simple data class for chart visualization
+    public static class ChartDataPoint {
+        private String label;
+        private Double value;
+        
+        public String getLabel() { return label; }
+        public void setLabel(String label) { this.label = label; }
+        public Double getValue() { return value; }
+        public void setValue(Double value) { this.value = value; }
     }
 
     private String getMonthLabel(int month) {
@@ -138,7 +161,7 @@ public class KpiDetailView implements Serializable {
                 updateComment = null;
                 
                 // Recreate chart with new data
-                createChartModel();
+                createChartData();
                 
             } catch (Exception e) {
                 // Handle error

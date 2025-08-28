@@ -37,13 +37,37 @@
                 <!-- =============================== -->
                 <p:tab title="Department KPIs">
                     <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
-                        <div class="p-d-flex p-ai-center">
-                            <p:inputText placeholder="Search Department KPI" style="flex:1" styleClass="p-mr-2"
+                        <div class="p-d-flex p-ai-center p-flex-wrap">
+                            <p:inputText placeholder="Search Department KPI" style="flex:1; min-width: 200px;" styleClass="p-mr-2 p-mb-2"
                                          value="#{kpiView.searchTerm}">
                                 <p:ajax event="keyup" listener="#{kpiView.reloadFilterReset}" update="departmentKPIsTable"/>
                             </p:inputText>
-                            <p:commandButton value="Search" icon="pi pi-search"
+                            
+                            <!-- Review Cycle Filter -->
+                            <p:selectOneMenu value="#{kpiView.selectedReviewCycle}" styleClass="p-mr-2 p-mb-2" style="min-width: 150px;">
+                                <f:selectItem itemLabel="All Review Cycles" itemValue="#{null}"/>
+                                <f:selectItems value="#{kpiView.reviewCycles}" var="cycle" itemLabel="#{cycle.name}" itemValue="#{cycle}"/>
+                                <p:ajax listener="#{kpiView.reloadFilterReset}" update="departmentKPIsTable"/>
+                            </p:selectOneMenu>
+                            
+                            <!-- Measurement Unit Filter -->
+                            <p:selectOneMenu value="#{kpiView.selectedMeasurementUnit}" styleClass="p-mr-2 p-mb-2" style="min-width: 120px;">
+                                <f:selectItem itemLabel="All Units" itemValue="#{null}"/>
+                                <f:selectItems value="#{kpiView.measurementUnits}" var="unit" itemLabel="#{unit}" itemValue="#{unit}"/>
+                                <p:ajax listener="#{kpiView.reloadFilterReset}" update="departmentKPIsTable"/>
+                            </p:selectOneMenu>
+                            
+                            <!-- Frequency Filter -->
+                            <p:selectOneMenu value="#{kpiView.selectedFrequency}" styleClass="p-mr-2 p-mb-2" style="min-width: 120px;">
+                                <f:selectItem itemLabel="All Frequencies" itemValue="#{null}"/>
+                                <f:selectItems value="#{kpiView.frequencies}" var="freq" itemLabel="#{freq}" itemValue="#{freq}"/>
+                                <p:ajax listener="#{kpiView.reloadFilterReset}" update="departmentKPIsTable"/>
+                            </p:selectOneMenu>
+                            
+                            <p:commandButton value="Search" icon="pi pi-search" styleClass="p-mr-2 p-mb-2"
                                              actionListener="#{kpiView.reloadFilterReset}" update="departmentKPIsTable"/>
+                            <p:commandButton value="Clear" icon="pi pi-times" styleClass="p-button-outlined p-mb-2"
+                                             actionListener="#{kpiView.clearFilters}" update="departmentKPIsTable"/>
                         </div>
                     </div>
 
@@ -54,6 +78,12 @@
                         <p:column headerText="KPI Name">
                             <h:outputText value="#{kpi.name}"/>
                         </p:column>
+                        <p:column headerText="Review Cycle">
+                            <h:outputText value="#{kpi.reviewCycle != null ? kpi.reviewCycle.name : 'N/A'}"/>
+                        </p:column>
+                        <p:column headerText="Frequency">
+                            <h:outputText value="#{kpi.frequency}"/>
+                        </p:column>
                         <p:column headerText="Status" width="150">
                             <h:outputText value="#{kpi.recordStatus}"/>
                         </p:column>
@@ -62,15 +92,21 @@
                                 <f:convertDateTime pattern="dd MMM yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;" width="200">
                             <p:button title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"
                                       outcome="/pages/kpis/KpiDetailView">
                                 <f:param name="kpiId" value="#{kpi.id}" />
                                 <f:param name="returnPage" value="/pages/kpis/KPIView" />
                             </p:button>
+                            <p:commandButton title="Edit" icon="pi pi-pencil" styleClass="p-button-sm p-button-warning p-mr-2"
+                                             actionListener="#{departmentKpiForm.show}">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{departmentKpiForm.model}" />
+                                <p:ajax event="dialogReturn" update="departmentKPIsTable" />
+                            </p:commandButton>
                             <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
-                                             actionListener="#{kpiView.deleteKPI(kpi)}"
-                                             update="departmentKPIsTable "/>
+                                             onclick="PF('deleteKpiDialog').show(); return false;">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{kpiView.selectedKpiForDeletion}" />
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>
@@ -106,15 +142,21 @@
                                 <f:convertDateTime pattern="dd MMM yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;" width="200">
                             <p:button title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"
                                       outcome="/pages/kpis/KpiDetailView">
                                 <f:param name="kpiId" value="#{kpi.id}" />
                                 <f:param name="returnPage" value="/pages/kpis/KPIView" />
                             </p:button>
+                            <p:commandButton title="Edit" icon="pi pi-pencil" styleClass="p-button-sm p-button-warning p-mr-2"
+                                             actionListener="#{teamKpiForm.show}">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{teamKpiForm.model}" />
+                                <p:ajax event="dialogReturn" update="teamKPIsTable" />
+                            </p:commandButton>
                             <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
-                                             actionListener="#{kpiView.deleteKPI(kpi)}"
-                                             update="teamKPIsTable "/>
+                                             onclick="PF('deleteKpiDialog').show(); return false;">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{kpiView.selectedKpiForDeletion}" />
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>
@@ -150,21 +192,42 @@
                                 <f:convertDateTime pattern="dd MMM yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;" width="200">
                             <p:button title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"
                                       outcome="/pages/kpis/KpiDetailView">
                                 <f:param name="kpiId" value="#{kpi.id}" />
                                 <f:param name="returnPage" value="/pages/kpis/KPIView" />
                             </p:button>
+                            <p:commandButton title="Edit" icon="pi pi-pencil" styleClass="p-button-sm p-button-warning p-mr-2"
+                                             actionListener="#{individualKPIForm.show}">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{individualKPIForm.model}" />
+                                <p:ajax event="dialogReturn" update="individualKPIsTable" />
+                            </p:commandButton>
                             <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
-                                             actionListener="#{kpiView.deleteKPI(kpi)}"
-                                             update="individualKPIsTable"/>
+                                             onclick="PF('deleteKpiDialog').show(); return false;">
+                                <f:setPropertyActionListener value="#{kpi}" target="#{kpiView.selectedKpiForDeletion}" />
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>
                 </p:tab>
 
             </p:tabView>
+
+            <!-- Delete Confirmation Dialog -->
+            <p:confirmDialog widgetVar="deleteKpiDialog" header="Confirm Deletion" 
+                             message="Are you sure you want to delete this KPI? This action cannot be undone."
+                             severity="warn" width="400">
+                <p:commandButton value="Yes, Delete" icon="pi pi-check"
+                                 styleClass="ui-button-danger"
+                                 actionListener="#{kpiView.deleteSelectedKpi}"
+                                 update="@form"
+                                 oncomplete="PF('deleteKpiDialog').hide();" />
+                <p:commandButton value="Cancel" icon="pi pi-times"
+                                 styleClass="ui-button-secondary"
+                                 onclick="PF('deleteKpiDialog').hide(); return false;" />
+            </p:confirmDialog>
         </h:form>
+
     </ui:define>
 </ui:composition>

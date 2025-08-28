@@ -7,18 +7,207 @@
                 xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
     <style>
-        .active-submenu > .ui-menuitem-link, .active-submenu > .ui-submenu-link {
+        /* Enhanced active menu item highlighting - More specific and persistent */
+        .layout-sidebar .layout-menu li.active-menuitem > a,
+        .layout-sidebar .layout-menu li[class*="active-menuitem"] > a {
+            background-color: #f0f8ff !important;
+            color: #0b5ed7 !important;
+            font-weight: 600 !important;
+            border-left: 4px solid #0b5ed7 !important;
+            padding-left: 8px !important;
+        }
+        
+        /* Submenu item highlighting - active submenu items */
+        .layout-sidebar .layout-menu li.active-menuitem > ul li.active-menuitem > a,
+        .layout-sidebar .layout-menu li[class*="active-menuitem"] > ul li[class*="active-menuitem"] > a {
             background-color: #e6f0ff !important;
             color: #0d6efd !important;
-            border-left: 3px solid #0d6efd;
+            font-weight: 600 !important;
+            border-left: 3px solid #0d6efd !important;
+            margin-left: 12px !important;
         }
-        .active-link > .ui-menuitem-link {
-            background-color: #dfefff !important;
+        
+        /* Icon highlighting for active items */
+        .layout-sidebar .layout-menu li.active-menuitem > a i,
+        .layout-sidebar .layout-menu li[class*="active-menuitem"] > a i {
             color: #0b5ed7 !important;
-            font-weight: 600;
-            border-left: 3px solid #0b5ed7;
+        }
+        
+        /* Submenu icon highlighting */
+        .layout-sidebar .layout-menu li.active-menuitem > ul li.active-menuitem > a i,
+        .layout-sidebar .layout-menu li[class*="active-menuitem"] > ul li[class*="active-menuitem"] > a i {
+            color: #0d6efd !important;
+        }
+        
+        /* Page-specific active highlighting using data attributes for persistence */
+        .layout-sidebar .layout-menu li[data-active="true"] > a {
+            background-color: #f0f8ff !important;
+            color: #0b5ed7 !important;
+            font-weight: 600 !important;
+            border-left: 4px solid #0b5ed7 !important;
+            padding-left: 8px !important;
+        }
+        
+        .layout-sidebar .layout-menu li[data-active="true"] > a i {
+            color: #0b5ed7 !important;
+        }
+        
+        .layout-sidebar .layout-menu li[data-submenu-active="true"] > ul li[data-active="true"] > a {
+            background-color: #e6f0ff !important;
+            color: #0d6efd !important;
+            font-weight: 600 !important;
+            border-left: 3px solid #0d6efd !important;
+            margin-left: 12px !important;
+        }
+        
+        .layout-sidebar .layout-menu li[data-submenu-active="true"] > ul li[data-active="true"] > a i {
+            color: #0d6efd !important;
+        }
+        
+        /* Hover effects for better UX */
+        .layout-sidebar .layout-menu li > a:hover {
+            background-color: #f8f9fa !important;
+            transition: background-color 0.2s ease;
+        }
+        
+        .layout-sidebar .layout-menu li > ul li > a:hover {
+            background-color: #f0f8ff !important;
+            transition: background-color 0.2s ease;
+        }
+        
+        /* Ensure submenu items stay visible when parent is active */
+        .layout-sidebar .layout-menu li.active-menuitem > ul,
+        .layout-sidebar .layout-menu li[data-submenu-active="true"] > ul {
+            display: block !important;
+        }
+        
+        /* Persistent active class - highest priority to prevent JavaScript override */
+        .layout-sidebar .layout-menu li.persistent-active > a {
+            background-color: #f0f8ff !important;
+            color: #0b5ed7 !important;
+            font-weight: 600 !important;
+            border-left: 4px solid #0b5ed7 !important;
+            padding-left: 8px !important;
+        }
+        
+        .layout-sidebar .layout-menu li.persistent-active > a i {
+            color: #0b5ed7 !important;
+        }
+        
+        /* Persistent active for submenu items */
+        .layout-sidebar .layout-menu li > ul li.persistent-active > a {
+            background-color: #e6f0ff !important;
+            color: #0d6efd !important;
+            font-weight: 600 !important;
+            border-left: 3px solid #0d6efd !important;
+            margin-left: 12px !important;
+        }
+        
+        .layout-sidebar .layout-menu li > ul li.persistent-active > a i {
+            color: #0d6efd !important;
         }
     </style>
+    
+    <script type="text/javascript">
+        // Function to maintain active states after JavaScript menu operations
+        function maintainActiveStates() {
+            // Ensure persistent-active classes are preserved
+            $('.layout-menu li.persistent-active').each(function() {
+                var $item = $(this);
+                
+                // If this is a submenu item that should be active
+                if ($item.hasClass('persistent-active')) {
+                    // Ensure parent submenu is expanded and active
+                    var $parentSubmenu = $item.closest('ul').parent('li');
+                    if ($parentSubmenu.length > 0) {
+                        $parentSubmenu.addClass('active-menuitem');
+                        $parentSubmenu.children('ul').show();
+                    }
+                    
+                    // Ensure this item is marked as active
+                    $item.addClass('active-menuitem');
+                }
+            });
+            
+            // Prevent JavaScript from removing persistent-active classes
+            $('.layout-menu li.persistent-active').on('click', function(e) {
+                var $this = $(this);
+                // Re-add persistent-active after any JavaScript modifications
+                setTimeout(function() {
+                    $this.addClass('persistent-active active-menuitem');
+                }, 10);
+            });
+        }
+        
+        // Enhanced function to preserve active states
+        function preserveActiveStates() {
+            // Store current persistent active items
+            var persistentActiveItems = [];
+            $('.layout-menu li.persistent-active').each(function() {
+                persistentActiveItems.push($(this).attr('id'));
+            });
+            
+            // Re-apply persistent active classes after menu operations
+            setTimeout(function() {
+                persistentActiveItems.forEach(function(id) {
+                    var $item = $('#' + id);
+                    if ($item.length > 0) {
+                        $item.addClass('persistent-active active-menuitem');
+                        
+                        // Ensure parent is expanded
+                        var $parentSubmenu = $item.closest('ul').parent('li');
+                        if ($parentSubmenu.length > 0) {
+                            $parentSubmenu.addClass('active-menuitem');
+                            $parentSubmenu.children('ul').show();
+                        }
+                    }
+                });
+            }, 50);
+        }
+        
+        // Run on document ready and after various events
+        $(document).ready(function() {
+            maintainActiveStates();
+            
+            // Re-apply after menu widget initialization
+            setTimeout(function() {
+                maintainActiveStates();
+                preserveActiveStates();
+            }, 500);
+            
+            // Re-apply after any menu interactions
+            $('.layout-menu').on('click', 'a', function() {
+                preserveActiveStates();
+            });
+            
+            // Re-apply after AJAX updates
+            $(document).on('pfAjaxComplete', function() {
+                setTimeout(function() {
+                    maintainActiveStates();
+                    preserveActiveStates();
+                }, 100);
+            });
+            
+            // Override the California menu widget's activate/deactivate functions
+            if (window.PrimeFaces &amp;&amp; PrimeFaces.widget &amp;&amp; PrimeFaces.widget.California) {
+                var originalActivate = PrimeFaces.widget.California.prototype.activate;
+                var originalDeactivate = PrimeFaces.widget.California.prototype.deactivate;
+                
+                PrimeFaces.widget.California.prototype.activate = function(item) {
+                    originalActivate.call(this, item);
+                    preserveActiveStates();
+                };
+                
+                PrimeFaces.widget.California.prototype.deactivate = function(item) {
+                    // Don't deactivate persistent-active items
+                    if (!item.hasClass('persistent-active')) {
+                        originalDeactivate.call(this, item);
+                    }
+                    preserveActiveStates();
+                };
+            }
+        });
+    </script>
 
     <div class="layout-sidebar" style="background: #EBEFF5; ">
         <div class="sidebar-scroll-content">
@@ -29,60 +218,62 @@
 
                     <p:menuitem id="dashboard" value="Dashboard"
                                 icon="pi pi-th-large"
-                                styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/dashboard/Dashboard.xhtml' ? 'active-link' : ''}"
+                                styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/dashboard/Dashboard.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                 outcome="/pages/dashboard/Dashboard" />
 
 
                     <p:submenu id="goals" label="Manage Organization"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'goals') ? 'active-submenu' : ''}"
-                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'organization')}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/goals/') ? 'active-menuitem persistent-active' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, '/goals/')}"
                                icon="fa fa-bullseye">
                         <p:menuitem id="orgGoals" value="Organization Goals"
                                     icon="fa fa-bullseye"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/OrganizationGoalsView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/OrganizationGoalsView.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                     outcome="/pages/goals/OrganizationGoalsView" />
                     </p:submenu>
 
 
                     <p:submenu id="kpis" label="Manage KPIs"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'kpis') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/kpis/') ? 'active-menuitem persistent-active' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, '/kpis/')}"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="allKPIs" value="All KPIs"
                                     icon="pi pi-chart-line"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                     outcome="/pages/kpis/KPIView" />
                     </p:submenu>
 
 
                     <p:submenu id="activities" label="Manage Activities"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'activities') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/activities/') ? 'active-menuitem' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, '/activities/')}"
                                icon="pi pi-fw pi-calendar">
                         <p:menuitem id="allActivities" value="All Activities"
                                     icon="pi pi-calendar"
                                     rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/ActivitiesView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/ActivitiesView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/activities/ActivitiesView" />
                     </p:submenu>
 
                     <p:submenu id="individual" label="My goals"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Individual') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Individual') ? 'active-menuitem' : ''}"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR') or dashboard.loggedinUser.hasRole('Individual')}"
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Individual')}"
                                icon="pi pi-user">
                         <p:menuitem id="individualGoals" value="Individual Goals"
                                     icon="fa fa-bullseye"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/IndividualGoalsView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/IndividualGoalsView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/goals/IndividualGoalsView" />
                         <p:menuitem id="individualKPIs" value="Individual KPIs"
                                     icon="pi pi-chart-line"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/IndividualKPIView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/IndividualKPIView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/kpis/IndividualKPIView" />
                         <p:menuitem id="individualActivities" value="Individual Activities"
                                     icon="pi pi-calendar"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/IndividualActivitiesView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/IndividualActivitiesView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/activities/IndividualActivitiesView" />
                     </p:submenu>
 
@@ -90,82 +281,85 @@
                     <p:submenu id="department" label="Manage Department"
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Department')}"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR') or dashboard.loggedinUser.hasRole('DEPT_LEAD') or dashboard.loggedinUser.hasRole('Department Lead')}"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Department') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Department') ? 'active-menuitem' : ''}"
                                icon="fa fa-building">
                         <p:menuitem id="teams" value="Teams"
                                     icon="fa fa-users"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/organizationstructure/TeamsView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/organizationstructure/TeamsView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/organizationstructure/TeamsView" />
                         <p:menuitem id="departmentGoals" value="Goals"
                                     icon="fa fa-bullseye"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/DepartmentGoalView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/DepartmentGoalView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/goals/DepartmentGoalView" />
                         <p:menuitem id="departmentKPIs" value="Department KPIs"
                                     icon="pi pi-chart-line"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/DepartmentKPIView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/DepartmentKPIView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/kpis/DepartmentKPIView" />
                         <p:menuitem id="departmentActivities" value="Department Activities"
                                     icon="pi pi-calendar"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/DepartmentActivitiesView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/activities/DepartmentActivitiesView" />
                     </p:submenu>
 
 
                     <p:submenu id="team" label="Manage Team"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR') or dashboard.loggedinUser.hasRole('TEAM_LEAD') or dashboard.loggedinUser.hasRole('Team Lead')}"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Team') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'Team') ? 'active-menuitem' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'Team')}"
                                icon="fa fa-users">
                         <p:menuitem id="teamGoals" value="Team Goals"
                                     icon="fa fa-bullseye"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/TeamGoalView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/goals/TeamGoalView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/goals/TeamGoalView" />
                         <p:menuitem id="teamKPIs" value="Team KPIs"
                                     icon="pi pi-chart-line"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/TeamKPIView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/TeamKPIView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/kpis/TeamKPIView" />
                         <p:menuitem id="teamActivities" value="Team Activities"
                                     icon="pi pi-calendar"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/TeamActivitiesView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/activities/TeamActivitiesView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/activities/TeamActivitiesView" />
                     </p:submenu>
 
 
                     <p:menuitem id="organizationStructure" value="Organization Structure"
                                 icon="pi pi-sitemap"
-                                styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/organizationstructure/OrganizationStructure.xhtml' ? 'active-link' : ''}"
+                                styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/organizationstructure/OrganizationStructure.xhtml' ? 'active-menuitem' : ''}"
                                 outcome="/pages/organizationstructure/OrganizationStructure" />
 
                     <p:submenu id="settings" label="Manage Users"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'users') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/users/') ? 'active-menuitem' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, '/users/')}"
                                icon="pi pi-fw pi-user">
                         <p:menuitem id="users" value="Users" icon="pi pi-fw pi-users"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/UsersView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/UsersView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/users/UsersView" />
                         <p:menuitem id="roles" value="Roles" icon="pi pi-fw pi-lock"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/RolesView.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/RolesView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/users/RolesView"/>
                     </p:submenu>
 
                     <p:submenu label="Organization Configuration"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
-                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'systemSetup') ? 'active-submenu' : ''}"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/systemSetup/') ? 'active-menuitem' : ''}"
+                               expanded="#{fn:contains(facesContext.viewRoot.viewId, '/systemSetup/')}"
                                icon="pi pi-fw pi-cog">
                         <p:menuitem value="Manage Global Weights"
                                     icon="pi pi-cog"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/GlobalWeightTable.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/GlobalWeightTable.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/systemSetup/GlobalWeightTable" />
                         <p:menuitem value="Organizational Fit Categories"
                                     icon="pi pi-cog"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/OrgFitCategoryTable.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/OrgFitCategoryTable.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/systemSetup/OrgFitCategoryTable" />
                         <p:menuitem value="Review Cycles"
                                     icon="pi pi-cog"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ReviewCycleTable.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ReviewCycleTable.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/systemSetup/ReviewCycleTable" />
                         <p:menuitem value="Manage Thresholds"
                                     icon="pi pi-cog"
-                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ThresholdTable.xhtml' ? 'active-link' : ''}"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/systemSetup/ThresholdTable.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/systemSetup/ThresholdTable" />
                     </p:submenu>
 

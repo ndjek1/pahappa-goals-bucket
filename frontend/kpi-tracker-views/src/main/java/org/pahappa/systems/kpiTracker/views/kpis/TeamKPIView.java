@@ -5,9 +5,11 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.RecordStatus;
@@ -21,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +39,7 @@ public class TeamKPIView implements Serializable {
     
     private KpisService kpisService;
     private TeamService teamService;
+    private ReviewCycleService reviewCycleService;
     private Team team;
     private User loggedinUser;
     private List<KPI> dataModels;
@@ -45,22 +49,36 @@ public class TeamKPIView implements Serializable {
     // Filter properties
     private List<MeasurementUnit> measurementUnitList;
     private List<Frequency> frequencyList;
+    private List<ReviewCycle> reviewCycles;
     private MeasurementUnit selectedMeasurementUnit;
     private Frequency selectedFrequency;
+    private ReviewCycle selectedReviewCycle;
     private Date createdFrom;
 
     @PostConstruct
     public void init() {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.teamService = ApplicationContextProvider.getBean(TeamService.class);
+        this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
         
         // Initialize enum lists for filters
         this.measurementUnitList = Arrays.asList(MeasurementUnit.values());
         this.frequencyList = Arrays.asList(Frequency.values());
         
+        // Load review cycles
+        loadReviewCycles();
+        
         loadTeam();
         reloadFilterReset();
+    }
+
+    private void loadReviewCycles() {
+        try {
+            this.reviewCycles = reviewCycleService.getAllInstances();
+        } catch (Exception e) {
+            this.reviewCycles = new ArrayList<>();
+        }
     }
 
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
@@ -82,6 +100,11 @@ public class TeamKPIView implements Serializable {
         // Add frequency filter
         if (selectedFrequency != null) {
             search1.addFilterEqual("frequency", selectedFrequency);
+        }
+        
+        // Add review cycle filter
+        if (selectedReviewCycle != null) {
+            search1.addFilterEqual("reviewCycle", selectedReviewCycle);
         }
         
         // Add date filter - defensive approach using available date fields
@@ -160,6 +183,7 @@ public class TeamKPIView implements Serializable {
         this.searchTerm = null;
         this.selectedMeasurementUnit = null;
         this.selectedFrequency = null;
+        this.selectedReviewCycle = null;
         this.createdFrom = null;
         reloadFilterReset();
     }

@@ -4,6 +4,7 @@ import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.BaseEntity;
@@ -41,6 +42,11 @@ public class KPI extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "individual_goal_id", nullable = true)
     private IndividualGoal individualGoal;
+
+    // Review cycle relationship for KPI evaluation periods
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_cycle_id", nullable = true)
+    private ReviewCycle reviewCycle;
 
     // Constructors
     public KPI() {
@@ -164,6 +170,14 @@ public class KPI extends BaseEntity {
 
     public void setIndividualGoal(IndividualGoal individualGoal) {
         this.individualGoal = individualGoal;
+    }
+
+    public ReviewCycle getReviewCycle() {
+        return reviewCycle;
+    }
+
+    public void setReviewCycle(ReviewCycle reviewCycle) {
+        this.reviewCycle = reviewCycle;
     }
 
     @Override

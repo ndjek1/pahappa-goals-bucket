@@ -5,9 +5,11 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.RecordStatus;
@@ -21,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +39,7 @@ public class DepartmentKPIView implements Serializable {
     
     private KpisService kpisService;
     private DepartmentService departmentService;
+    private ReviewCycleService reviewCycleService;
     private Department department;
     private User loggedinUser;
     private List<KPI> dataModels;
@@ -46,8 +50,10 @@ public class DepartmentKPIView implements Serializable {
     // Filter properties
     private List<MeasurementUnit> measurementUnitList;
     private List<Frequency> frequencyList;
+    private List<ReviewCycle> reviewCycles;
     private MeasurementUnit selectedMeasurementUnit;
     private Frequency selectedFrequency;
+    private ReviewCycle selectedReviewCycle;
 
     @PostConstruct
     public void init() {
@@ -83,6 +89,11 @@ public class DepartmentKPIView implements Serializable {
                 // Add frequency filter
                 if (selectedFrequency != null) {
                     search1.addFilterEqual("frequency", selectedFrequency);
+                }
+                
+                // Add review cycle filter
+                if (selectedReviewCycle != null) {
+                    search1.addFilterEqual("reviewCycle", selectedReviewCycle);
                 }
 
                 this.dataModels = kpisService.getInstances(search1, i, i1);
@@ -170,6 +181,7 @@ public class DepartmentKPIView implements Serializable {
         this.searchTerm = null;
         this.selectedMeasurementUnit = null;
         this.selectedFrequency = null;
+        this.selectedReviewCycle = null;
         this.createdFrom = null;
         this.createdTo = null;
         reloadFilterReset();
