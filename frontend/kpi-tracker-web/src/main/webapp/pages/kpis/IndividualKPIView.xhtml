@@ -244,8 +244,8 @@
                                                          icon="fa fa-plus"
                                                          ajax="false"
                                                          styleClass="ui-button-success" immediate="true"
-                                                         actionListener="#{kpiForm.show}">
-                                            <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
+                                                         actionListener="#{individualKPIForm.show}">
+                                            <f:setPropertyActionListener value="#{null}" target="#{individualKPIForm.model}" />
                                             <p:ajax event="dialogReturn"
                                                     listener="#{individualKPIView.reloadFilterReset}"
                                                     update="individualKPIsTable" />
@@ -305,8 +305,8 @@
                             <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                                 <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
                                                  ajax="false"
-                                                 actionListener="#{kpiForm.show}">
-                                    <f:setPropertyActionListener value="#{kpi}" target="#{kpiForm.model}" />
+                                                 actionListener="#{individualKPIForm.show}">
+                                    <f:setPropertyActionListener value="#{kpi}" target="#{individualKPIForm.model}" />
                                     <p:ajax event="dialogReturn" update="individualKPIsTable" />
                                 </p:commandButton>
                                 <p:commandButton icon="fa fa-trash" title="Delete"

@@ -112,17 +112,17 @@
                     <!-- KPI Type Navigation -->
                     <div class="card">
                         <div class="p-grid" style="margin-top: -4px;">
-                            <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/OrganizationalKPIView.xhtml'">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-circle bg-green me-3"><i class="pi pi-globe"></i></div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">Organizational KPIs</h6>
-                                            <p class="text-500 mb-0 small">Manage organization-wide KPIs</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div class="p-col-12 p-md-2-4">-->
+<!--                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/OrganizationalKPIView.xhtml'">-->
+<!--                                    <div class="d-flex align-items-center">-->
+<!--                                        <div class="icon-circle bg-green me-3"><i class="pi pi-globe"></i></div>-->
+<!--                                        <div class="flex-grow-1">-->
+<!--                                            <h6 class="mb-1">Organizational KPIs</h6>-->
+<!--                                            <p class="text-500 mb-0 small">Manage organization-wide KPIs</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             
                             <div class="p-col-12 p-md-2-4">
                                 <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/DepartmentKPIView.xhtml'">
@@ -161,7 +161,7 @@
                             </div>
 
                             <div class="p-col-12 p-md-2-4">
-                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/IndividualKPIForm.xhtml'">
+                                <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/kpis/IndividualKPIView.xhtml'">
                                     <div class="d-flex align-items-center">
                                         <div class="icon-circle bg-cyan me-3"><i class="pi pi-user"></i></div>
                                         <div class="flex-grow-1">
@@ -284,21 +284,10 @@
 
                             <f:facet name="header">
                                 <div class="p-d-flex p-jc-between">
-                                                                <div>
-                                <span class="table-header-text">All System KPIs</span>
-                            </div>
-                            <div>
-                                <p:commandButton value="Add System KPI" process="@this"
-                                                 icon="fa fa-plus"
-                                                 ajax="false"
-                                                 styleClass="ui-button-success" immediate="true"
-                                                 actionListener="#{kpiForm.show}">
-                                    <f:setPropertyActionListener value="#{null}" target="#{kpiForm.model}" />
-                                    <p:ajax event="dialogReturn"
-                                            listener="#{kpiView.reloadFilterReset}"
-                                            update="kpisTable" />
-                                </p:commandButton>
-                            </div>
+                                    <div>
+                                         <span class="table-header-text">All System KPIs</span>
+                                   </div>
+
                                 </div>
                             </f:facet>
 
@@ -387,8 +376,7 @@
         </div>
 
         <!-- KPI Form Dialogs -->
-        <ui:include src="KPIForm.xhtml" />
-        <ui:include src="OrganizationalKPIForm.xhtml" />
+<!--        <ui:include src="OrganizationalKPIForm.xhtml" />-->
         <ui:include src="DepartmentKPIForm.xhtml" />
         <ui:include src="TeamKPIForm.xhtml" />
 
