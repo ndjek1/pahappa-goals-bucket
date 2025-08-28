@@ -4,6 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
+
     <ui:define name="head">
         <style type="text/css">
             .capitalized {
@@ -11,117 +12,160 @@
             }
         </style>
     </ui:define>
-    <ui:define name="content">
-        <title>Add Individual Activity</title>
 
-        <h:form id="individualActivityForm" styleClass="dialog-card">
-            <p:growl id="growl" showDetail="true" life="4000" />
+    <ui:define name="content">
+        <title>Add Team Activity</title>
+
+        <h:form id="departmentActivityForm" styleClass="dialog-card">
+
+            <p:growl id="growl" showDetail="true" life="4000"/>
 
             <div class="ui-fluid formgrid grid p-m-4">
 
                 <!-- Title -->
-                <div class="field col-12 p-m-4">
-                    <label for="title" class="p-d-block p-mb-2">Title *</label>
-                    <p:inputText id="title" value="#{activityFormDialog.model.title}"
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="title" value="Title *"/>
+                    <p:inputText id="title" value="#{individualActivityFormDialog.model.title}"
                                  required="true"
                                  placeholder="Enter activity title"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <!-- Status and Assigned User -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <label for="status" class="p-d-block p-mb-2">Status *</label>
-                    <p:selectOneMenu id="status" value="#{activityFormDialog.selectedStatus}"
-                                     converter="activityStatusConverter" filter="true"
-                                     required="true" effect="fold"
-                                     styleClass="p-inputtext-sm w-full">
-                        <f:selectItem itemLabel="Select status" itemValue="" />
-                        <f:selectItems value="#{activityFormDialog.activityStatuses}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
-                    </p:selectOneMenu>
-                </div>
-
-                <div class="field col-12 md:col-6 p-m-4">
-                    <label for="assignedUser" class="p-d-block p-mb-2">Assigned User *</label>
-                    <p:selectOneMenu id="assignedUser" value="#{activityFormDialog.selectedUser}"
-                                     converter="userConverter" filter="true"
-                                     required="true" effect="fold"
-                                     styleClass="p-inputtext-sm w-full">
-                        <f:selectItem itemLabel="Select user" itemValue="" />
-                        <f:selectItems value="#{activityFormDialog.users}" var="user" itemLabel="#{user.fullName}" itemValue="#{user}"/>
+                <!-- Status -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="status" value="Status"/>
+                    <p:selectOneMenu id="status"
+                                     value="#{individualActivityFormDialog.selectedStatus}"
+                                     converter="activityStatusConverter"
+                                     filter="true" effect="fold"
+                                     required="true"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select status" itemValue=""/>
+                        <f:selectItems value="#{individualActivityFormDialog.activityStatuses}"
+                                       var="status"
+                                       itemLabel="#{status.displayName}"
+                                       itemValue="#{status}"/>
                     </p:selectOneMenu>
                 </div>
 
                 <!-- Description -->
                 <div class="field col-12 p-m-4">
-                    <label for="description" class="p-d-block p-mb-2">Description</label>
-                    <p:inputTextarea id="description" value="#{activityFormDialog.model.description}" 
+                    <p:outputLabel for="desc" value="Description"/>
+                    <p:inputTextarea id="desc"
+                                     value="#{individualActivityFormDialog.model.description}"
                                      rows="3"
-                                     styleClass="p-inputtext-sm w-full" />
+                                     styleClass="w-full"/>
                 </div>
 
-                <!-- Individual Goal -->
-                <div class="field col-12 p-m-4">
-                    <label for="individualGoal" class="p-d-block p-mb-2">Individual Goal *</label>
-                    <p:selectOneMenu id="individualGoal" value="#{activityFormDialog.selectedIndividualGoal}"
-                                     converter="individualGoalConverter" filter="true"
-                                     required="true" effect="fold"
-                                     styleClass="p-inputtext-sm w-full">
-                        <f:selectItem itemLabel="Select individual goal" itemValue="" />
-                        <f:selectItems value="#{activityFormDialog.individualGoals}" var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
-                        <p:ajax event="change" listener="#{activityFormDialog.onIndividualGoalChange}" />
+                <!-- Department Goal -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="individualGoal" value="Goals"/>
+                    <p:selectOneMenu id="individualGoal"
+                                     value="#{individualActivityFormDialog.individualGol}"
+                                     converter="individualGoalConverter"
+                                     filter="true" effect="fold"
+                                     required="true"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select a goal" itemValue=""/>
+                        <f:selectItems value="#{individualActivityFormDialog.individualGoals}"
+                                       var="goal"
+                                       itemLabel="#{goal.name}"
+                                       itemValue="#{goal}"/>
                     </p:selectOneMenu>
                 </div>
 
-                <!-- Planned Start Date and Planned End Date -->
+                <!-- Activity Type -->
                 <div class="field col-12 md:col-6 p-m-4">
-                    <label for="plannedStartDate" class="p-d-block p-mb-2">Planned Start Date</label>
-                    <p:calendar id="plannedStartDate" value="#{activityFormDialog.model.plannedStartDate}" 
-                                showTime="false" pattern="MM/dd/yyyy"
-                                styleClass="p-inputtext-sm w-full" />
+                    <p:outputLabel for="actType" value="Activity Type"/>
+                    <p:selectOneMenu id="actType"
+                                     value="#{individualActivityFormDialog.selectedActivityType}"
+                                     converter="activityTypeConverter"
+                                     effect="fold"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select activity type" itemValue=""/>
+                        <f:selectItems value="#{individualActivityFormDialog.activityTypes}"
+                                       var="type"
+                                       itemLabel="#{type.displayName}"
+                                       itemValue="#{type}"/>
+                        <!-- Process this field and re-render the target panel -->
+                        <p:ajax event="change"
+                                process="@this"
+                                update="departmentActivityForm:targetValuePanel"/>
+                    </p:selectOneMenu>
                 </div>
 
-                <div class="field col-12 md:col-6 p-m-4">
-                    <label for="plannedEndDate" class="p-d-block p-mb-2">Planned End Date</label>
-                    <p:calendar id="plannedEndDate" value="#{activityFormDialog.model.plannedEndDate}" 
-                                showTime="false" pattern="MM/dd/yyyy"
-                                styleClass="p-inputtext-sm w-full" />
+                <!-- Target Value (only for quantitative) -->
+                <h:panelGroup id="targetValuePanel" layout="block">
+                    <h:panelGroup rendered="#{individualActivityFormDialog.quantitativeSelected}">
+                        <div class="field col-12 md:col-6 p-m-4">
+                            <p:outputLabel for="targetValue" value="Target Value"/>
+                            <p:inputNumber id="targetValue"
+                                           value="#{individualActivityFormDialog.model.targetValue}"
+                                           decimalPlaces="2"
+                                           minValue="0"
+                                           required="#{individualActivityFormDialog.quantitativeSelected}"
+                                           requiredMessage="Target value is required for quantitative activities."
+                                           placeholder="Enter target value"
+                                           styleClass="w-full"/>
+                            <p:message for="targetValue"/>
+                        </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+
+                <!-- Planned Start Date -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="startDate" value="Planned Start Date"/>
+                    <p:calendar id="startDate"
+                                value="#{individualActivityFormDialog.model.plannedStartDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                styleClass="w-full"/>
                 </div>
 
-                <!-- Actual Start Date and Actual End Date -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <label for="actualStartDate" class="p-d-block p-mb-2">Actual Start Date</label>
-                    <p:calendar id="actualStartDate" value="#{activityFormDialog.model.actualStartDate}" 
-                                showTime="false" pattern="MM/dd/yyyy"
-                                styleClass="p-inputtext-sm w-full" />
+                <!-- Planned End Date -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="endDate" value="Planned End Date"/>
+                    <p:calendar id="endDate"
+                                value="#{individualActivityFormDialog.model.plannedEndDate}"
+                                showTime="false"
+                                pattern="MM/dd/yyyy"
+                                styleClass="w-full"/>
                 </div>
 
-                <div class="field col-12 md:col-6 p-m-4">
-                    <label for="actualEndDate" class="p-d-block p-mb-2">Actual End Date</label>
-                    <p:calendar id="actualEndDate" value="#{activityFormDialog.model.actualEndDate}" 
-                                showTime="false" pattern="MM/dd/yyyy"
-                                styleClass="p-inputtext-sm w-full" />
+                <!-- Priority -->
+                <div class="field col-12 md:col-4 p-m-4">
+                    <p:outputLabel for="priority" value="Priority"/>
+                    <p:selectOneMenu id="priority"
+                                     value="#{individualActivityFormDialog.selectedPriority}"
+                                     converter="activityPriorityConverter"
+                                     effect="fold"
+                                     styleClass="w-full">
+                        <f:selectItem itemLabel="Select priority" itemValue=""/>
+                        <f:selectItems value="#{individualActivityFormDialog.priorities}"
+                                       var="priority"
+                                       itemLabel="#{priority.displayName}"
+                                       itemValue="#{priority}"/>
+                    </p:selectOneMenu>
                 </div>
 
                 <!-- Buttons -->
-                <div class="field col-12 p-d-flex p-jc-between">
+                <div class="field col-12 p-d-flex p-jc-between p-mt-4">
                     <p:commandButton value="Cancel"
-                                     icon="pi pi-times"
-                                     immediate="true"
-                                     action="#{activityFormDialog.hide}"
-                                     styleClass="ui-button-danger p-mx-5" />
+                                     process="@this"
+                                     action="#{individualActivityFormDialog.hide}"
+                                     validateClient="false"
+                                     styleClass="ui-button-outlined ui-button-help p-mx-5"/>
 
                     <p:commandButton value="Save"
-                                     icon="pi pi-check"
                                      process="@form"
-                                     actionListener="#{activityFormDialog.save}"
+                                     actionListener="#{individualActivityFormDialog.persist}"
                                      update="@form growl"
-                                     styleClass="ui-button-primary p-mx-5" />
+                                     validateClient="true"
+                                     styleClass="ui-button-primary p-mx-5"/>
                 </div>
 
             </div>
-
         </h:form>
     </ui:define>
 </ui:composition>
-
-
