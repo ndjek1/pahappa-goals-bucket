@@ -10,84 +10,56 @@
             <div class="ui-g-12">
                 <h:form id="usersView" enctype="multipart/form-data">
 
-                    <div class="p-grid overlay-demo">
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Total" />
-                                <h2 class="p-text-right">#{usersView.total}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Male" />
-                                <h2 class="p-text-right">#{usersView.noMale}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="Female" />
-                                <h2 class="p-text-right">#{usersView.noFemale}</h2>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-3">
-                            <div class="card">
-                                <h:outputText value="UnKnown" />
-                                <h2 class="p-text-right">#{usersView.noUnknown}</h2>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card">
-                        <h:outputText value="Filters" />
-                        <p:growl id="messages" showDetail="true" />
-                        <div class="p-grid">
-                            <div class="p-col-12 p-md-6 p-lg-2">
-                                <p:inputText id="searchTerm" required="false"
-                                             value="#{usersView.searchTerm}" placeholder="Search ..."
-                                             onkeyup="#{usersView.reloadFilterReset()}">
-
-                                    <p:ajax event="keyup"
-                                            update="usersView"
-                                            listener="#{usersView.reloadFilterReset()}" />
-                                </p:inputText>
-                            </div>
-
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:selectOneMenu id="genders" label="Filter gender"
-                                                 title="Filter gender" value="#{usersView.selectedGender}"
-                                                 style="height: 100%" converter="genderConverter">
-                                    <f:selectItem itemLabel="All" value="#{null}" />
-                                    <f:selectItems value="#{usersView.genders}" />
-                                    <p:ajax event="change" update="usersView"
-                                            listener="#{usersView.reloadFilterReset()}" />
-                                </p:selectOneMenu>
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:calendar placeholder="From Date Created"
-                                            value="#{usersView.createdFrom}" inputStyleClass="Wid100 "
-                                            navigator="true" pattern="dd MMM, yyyy" />
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-3">
-                                <p:calendar placeholder="To Date Created"
-                                            value="#{usersView.createdTo}" inputStyleClass="Wid100 "
-                                            navigator="true" pattern="dd MMM, yyyy" />
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-1">
-                                <p:commandButton icon="fa fa-search"
-                                                 styleClass="ui-button-success" id="searchBtn"
-                                                 style="margin-right: 18px" update="usersView"
-                                                 actionListener="#{usersView.reloadFilterReset()}">
-                                </p:commandButton>
-                            </div>
-
-
-                        </div>
-                    </div>
-
                     <p:tabView style="margin-top:1rem">
 
                         <!-- Active Users Tab -->
                         <p:tab title="Active Users" titleStyle="font-size: 14pt">
+                            <div class="card">
+                                <h:outputText value="Filters" />
+                                <p:growl id="messages" showDetail="true" />
+                                <div class="p-grid">
+                                    <div class="p-col-12 p-md-6 p-lg-2">
+                                        <p:inputText id="searchTerm" required="false"
+                                                     value="#{usersView.searchTerm}" placeholder="Search ..."
+                                                     onkeyup="#{usersView.reloadFilterReset()}">
+
+                                            <p:ajax event="keyup"
+                                                    update="usersView"
+                                                    listener="#{usersView.reloadFilterReset()}" />
+                                        </p:inputText>
+                                    </div>
+
+                                    <div class="p-col-12 p-md-6 p-lg-3">
+                                        <p:selectOneMenu id="genders" label="Filter gender"
+                                                         title="Filter gender" value="#{usersView.selectedGender}"
+                                                         style="height: 100%" converter="genderConverter">
+                                            <f:selectItem itemLabel="All" value="#{null}" />
+                                            <f:selectItems value="#{usersView.genders}" />
+                                            <p:ajax event="change" update="usersView"
+                                                    listener="#{usersView.reloadFilterReset()}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="p-col-12 p-md-6 p-lg-3">
+                                        <p:calendar placeholder="From Date Created"
+                                                    value="#{usersView.createdFrom}" inputStyleClass="Wid100 "
+                                                    navigator="true" pattern="dd MMM, yyyy" />
+                                    </div>
+                                    <div class="p-col-12 p-md-6 p-lg-3">
+                                        <p:calendar placeholder="To Date Created"
+                                                    value="#{usersView.createdTo}" inputStyleClass="Wid100 "
+                                                    navigator="true" pattern="dd MMM, yyyy" />
+                                    </div>
+                                    <div class="p-col-12 p-md-6 p-lg-1">
+                                        <p:commandButton icon="fa fa-search"
+                                                         styleClass="ui-button-success" id="searchBtn"
+                                                         style="margin-right: 18px" update="usersView"
+                                                         actionListener="#{usersView.reloadFilterReset()}">
+                                        </p:commandButton>
+                                    </div>
+
+
+                                </div>
+                            </div>
                             <p:dataTable id="usersTable" var="model" value="#{usersView.dataModels}"
                                          widgetVar="usersTable"
                                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
@@ -99,7 +71,7 @@
                                 <f:facet name="header">
                                     <div class="p-d-flex p-jc-between">
                                         <div>
-                                            <span class="table-header-text">System users</span>
+
                                         </div>
                                         <div>
                                             <p:commandButton value="Add user" process="@this"

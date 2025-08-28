@@ -7,31 +7,7 @@
 
    <ui:define name="content">
       <h:form id="globalWeightView" enctype="multipart/form-data">
-         <div class="p-grid ">
-            <div class="p-col-12">
-               <div class="card">
-                  <p:growl id="messages" showDetail="true" />
-                  <div class="p-d-flex p-jc-between" style="margin: 5px">
 
-                     <div>
-                        <p:commandButton icon="fa fa-search"
-                                         styleClass="p-mr-2 p-mb-2 primary-button" id="searchBtn"
-                                         actionListener="#{globalWeightView.reloadFilterReset()}"
-                                         update="globalWeightView" value="Search">
-                        </p:commandButton>
-
-                        <p:commandButton value="Configure new weight"
-                                         actionListener="#{globalWeightsForm.show}">
-                           <f:setPropertyActionListener value="#{null}"
-                                                        target="#{globalWeightsForm.model}" />
-                           <p:ajax event="dialogReturn" listener="#{globalWeightView.reloadFilterReset}" update="globalWeightTable" />
-                        </p:commandButton>
-
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
          <div class="p-grid ">
             <div class="p-col-12">
                <div class="card">
@@ -46,8 +22,16 @@
                      <f:facet name="header">
                         <div class="p-d-flex p-jc-between">
                            <div>
-                              <span style="font-weight: bold">Roles</span>
+                              <h3 style="font-weight: bold">Global weights</h3>
                            </div>
+                            <p:commandButton value="Add new weights"
+                                             icon="pi pi-plus"
+                                             styleClass="add-button"
+                                             actionListener="#{globalWeightsForm.show}">
+                                <f:setPropertyActionListener value="#{null}"
+                                                             target="#{globalWeightsForm.model}" />
+                                <p:ajax event="dialogReturn" listener="#{globalWeightView.reloadFilterReset}" update="globalWeightTable" />
+                            </p:commandButton>
 
                         </div>
                      </f:facet>
@@ -62,7 +46,7 @@
                      </p:column>
                      <p:column>
                         <f:facet name="header">
-                           <h:outputText value="Org fit weight" />
+                           <h:outputText value="Organization fit weight" />
                         </f:facet>
                         <h:outputText value="#{model.orgFitWeight}" />
                      </p:column>
@@ -101,9 +85,6 @@
 
                      </p:column>
                   </p:dataTable>
-                  <p:blockUI block="globalWeightView" trigger="searchBtn">
-                     <p:graphicImage value="/resources/images/workingicon.png" />
-                  </p:blockUI>
                </div>
             </div>
          </div>

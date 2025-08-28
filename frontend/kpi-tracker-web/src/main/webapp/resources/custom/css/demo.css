@@ -709,3 +709,14 @@ pre[class*=language-].line-numbers > code {
   padding-right: 0.8em;
   text-align: right;
 }
+
+ .add-button {
+     background-color: #6DBE46 !important;
+     border-color: #6DBE46 !important;
+     color: #ffffff !important;
+ }
+
+.add-button:hover {
+    background-color: #58a73a !important; /* slightly darker on hover */
+    border-color: #58a73a !important;
+}

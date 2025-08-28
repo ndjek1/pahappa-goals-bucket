@@ -28,13 +28,9 @@
                 <div class="p-d-flex p-jc-between p-ai-center p-mb-4">
                     <h2 style="margin: 0;">Organisational Fit Categories</h2>
                     <div>
-                        <p:commandButton value="Adjust weights"
-                                         styleClass="p-button-outlined p-mr-2"
-                                         actionListener="..." />
-
                         <p:commandButton value="Create Category"
                                          icon="pi pi-plus"
-                                         styleClass="p-button-success"
+                                         styleClass="add-button"
                                          actionListener="#{orgFitCategoryForm.show}">
                             <f:setPropertyActionListener value="#{null}" target="#{orgFitCategoryForm.model}" />
                             <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
@@ -42,50 +38,60 @@
                     </div>
                 </div>
 
-                <!-- 2. CONTENT LIST: Using ui:repeat to create custom cards -->
                 <p:outputPanel id="categoryListPanel">
-                <ui:repeat value="#{orgFitCategoryView.dataModels}" var="category">
-                    <div class="p-card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 6px;">
+                    <div class="p-grid">
+                        <ui:repeat value="#{orgFitCategoryView.dataModels}" var="category">
+                            <div class="p-col-12 p-md-6 p-lg-4">
+                                <!-- Card as flex column -->
+                                <div class="p-card p-p-3 p-mb-3 p-d-flex p-flex-column"
+                                     style="border: 1px solid #dee2e6; border-radius: 6px; height: 100%;">
 
-                        <!-- Top part of the card: Name, Description, and Weight -->
-                        <div class="p-d-flex p-jc-between p-ai-start">
-                            <div>
-                                <h4 style="margin-top: 0; margin-bottom: 0.5rem;">#{category.name}</h4>
-                                <h:outputText value="#{category.description}" style="color: #6c757d;" />
+                                    <!-- Top part: Name, Description, and Weight -->
+                                    <div>
+                                        <div class="p-d-flex p-jc-between p-ai-start">
+                                            <div>
+                                                <h4 style="margin-top: 0; margin-bottom: 0.5rem;">#{category.name}</h4>
+                                                <h:outputText value="#{category.description}" style="color: #6c757d;" />
+                                            </div>
+                                            <p:tag value="#{category.weight}%" styleClass="p-mr-2" severity="info" rounded="true" />
+                                        </div>
+                                        <hr class="p-my-3"/>
+                                    </div>
+
+                                    <!-- Spacer pushes buttons to bottom -->
+                                    <div class="p-flex-grow-1"></div>
+
+                                    <!-- Footer: Always sticks to bottom -->
+                                    <div  style="display: flex !important; justify-content: space-between !important; margin-top: 1rem !important;">
+                                        <p:commandButton value="Manage Items"
+                                                         styleClass="ui-button-success"
+                                                         action="#{orgFitCategoryItemView.prepareForCategory(category)}" />
+
+                                        <div>
+                                            <p:commandButton title="Edit" icon="pi pi-pencil"
+                                                             styleClass="p-button-text p-mr-2"
+                                                             actionListener="#{orgFitCategoryForm.show}">
+                                                <f:setPropertyActionListener value="#{category}" target="#{orgFitCategoryForm.model}" />
+                                                <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
+                                            </p:commandButton>
+
+                                            <p:commandButton title="Delete" icon="pi pi-trash"
+                                                             styleClass="p-button-text ui-button-danger"
+                                                             update=":orgFitForm:categoryListPanel :orgFitForm:weightPanel"
+                                                             actionListener="#{orgFitCategoryView.deleteClient(category)}">
+                                                <p:confirm header="Confirmation"
+                                                           message="Are you sure you want to delete '#{category.name}'?"
+                                                           icon="pi pi-exclamation-triangle" />
+                                            </p:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <p:tag value="#{category.weight}%" styleClass="p-mr-2" severity="info" rounded="true" />
-                        </div>
-
-                        <hr class="p-my-3"/>
-
-                            <!-- Bottom part of the card: Manage Items and Edit/Delete actions -->
-                        <div class="p-d-flex p-jc-between p-ai-center">
-                            <p:commandButton value="Manage Items"
-                                             styleClass="ui-button-success"
-                                             action="#{orgFitCategoryItemView.prepareForCategory(category)}" >
-                            </p:commandButton>
-
-                            <div>
-                                <p:commandButton value="Edit" icon="pi pi-pencil"
-                                                 styleClass=" p-button-text p-mr-2"
-                                                 actionListener="#{orgFitCategoryForm.show}">
-                                    <f:setPropertyActionListener value="#{category}" target="#{orgFitCategoryForm.model}" />
-                                    <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
-                                </p:commandButton>
-
-                                <p:commandButton value="Delete" icon="pi pi-trash"
-                                                 styleClass="p-button-text ui-button-danger"
-                                                 update=":orgFitForm:categoryListPanel :orgFitForm:weightPanel"
-                                                 actionListener="#{orgFitCategoryView.deleteClient(category)}">
-                                    <p:confirm header="Confirmation"
-                                               message="Are you sure you want to delete '#{category.name}'?"
-                                               icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
-                            </div>
-                        </div>
+                        </ui:repeat>
                     </div>
-                </ui:repeat>
                 </p:outputPanel>
+
+
                 <!-- Check if the list is empty -->
                 <p:outputPanel rendered="#{empty orgFitCategoryView.dataModels}">
                     <div class="p-text-center p-p-4" style="border: 1px dashed #ced4da; border-radius: 6px;">

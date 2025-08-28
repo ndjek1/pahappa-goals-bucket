@@ -149,7 +149,7 @@
                         <div class="p-d-flex p-jc-between">
                             <span class="table-header-text">Team Activities</span>
                             <p:commandButton value="Add Activity" process="@this" icon="pi pi-plus"
-                                             styleClass="ui-button-success" immediate="true"
+                                             styleClass="add-button" immediate="true"
                                              actionListener="#{teamActivityFormDialog.show}">
                                 <f:setPropertyActionListener value="#{null}" target="#{teamActivityFormDialog.model}" />
                                 <p:ajax event="dialogReturn"

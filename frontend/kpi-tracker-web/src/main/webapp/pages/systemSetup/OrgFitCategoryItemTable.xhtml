@@ -29,7 +29,8 @@
 
                     <!-- Add Item Button -->
                     <p:commandButton value="Add Item" icon="pi pi-plus"
-                                     styleClass="ui-button-success"
+                                     styleClass="add-button"
+
                                      actionListener="#{orgFitCategoryItemForm.prepareForCategory(orgFitCategoryItemView.selectedOrgFitCategory)}"
                                      process="@this">
 
@@ -42,48 +43,54 @@
                     </p:commandButton>
                 </div>
 
-                <!-- This panel wraps the list so it can be updated by AJAX -->
                 <p:outputPanel id="itemsListPanel" layout="block">
-                    <!-- The list of cards, created with ui:repeat -->
-                    <ui:repeat value="#{orgFitCategoryItemView.dataModels}" var="item">
-                        <div class="p-card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 6px;">
-                            <!-- Top section: Name and Description -->
-                            <div class="p-mb-3">
-                                <h4 style="margin-top: 0; margin-bottom: 0.5rem;">#{item.name}</h4>
-                                <h:outputText value="#{item.description}" style="color: #6c757d;" />
+                    <div class="p-grid p-nogutter ">
+                        <ui:repeat value="#{orgFitCategoryItemView.dataModels}" var="item">
+                            <div class="p-col-12 p-md-6 p-lg-4 p-mx-0">
+                                <div class="p-card p-d-flex p-flex-column p-p-3 p-mb-3 p-rounded p-shadow-2 p-hover-shadow p-bg-white p-h-100">
+
+                                    <!-- Top content -->
+                                    <div>
+                                        <h4 class="p-m-0 p-mb-2 p-text-bold p-text-primary">#{item.name}</h4>
+                                        <h:outputText value="#{item.description}" styleClass="p-text-secondary"/>
+                                    </div>
+
+                                    <!-- Spacer pushes buttons to bottom -->
+                                    <div class="p-flex-grow-1"></div>
+
+                                    <!-- Footer buttons -->
+                                    <div class="p-d-flex p-jc-end p-ai-center  p-mt-2">
+                                        <p:commandButton title="Edit" icon="pi pi-pencil"
+                                                         styleClass="p-button-outlined p-mx-2"
+                                                         actionListener="#{orgFitCategoryItemForm.show}"
+                                                         process="@this">
+                                            <f:setPropertyActionListener value="#{item}" target="#{orgFitCategoryItemForm.model}" />
+                                            <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.reloadFilterReset}" update="orgFitItemView" />
+                                        </p:commandButton>
+
+                                        <p:commandButton title="Delete" icon="pi pi-trash"
+                                                         styleClass="p-button-text p-button-danger"
+                                                         update="orgFitItemView"
+                                                         actionListener="#{orgFitCategoryItemView.deleteClient(item)}">
+                                            <p:confirm header="Confirmation"
+                                                       message="Are you sure you want to delete '#{item.name}'?"
+                                                       icon="pi pi-exclamation-triangle" />
+                                        </p:commandButton>
+                                    </div>
+
+                                </div>
                             </div>
+                        </ui:repeat>
 
-                            <hr class="p-my-2"/>
-
-                            <!-- Bottom section: Action buttons -->
-                            <div class="p-d-flex p-jc-end p-ai-center">
-                                <p:commandButton value="Edit" icon="pi pi-pencil"
-                                                 styleClass="ui-button-outlined p-mr-2"
-                                                 actionListener="#{orgFitCategoryItemForm.show}"
-                                                 process="@this">
-                                    <f:setPropertyActionListener value="#{item}" target="#{orgFitCategoryItemForm.model}" />
-                                    <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.reloadFilterReset}" update="orgFitItemView" />
-                                </p:commandButton>
-
-                                <p:commandButton value="Delete" icon="pi pi-trash"
-                                                 styleClass="ui-button-text ui-button-danger"
-                                                 update="orgFitItemView"
-                                                 actionListener="#{orgFitCategoryItemView.deleteClient(item)}">
-                                    <p:confirm header="Confirmation"
-                                               message="Are you sure you want to delete '#{item.name}'?"
-                                               icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
+                        <!-- Empty list -->
+                        <p:outputPanel rendered="#{empty orgFitCategoryItemView.dataModels}" styleClass="p-col-12">
+                            <div class="p-text-center p-p-4 p-border-1 p-border-dashed p-rounded">
+                                <h:outputText value="#{orgFitCategoryItemView.dataEmptyMessage}" />
                             </div>
-                        </div>
-                    </ui:repeat>
-
-                    <!-- Message to display when the list is empty -->
-                    <p:outputPanel rendered="#{empty orgFitCategoryItemView.dataModels}">
-                        <div class="p-text-center p-p-4" style="border: 1px dashed #ced4da; border-radius: 6px;">
-                            <h:outputText value="#{orgFitCategoryItemView.dataEmptyMessage}" />
-                        </div>
-                    </p:outputPanel>
+                        </p:outputPanel>
+                    </div>
                 </p:outputPanel>
+
             </div>
 
             <!-- Global Confirmation Dialog -->
