@@ -1,335 +1,172 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pc="http://primefaces.org/california"
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <title>System Activities</title>
         <style>
-            .capitalized { text-transform: capitalize; }
-            .activity-nav-card {
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: 1px solid #e0e0e0;
-                padding: 2px;
-                border-radius: 8px;
-                background: #f9fafb;
+            .custom-btn {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                display: flex;
+                align-items: center;
+                padding: 6px 10px;
             }
-            .activity-nav-card:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-            .icon-circle { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; color:#fff; font-size:10px; }
-            .nav-card { background: #f9fafb; }
-            .bg-green { background:#22c55e; } .bg-blue { background:#3b82f6; } .bg-purple { background:#8b5cf6; } .bg-orange { background:#f59e0b; } .bg-cyan { background:#06b6d4; }
-            .nav-card h6 { margin:0; font-size:0.7rem; }
-            .nav-card p { margin:0; font-size:0.64rem; color:#6b7280; }
-            .stat-value { margin-left:auto; font-size:0.95rem; font-weight:600; }
-            .text-primary { color:#3b82f6; } .text-success { color:#10b981; } .text-warning { color:#f59e0b; }
-            .p-grid { margin:0 -0.2rem; } [class*='p-col-'] { padding:0 0.2rem; box-sizing: border-box; }
-            .p-md-2-4 { flex: 0 0 calc(20% - 0.1rem); max-width: calc(20% - 0.1rem); }
-            .filter-input, .filter-select, .filter-calendar { width:100%; font-size:0.72rem; padding:0.16rem 0.28rem; border:1px solid #d1d5db; border-radius:0.3rem; }
-            .breadcrumb-card { padding:3px 5px; margin:0 0 4px 0; }
-            .breadcrumb-card .ui-breadcrumb { font-size:0.76rem; padding:0; margin:0; }
-            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link { padding:1px 5px; }
-            .d-flex { display:flex; } .align-items-center { align-items:center; } .flex-grow-1 { flex-grow:1; } .me-3 { margin-right:0.35rem; }
+            .custom-btn:hover {
+                background: #f0f0f0 !important;
+                border-radius: 8px;
+            }
+            .custom-icon { font-size: 1.2rem; }
+            .custom-icon-edit { color: orange; font-size: 1.2rem; }
         </style>
     </ui:define>
 
     <ui:define name="content">
-        <h:form id="activitiesForm" enctype="multipart/form-data">
-            <!-- Breadcrumb Navigation -->
-            <div class="card breadcrumb-card">
-                <p:breadCrumb>
-                    <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
-                    <p:menuitem value="Activity Management" icon="pi pi-calendar" />
-                </p:breadCrumb>
-            </div>
-            
-            <!-- Activity Type Navigation -->
-            <div class="card">
-                <div class="p-grid" style="margin-top: -4px;">
-                    <div class="p-col-12 p-md-2-4">
-                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/OrganizationalActivitiesView.xhtml'">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-green me-3"><i class="pi pi-globe"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Organizational Activities</h6>
-                                    <p class="text-500 mb-0">Manage organization-wide activities</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-2-4">
-                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/DepartmentActivitiesView.xhtml'">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-blue me-3"><i class="pi pi-building"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Department Activities</h6>
-                                    <p class="text-500 mb-0">Manage department-level activities</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-2-4">
-                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/TeamActivitiesView.xhtml'">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-purple me-3"><i class="pi pi-users"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Team Activities</h6>
-                                    <p class="text-500 mb-0">Manage team-level activities</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-2-4">
-                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/ActivitiesView.xhtml'">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-orange me-3"><i class="pi pi-list"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">All Activities</h6>
-                                    <p class="text-500 mb-0">View all system activities</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-2-4">
-                        <div class="card activity-nav-card nav-card" onclick="window.location.href='#{request.contextPath}/pages/activities/IndividualActivityFormDialog.xhtml'">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-cyan me-3"><i class="pi pi-user"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Individual Activities</h6>
-                                    <p class="text-500 mb-0">Create/manage individual activities</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Statistics Cards as compact nav-cards -->
-            <div class="card">
-                <div class="p-grid" style="margin-top:-4px;">
-                <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-blue me-3"><i class="pi pi-chart-bar"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Total Activities</h6>
-                                    <span class="stat-value text-primary">#{activitiesView.activityModels.size()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-green me-3"><i class="pi pi-check-circle"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Active Activities</h6>
-                                    <span class="stat-value text-success">#{activitiesView.activityModels.stream().filter(a -> a.status == 'IN_PROGRESS').count()}</span>
-                                </div>
-                    </div>
-                </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-warning me-3"><i class="pi pi-clock"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Pending Activities</h6>
-                                    <span class="stat-value text-warning">#{activitiesView.activityModels.stream().filter(a -> a.status == 'PENDING').count()}</span>
-                                </div>
-                    </div>
-                </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle me-3" style="background:#6366f1"><i class="pi pi-check"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Completed Activities</h6>
-                                    <span class="stat-value" style="color:#6366f1">#{activitiesView.activityModels.stream().filter(a -> a.status == 'COMPLETED').count()}</span>
-                                </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+        <h:form id="activitiesForm">
 
-            <!-- Filters Section compact single row -->
-            <div class="card">
-                <div class="p-grid">
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-light-blue me-3"><i class="pi pi-search"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Search</h6>
-                                    <p:inputText id="searchTerm" required="false"
-                                                 value="#{activitiesView.searchTerm}" placeholder="Search activities ..."
-                                                 styleClass="filter-input">
-                                        <p:ajax event="keyup"
-                                                update="activitiesTable"
-                                                listener="#{activitiesView.reloadFilterReset()}" />
-                                    </p:inputText>
-                                    <div class="d-flex" style="margin-top:4px;gap:6px;">
-                                        <p:commandButton value="Search" icon="fa fa-search"
-                                                         styleClass="ui-button-success" id="searchBtn"
-                                                         update="activitiesTable"
-                                                         actionListener="#{activitiesView.reloadFilterReset()}" />
-                                        <p:commandButton value="Clear" icon="fa fa-times"
-                                                         styleClass="ui-button-outlined ui-button-secondary"
-                                                         actionListener="#{activitiesView.clearFilters}" update="activitiesTable" />
-                                    </div>
-                                </div>
-                            </div>
+            <p:growl id="growl" showDetail="true" life="4000"/>
+
+            <p:tabView>
+
+                <!-- =============================== -->
+                <!-- TAB 1: DEPARTMENT ACTIVITIES     -->
+                <!-- =============================== -->
+                <p:tab title="Department Activities">
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Department Activity" style="flex:1" styleClass="p-mr-2"
+                                         value="#{activitiesView.searchTerm}">
+                                <p:ajax event="keyup" listener="#{activitiesView.reloadFilterReset}" update="departmentActivitiesTable"/>
+                            </p:inputText>
+                            <p:selectOneMenu value="#{activitiesView.selectedStatus}" styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                                <f:selectItems value="#{activitiesView.selectedStatus}" var="status" itemLabel="#{status}" itemValue="#{status}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Search" icon="pi pi-search"
+                                             actionListener="#{activitiesView.reloadFilterReset}" update="departmentActivitiesTable"/>
                         </div>
                     </div>
 
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-light-green me-3"><i class="pi pi-cog"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Status</h6>
-                                    <p:selectOneMenu id="statusFilter" value="#{activitiesView.selectedStatus}"
-                                                     styleClass="filter-select" converter="activityStatusConverter">
-                                        <f:selectItem itemLabel="All Statuses" value="#{null}" />
-                                        <f:selectItems value="#{activitiesView.activityStatusList}" var="status" itemLabel="#{status.displayName}" itemValue="#{status}"/>
-                                        <p:ajax event="change" update="activitiesTable"
-                                                listener="#{activitiesView.reloadFilterReset()}" />
-                                    </p:selectOneMenu>
-                                </div>
-                            </div>
+                    <p:dataTable id="departmentActivitiesTable" var="act" value="#{activitiesView.departmentActivities}"
+                                 paginator="true" rows="10" lazy="false" paginatorPosition="bottom"
+                                 emptyMessage="No department activities found.">
+
+                        <p:column headerText="Title">
+                            <h:outputText value="#{act.title}"/>
+                        </p:column>
+                        <p:column headerText="Status" width="150">
+                            <p:badge value="#{act.status.name()}"
+                                     severity="#{act.status.toString() eq 'ACTIVE' ? 'success' : (act.status.toString() eq 'PENDING' ? 'warning' : 'info')}"/>
+                        </p:column>
+                        <p:column headerText="Created on">
+                            <h:outputText value="#{act.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                            <p:commandButton title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"/>
+                            <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
+                                             actionListener="#{activitiesView.deleteDepartmentActivity(act)}"
+                                             update="departmentActivitiesTable "/>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:tab>
+
+                <!-- =============================== -->
+                <!-- TAB 2: TEAM ACTIVITIES           -->
+                <!-- =============================== -->
+                <p:tab title="Team Activities">
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Team Activity" style="flex:1" styleClass="p-mr-2"
+                                         value="#{activitiesView.searchTerm}">
+                                <p:ajax event="keyup" listener="#{activitiesView.reloadFilterReset}" update="teamActivitiesTable"/>
+                            </p:inputText>
+                            <p:selectOneMenu value="#{activitiesView.selectedStatus}" styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                                <f:selectItems value="#{activitiesView.selectedStatus}" var="status" itemLabel="#{status}" itemValue="#{status}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Search" icon="pi pi-search"
+                                             actionListener="#{activitiesView.reloadFilterReset}" update="teamActivitiesTable"/>
                         </div>
                     </div>
 
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-light-purple me-3"><i class="pi pi-calendar"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">From Date</h6>
-                                    <p:calendar value="#{activitiesView.createdFrom}" 
-                                                styleClass="filter-calendar"
-                                                navigator="true" pattern="dd MMM, yyyy" />
-                                </div>
-                            </div>
+                    <p:dataTable id="teamActivitiesTable" var="act" value="#{activitiesView.teamActivities}"
+                                 paginator="true" rows="10" lazy="false" paginatorPosition="bottom"
+                                 emptyMessage="No team activities found.">
+
+                        <p:column headerText="Title">
+                            <h:outputText value="#{act.title}"/>
+                        </p:column>
+                        <p:column headerText="Status" width="150">
+                            <p:badge value="#{act.status.name()}"
+                                     severity="#{act.status.toString() eq 'ACTIVE' ? 'success' : (act.status.toString() eq 'PENDING' ? 'warning' : 'info')}"/>
+                        </p:column>
+                        <p:column headerText="Created on">
+                            <h:outputText value="#{act.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                            <p:commandButton title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"/>
+                            <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
+                                             actionListener="#{activitiesView.deleteTeamActivity(act)}"
+                                             update="teamActivitiesTable "/>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:tab>
+
+                <!-- =============================== -->
+                <!-- TAB 3: INDIVIDUAL ACTIVITIES     -->
+                <!-- =============================== -->
+                <p:tab title="Individual Activities">
+                    <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+                        <div class="p-d-flex p-ai-center">
+                            <p:inputText placeholder="Search Individual Activity" style="flex:1" styleClass="p-mr-2"
+                                         value="#{activitiesView.searchTerm}">
+                                <p:ajax event="keyup" listener="#{activitiesView.reloadFilterReset}" update="individualActivitiesTable"/>
+                            </p:inputText>
+                            <p:selectOneMenu value="#{activitiesView.selectedStatus}" styleClass="p-mr-2">
+                                <f:selectItem itemLabel="Status" itemValue=""/>
+                                <f:selectItems value="#{activitiesView.selectedStatus}" var="status" itemLabel="#{status}" itemValue="#{status}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Search" icon="pi pi-search"
+                                             actionListener="#{activitiesView.reloadFilterReset}" update="individualActivitiesTable"/>
                         </div>
                     </div>
 
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle me-3" style="background:#fca5a5;"><i class="pi pi-calendar"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">To Date</h6>
-                                    <p:calendar value="#{activitiesView.createdTo}" 
-                                                styleClass="filter-calendar"
-                                                navigator="true" pattern="dd MMM, yyyy" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <p:dataTable id="individualActivitiesTable" var="act" value="#{activitiesView.individualActivities}"
+                                 paginator="true" rows="10" lazy="false" paginatorPosition="bottom"
+                                 emptyMessage="No individual activities found.">
 
-            <!-- Activities List -->
-            <div class="card" style="margin-top:0.5rem">
-                <p:dataTable id="activitiesTable" var="activity" value="#{activitiesView.activityModels}"
-                             widgetVar="activitiesTable"
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                             paginator="true" lazy="true" rows="20"
-                             emptyMessage="#{activitiesView.dataEmptyMessage}"
-                             paginatorPosition="bottom" paginatorAlwaysVisible="false"
-                             rowIndexVar="row" reflow="true" styleClass="TableAlgnment">
+                        <p:column headerText="Title">
+                            <h:outputText value="#{act.title}"/>
+                        </p:column>
+                        <p:column headerText="Status" width="150">
+                            <p:badge value="#{act.status.name()}"
+                                     severity="#{act.status.toString() eq 'ACTIVE' ? 'success' : (act.status.toString() eq 'PENDING' ? 'warning' : 'info')}"/>
+                        </p:column>
+                        <p:column headerText="Created on">
+                            <h:outputText value="#{act.dateCreated}">
+                                <f:convertDateTime pattern="dd MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Action" exportable="false" style="text-align: center; white-space: nowrap;">
+                            <p:commandButton title="View" icon="pi pi-eye" styleClass="p-button-sm p-mr-2"/>
+                            <p:commandButton title="Delete" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"
+                                             actionListener="#{activitiesView.deleteIndividualActivity(act)}"
+                                             update="individualActivitiesTable"/>
+                        </p:column>
 
-                    <f:facet name="header">
-                        <div class="p-d-flex p-jc-between">
-                            <div>
-                                <span class="table-header-text">All System Activities</span>
-                            </div>
-                            <div>
-                                <p:commandButton value="Add System Activity" process="@this"
-                                                 icon="fa fa-plus"
-                                                 ajax="false"
-                                                 styleClass="ui-button-success" immediate="true"
-                                                 actionListener="#{activityFormDialog.show}">
-                                    <f:setPropertyActionListener value="#{null}"
-                                                                 target="#{activityFormDialog.model}" />
-                                    <p:ajax event="dialogReturn"
-                                            listener="#{activitiesView.reloadFilterReset}"
-                                            update="activitiesTable" />
-                                </p:commandButton>
-                            </div>
-                        </div>
-                    </f:facet>
+                    </p:dataTable>
+                </p:tab>
 
-                    <p:column width="30" headerText="No.">
-                        <h:outputText value="#{row + 1}" />
-                    </p:column>
-                    <p:column headerText="Title">
-                        <h:outputText value="#{activity.title}" />
-                    </p:column>
-                    <p:column headerText="Description">
-                        <h:outputText value="#{activity.description}" />
-                    </p:column>
-                    <p:column headerText="Status">
-                        <h:outputText value="#{activity.status}" />
-                    </p:column>
-                    <p:column headerText="Assigned User">
-                        <h:outputText value="#{activity.user != null ? activity.user.fullName : 'N/A'}" />
-                    </p:column>
-                    <p:column headerText="Goal Type">
-                        <h:outputText value="#{activity.organizationGoal != null ? 'Organization' : (activity.departmentGoal != null ? 'Department' : (activity.teamGoal != null ? 'Team' : 'N/A'))}" />
-                    </p:column>
-                    <p:column headerText="Goal Name">
-                        <h:outputText value="#{activity.organizationGoal != null ? activity.organizationGoal.name : (activity.departmentGoal != null ? activity.departmentGoal.name : (activity.teamGoal != null ? activity.teamGoal.name : 'N/A'))}" />
-                    </p:column>
-                    <p:column headerText="Created Date">
-                        <h:outputText value="#{activity.createdDate}">
-                            <f:convertDateTime pattern="dd MMM, yyyy" />
-                        </h:outputText>
-                    </p:column>
-
-                    <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
-                        <p:commandButton icon="fa fa-edit" styleClass="ui-button-primary"
-                                         ajax="false"
-                                         actionListener="#{activityFormDialog.show}">
-                            <f:setPropertyActionListener value="#{activity}" target="#{activityFormDialog.model}" />
-                            <p:ajax event="dialogReturn" update="activitiesTable" />
-                        </p:commandButton>
-                        <p:commandButton icon="fa fa-trash" title="Delete"
-                                         styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
-                                         actionListener="#{activitiesView.deleteActivity(activity)}"
-                                         update="activitiesTable">
-                            <p:confirm header="Confirmation"
-                                       message="You are about to delete an activity. Do you wish to continue?"
-                                       icon="ui-icon-alert" />
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-            </div>
+            </p:tabView>
         </h:form>
-
-        <!-- Activity Form Dialog -->
-        <ui:include src="ActivityFormDialog.xhtml" />
-        
-        <script type="text/javascript">
-//<![CDATA[
-            function refreshActivityTable() {
-                console.log('Refreshing activity table...');
-                if (typeof PF !== 'undefined' && PF('activitiesTable')) {
-                    PF('activitiesTable').filter();
-                }
-                setTimeout(function() {
-                    if (typeof PrimeFaces !== 'undefined') {
-                        PrimeFaces.ab({s: 'activitiesView:activitiesTable', u: 'activitiesView:activitiesTable'});
-                    }
-                }, 100);
-            }
-//]]>
-        </script>
     </ui:define>
 </ui:composition>

@@ -79,7 +79,7 @@
                                          title="Approve"
                                          rendered="#{model.status.toString()  eq 'PENDING'}"
                                          actionListener="#{teamGoalDetails.approveIndividualGoal(model)}">
-                            <p:ajax event="dialogReturn" update="childGoals gowl" />
+                            <p:ajax event="dialogReturn" update="childGoals" />
                         </p:commandButton>
                         <p:commandButton icon="fa fa-trash" title="Delete"
                                          styleClass="ui-button-danger" style="margin-left:5px" ajax="false"

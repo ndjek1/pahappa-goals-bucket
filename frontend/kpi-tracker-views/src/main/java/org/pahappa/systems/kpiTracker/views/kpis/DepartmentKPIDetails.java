@@ -9,11 +9,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
-import org.pahappa.systems.kpiTracker.models.activities.Activity;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
-import org.pahappa.systems.kpiTracker.core.services.activities.ActivityService;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +30,9 @@ public class DepartmentKPIDetails implements Serializable {
     
     @Autowired
     private KpisService kpisService;
-    
-    @Autowired
-    private ActivityService activityService;
+
     
     private KPI selectedKPI;
-    private List<Activity> relatedActivities;
     private String kpiId;
     
     // Progress tracking
@@ -91,10 +86,8 @@ public class DepartmentKPIDetails implements Serializable {
                 // Load activities that are linked to this KPI
                 // This would depend on your data model - you might need to adjust the query
                 // For now, we'll set it to null until the relationship is properly defined
-                relatedActivities = null;
             } catch (Exception e) {
                 UiUtils.ComposeFailure("Error", "Error loading related activities: " + e.getMessage());
-                relatedActivities = null;
             }
         }
     }
@@ -252,14 +245,7 @@ public class DepartmentKPIDetails implements Serializable {
     public void setSelectedKPI(KPI selectedKPI) {
         this.selectedKPI = selectedKPI;
     }
-    
-    public List<Activity> getRelatedActivities() {
-        return relatedActivities;
-    }
-    
-    public void setRelatedActivities(List<Activity> relatedActivities) {
-        this.relatedActivities = relatedActivities;
-    }
+
     
     public String getKpiId() {
         return kpiId;
