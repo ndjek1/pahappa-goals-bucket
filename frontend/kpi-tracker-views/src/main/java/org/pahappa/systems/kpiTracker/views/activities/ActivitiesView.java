@@ -3,150 +3,141 @@ package org.pahappa.systems.kpiTracker.views.activities;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.activities.ActivityService;
-import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
-import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
-import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
-import org.pahappa.systems.kpiTracker.models.activities.Activity;
-
+import org.pahappa.systems.kpiTracker.core.services.activities.DepartmentActivityService;
+import org.pahappa.systems.kpiTracker.core.services.activities.TeamActivityService;
+import org.pahappa.systems.kpiTracker.core.services.activities.IndividualActivityService;
+import org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity;
+import org.pahappa.systems.kpiTracker.models.activities.TeamActivity;
+import org.pahappa.systems.kpiTracker.models.activities.IndividualActivity;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.sers.webutils.client.views.presenters.PaginatedTableView;
 import org.sers.webutils.client.views.presenters.ViewPath;
 import org.sers.webutils.model.RecordStatus;
-import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
+import javax.faces.bean.ViewScoped;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @ManagedBean(name = "activitiesView")
 @Getter
 @Setter
-@SessionScoped
+@ViewScoped
 @ViewPath(path = HyperLinks.ACTIVITIES_VIEW)
-public class ActivitiesView implements Serializable {
+public class ActivitiesView extends PaginatedTableView<DepartmentActivity, ActivitiesView, ActivitiesView> {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(ActivitiesView.class.getSimpleName());
 
-    private ActivityService activityService;
-    private OrganizationGoalService organizationGoalService;
-    private DepartmentGoalService departmentGoalService;
-    private TeamGoalService teamGoalService;
+    private DepartmentActivityService departmentActivityService;
+    private TeamActivityService teamActivityService;
+    private IndividualActivityService individualActivityService;
 
-    private List<RecordStatus> recordStatusList;
-    private List<ActivityStatus> activityStatusList;
+    private List<DepartmentActivity> departmentActivities;
+    private List<TeamActivity> teamActivities;
+    private List<IndividualActivity> individualActivities;
 
-    private int totalActivities;
-    private int activeActivities;
-    private int pendingActivities;
-    private int completedActivities;
-
+    private Search search;
     private String searchTerm;
     private ActivityStatus selectedStatus;
-    private Date createdFrom, createdTo;
-
-    private List<Activity> activityModels;
-    private String dataEmptyMessage = "No activities found.";
-    private Activity selectedActivity;
 
     @PostConstruct
     public void init() {
-        activityService = ApplicationContextProvider.getBean(ActivityService.class);
-        organizationGoalService = ApplicationContextProvider.getBean(OrganizationGoalService.class);
-        departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
-        teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
-
-        this.recordStatusList = Arrays.asList(RecordStatus.values());
-        this.activityStatusList = Arrays.asList(ActivityStatus.values());
+        departmentActivityService = ApplicationContextProvider.getBean(DepartmentActivityService.class);
+        teamActivityService = ApplicationContextProvider.getBean(TeamActivityService.class);
+        individualActivityService = ApplicationContextProvider.getBean(IndividualActivityService.class);
 
         reloadFilterReset();
+        loadDepartmentActivities();
+        loadTeamActivities();
+        loadIndividualActivities();
     }
 
+    @Override
+    public void reloadFromDB(int first, int pageSize, Map<String, Object> filters) throws Exception {
+        super.setDataModels(departmentActivityService.getInstances(buildSearch(), first, pageSize));
+    }
+
+    @Override
     public void reloadFilterReset() {
+        super.setTotalRecords(departmentActivityService.countInstances(buildSearch()));
         try {
-            Search allActivitiesSearch = new Search();
-            this.totalActivities = activityService.countInstances(allActivitiesSearch);
-
-            Search activeActivitiesSearch = new Search();
-            activeActivitiesSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-            this.activeActivities = activityService.countInstances(activeActivitiesSearch);
-
-            Search pendingActivitiesSearch = new Search();
-            pendingActivitiesSearch.addFilterEqual("status", ActivityStatus.PENDING);
-            this.pendingActivities = activityService.countInstances(pendingActivitiesSearch);
-
-            Search completedActivitiesSearch = new Search();
-            completedActivitiesSearch.addFilterEqual("status", ActivityStatus.COMPLETED);
-            this.completedActivities = activityService.countInstances(completedActivitiesSearch);
-
-            Search activitySearch = new Search();
-            if (searchTerm != null && !searchTerm.isEmpty()) {
-                activitySearch.addFilterILike("title", "%" + searchTerm + "%");
-            }
-            if (selectedStatus != null) {
-                activitySearch.addFilterEqual("status", selectedStatus);
-            }
-            if (createdFrom != null) {
-                activitySearch.addFilterGreaterOrEqual("dateCreated", createdFrom);
-            }
-            if (createdTo != null) {
-                activitySearch.addFilterLessOrEqual("dateCreated", createdTo);
-            }
-
-            // Filter and load dataModels based on search/filter criteria
-            this.activityModels = activityService.getInstances(activitySearch, 0, 1000);
+            super.reloadFilterReset();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error reloading activities", e);
-            UiUtils.ComposeFailure("Error", "Failed to reload activities: " + e.getMessage());
+            UiUtils.ComposeFailure("Error", e.getLocalizedMessage());
         }
     }
 
-    public void reloadFromDB(int offset, int limit, java.util.Map<String, Object> filters) throws Exception {
+    private Search buildSearch() {
+        Search search = new Search();
+        search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            search.addFilterILike("title", "%" + searchTerm + "%");
+        }
+        if (selectedStatus != null) {
+            search.addFilterEqual("status", selectedStatus);
+        }
+        return search;
+    }
+
+    public void loadDepartmentActivities() {
+        this.departmentActivities = departmentActivityService.getAllInstances();
+    }
+
+    public void loadTeamActivities() {
+        this.teamActivities = teamActivityService.getAllInstances();
+    }
+
+    public void loadIndividualActivities() {
+        this.individualActivities = individualActivityService.getAllInstances();
+    }
+
+    public void deleteDepartmentActivity(DepartmentActivity activity) {
         try {
-            Search search = new Search();
-            search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-            
-            if (searchTerm != null && !searchTerm.isEmpty()) {
-                search.addFilterILike("title", "%" + searchTerm + "%");
-            }
-            
-            this.activityModels = activityService.getInstances(search, offset, limit);
+            departmentActivityService.deleteInstance(activity);
+            reloadFilterReset();
+            loadDepartmentActivities();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error reloading activities from DB", e);
-            throw e;
+            UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
     }
 
-    public void deleteActivity(Activity activity) {
+    public void deleteTeamActivity(TeamActivity activity) {
         try {
-            if (activity != null) {
-                activityService.deleteInstance(activity);
-                UiUtils.showMessageBox("Action successful", "Activity has been deleted successfully.");
-                reloadFilterReset();
-            }
+            teamActivityService.deleteInstance(activity);
+            loadTeamActivities();
         } catch (Exception e) {
-            UiUtils.ComposeFailure("Action failed", "Failed to delete activity: " + e.getMessage());
+            UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
     }
-    
-    public void clearFilters() {
-        this.searchTerm = null;
-        this.selectedStatus = null;
-        this.createdFrom = null;
-        this.createdTo = null;
-        reloadFilterReset();
+
+    public void deleteIndividualActivity(IndividualActivity activity) {
+        try {
+            individualActivityService.deleteInstance(activity);
+            loadIndividualActivities();
+        } catch (Exception e) {
+            UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
+        }
     }
 
-    public List<ExcelReport> getExcelReportModels() {
+    @Override
+    public List getExcelReportModels() {
+        return null;
+    }
+
+    @Override
+    public String getFileName() {
+        return null;
+    }
+
+    @Override
+    public List load(int i, int i1, Map map, Map map1) {
         return null;
     }
 }

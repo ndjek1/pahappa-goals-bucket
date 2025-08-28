@@ -87,4 +87,17 @@ public class IndividualGoal extends BaseEntity {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IndividualGoal)) return false;
+        IndividualGoal that = (IndividualGoal) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

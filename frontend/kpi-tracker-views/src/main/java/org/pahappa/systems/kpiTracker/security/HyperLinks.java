@@ -45,14 +45,16 @@ public class HyperLinks {
 
     // Activity-related constants
     public static final String ACTIVITIES_VIEW = "/pages/activities/ActivitiesView.xhtml?faces-redirect=true";
-    public static final String ACTIVITY_FORM_DIALOG = "/pages/activities/ActivityFormDialog.xhtml";
-    public static final String ORGANIZATIONAL_ACTIVITIES_VIEW = "/pages/activities/OrganizationalActivitiesView.xhtml?faces-redirect=true";
     public static final String DEPARTMENT_ACTIVITIES_VIEW = "/pages/activities/DepartmentActivitiesView.xhtml?faces-redirect=true";
     public static final String TEAM_ACTIVITIES_VIEW = "/pages/activities/TeamActivitiesView.xhtml?faces-redirect=true";
+    public static final String INDIVIDUAL_ACTIVITIES_VIEW = "/pages/activities/TeamActivitiesView.xhtml?faces-redirect=true";
     
     // Activity Form Dialog constants
-    public static final String ORGANIZATIONAL_ACTIVITY_FORM_DIALOG = "/pages/activities/OrganizationalActivityFormDialog.xhtml";
     public static final String DEPARTMENT_ACTIVITY_FORM_DIALOG = "/pages/activities/DepartmentActivityFormDialog.xhtml";
     public static final String TEAM_ACTIVITY_FORM_DIALOG = "/pages/activities/TeamActivityFormDialog.xhtml";
+    public static final String INDIVIDUAL_ACTIVITY_FORM_DIALOG = "/pages/activities/IndividualActivityFormDialog.xhtml";
+    public static final String UPDATE_DEPARTMENT_ACTIVITY_FORM_DIALOG = "/pages/activities/UpdateActivityDialog.xhtml";
+    public static final String UPDATE_TEAM_ACTIVITY_FORM_DIALOG = "/pages/activities/UpdatedTeamActivityDialog.xhtml";
+    public static final String UPDATE_INDIVIDUAL_ACTIVITY_FORM_DIALOG = "/pages/activities/UpdateIndividualActivityDialog.xhtml";
 
 }
