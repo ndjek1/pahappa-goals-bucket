@@ -58,4 +58,8 @@ public class HyperLinks {
     public static final String UPDATE_TEAM_ACTIVITY_FORM_DIALOG = "/pages/activities/UpdatedTeamActivityDialog.xhtml";
     public static final String UPDATE_INDIVIDUAL_ACTIVITY_FORM_DIALOG = "/pages/activities/UpdateIndividualActivityDialog.xhtml";
 
+
+    //Assessment or Rating
+    public static final String SUPERVISOR_ASSESSMENT_FORM_DIALOG = "/pages/ratings/SupervisorAssessmentForm.xhtml";
+
 }

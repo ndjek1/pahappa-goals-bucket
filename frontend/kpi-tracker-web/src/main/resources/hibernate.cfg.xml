@@ -69,5 +69,7 @@
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
 		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
 
+<!--        Assessment-->
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.SupervisorAssessment" />
 	</session-factory>
 </hibernate-configuration>

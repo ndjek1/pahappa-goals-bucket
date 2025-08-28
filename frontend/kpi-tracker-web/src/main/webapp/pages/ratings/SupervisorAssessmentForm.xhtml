@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="content">
+        <title>Assessment</title>
+        <h:form id="globalWeightDialog" styleClass="ui-fluid formgrid grid"
+               >
+
+            <p:growl id="growl" showDetail="true" life="4000" />
+
+            <div class="field col-12 p-m-4">
+                <div class="field col-12 " >
+                    <h:outputText
+                            value="Assessing #{supervisorAssessmentForm.staff.user.fullName}" />
+
+                </div>
+
+            </div>
+
+            <!-- Business Goal Weight -->
+            <div class="field col-12 p-mx-4 p-mb-2">
+                <p:outputLabel for="score" value="Score /100" />
+                <p:inputText id="score"
+                             value="#{supervisorAssessmentForm.model.score}"
+                             required="true"
+                requiredMessage="Score is required"
+                >
+                </p:inputText>
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="col-12 p-mx-4" style="margin-top: 2rem; display: flex; justify-content: space-between; gap: 1rem;">
+                <p:commandButton value="Cancel"
+                                 validateClient="false"
+                                 process="@this"
+                                 action="#{supervisorAssessmentForm.hide}"
+                                 styleClass="ui-button-danger p-mx-5"
+                                 style="flex: 1;" />
+
+                <p:commandButton value="Save"
+                                 process="@form"
+                                 actionListener="#{supervisorAssessmentForm.persist}"
+                                 update="@form"
+                                 validateClient="true"
+                                 style="flex: 1;"
+                                 styleClass="ui-button-primary p-mx-5"
+                />
+            </div>
+
+        </h:form>
+        <!-- Case: Active review cycle is null -->
+    </ui:define>
+</ui:composition>
