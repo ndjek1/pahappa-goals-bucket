@@ -46,99 +46,51 @@
     <ui:define name="content">
         <h:form id="departmentKPIView" enctype="multipart/form-data">
 
-            <!-- Breadcrumb -->
-            <div class="card breadcrumb-card">
-                <p:breadCrumb>
-                    <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
-                    <p:menuitem value="Department KPIs" icon="pi pi-building" />
-                </p:breadCrumb>
-            </div>
-
             <!-- Filters Section -->
-            <div class="card">
-                <div class="p-grid">
-
-                    <!-- Search -->
-                    <div class="p-col-12 p-md-2">
-                        <div class="activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-blue" title="Search"><i class="pi pi-search"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6>Search</h6>
-                                    <p:inputText id="searchTerm" value="#{departmentKPIView.searchTerm}"
-                                                 placeholder="Search KPIs ..." styleClass="filter-input">
-                                        <p:ajax event="keyup" update="departmentKPIsTable"
-                                                listener="#{departmentKPIView.reloadFilterReset()}" />
-                                    </p:inputText>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Measurement Unit -->
-                    <div class="p-col-12 p-md-3">
-                        <div class="activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-green" title="Unit"><i class="pi pi-cog"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6>Unit</h6>
-                                    <p:selectOneMenu id="measurementUnit" value="#{departmentKPIView.selectedMeasurementUnit}"
-                                                     styleClass="filter-select" converter="measurementUnitConverter">
-                                        <f:selectItem itemLabel="All Units" value="#{null}" />
-                                        <f:selectItems value="#{departmentKPIView.measurementUnitList}" var="unit" 
-                                                       itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
-                                        <p:ajax event="change" update="departmentKPIsTable"
-                                                listener="#{departmentKPIView.reloadFilterReset()}" />
-                                    </p:selectOneMenu>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- From Date -->
-                    <div class="p-col-12 p-md-3">
-                        <div class="activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-indigo" title="From Date"><i class="pi pi-calendar"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6>From Date</h6>
-                                    <p:calendar value="#{departmentKPIView.createdFrom}"
-                                                styleClass="filter-calendar"
-                                                navigator="true" pattern="dd MMM, yyyy" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- To Date -->
-                    <div class="p-col-12 p-md-3">
-                        <div class="activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-red" title="To Date"><i class="pi pi-calendar"></i></div>
-                                <div class="flex-grow-1">
-                                    <h6>To Date</h6>
-                                    <p:calendar value="#{departmentKPIView.createdTo}"
-                                                styleClass="filter-calendar"
-                                                navigator="true" pattern="dd MMM, yyyy" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Clear Button -->
-                    <div class="p-col-12 p-md-1 d-flex align-items-center">
-                        <p:commandButton value="Clear" icon="pi pi-times"
-                                         styleClass="ui-button-outlined ui-button-secondary"
-                                         actionListener="#{departmentKPIView.clearFilters}"
-                                         update="departmentKPIsTable" />
+            <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+                    <div class="p-d-flex p-ai-center p-flex-wrap">
+                        <p:inputText placeholder="Search Department KPI" style="flex:1; min-width: 200px;" styleClass="p-mr-2 p-mb-2"
+                                     value="#{departmentKPIView.searchTerm}">
+                            <p:ajax event="keyup" listener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIsTable"/>
+                        </p:inputText>
+                        
+                        <!-- Measurement Unit Filter -->
+                        <p:selectOneMenu value="#{departmentKPIView.selectedMeasurementUnit}" styleClass="p-mr-2 p-mb-2" style="min-width: 120px;"
+                                         converter="measurementUnitConverter">
+                            <f:selectItem itemLabel="All Units" itemValue="#{null}"/>
+                            <f:selectItems value="#{departmentKPIView.measurementUnitList}" var="unit" 
+                                           itemLabel="#{unit.displayName}" itemValue="#{unit}"/>
+                            <p:ajax event="change" listener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIsTable"/>
+                        </p:selectOneMenu>
+                        
+                        <!-- Frequency Filter -->
+                        <p:selectOneMenu value="#{departmentKPIView.selectedFrequency}" styleClass="p-mr-2 p-mb-2" style="min-width: 120px;"
+                                         converter="frequencyConverter">
+                            <f:selectItem itemLabel="All Frequencies" itemValue="#{null}"/>
+                            <f:selectItems value="#{departmentKPIView.frequencyList}" var="freq" 
+                                           itemLabel="#{freq.displayName}" itemValue="#{freq}"/>
+                            <p:ajax event="change" listener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIsTable"/>
+                        </p:selectOneMenu>
+                        
+                        <!-- Review Cycle Filter -->
+                        <p:selectOneMenu value="#{departmentKPIView.selectedReviewCycle}" styleClass="p-mr-2 p-mb-2" style="min-width: 150px;">
+                            <f:selectItem itemLabel="All Review Cycles" itemValue="#{null}"/>
+                            <f:selectItems value="#{departmentKPIView.reviewCycles}" var="cycle" 
+                                           itemLabel="#{cycle.name}" itemValue="#{cycle}"/>
+                            <p:ajax event="change" listener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIsTable"/>
+                        </p:selectOneMenu>
+                        
+                        <p:commandButton value="Search" icon="pi pi-search" styleClass="p-mr-2 p-mb-2"
+                                         actionListener="#{departmentKPIView.reloadFilterReset}" update="departmentKPIsTable"/>
+                        <p:commandButton value="Clear" icon="pi pi-times" styleClass="p-button-outlined p-mb-2"
+                                         actionListener="#{departmentKPIView.clearFilters}" update="departmentKPIsTable"/>
                     </div>
                 </div>
-            </div>
 
             <!-- KPIs List -->
             <div class="card">
                 <p:dataTable id="departmentKPIsTable" var="kpi" value="#{departmentKPIView.dataModels}"
-                             widgetVar="departmentKPIsTable" paginator="true" lazy="true" rows="20"
+                             widgetVar="departmentKPITable" paginator="true" lazy="true" rows="20"
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              emptyMessage="#{departmentKPIView.dataEmptyMessage}"
                              paginatorPosition="bottom" paginatorAlwaysVisible="false"
@@ -173,6 +125,9 @@
                     <p:column headerText="Current">
                         <h:outputText value="#{kpi.currentValue != null ? kpi.currentValue : '0'}" />
                     </p:column>
+                    <p:column headerText="Review Cycle">
+                        <h:outputText value="#{kpi.reviewCycle != null ? kpi.reviewCycle.name : 'N/A'}" />
+                    </p:column>
                     <p:column headerText="Status">
                         <h:outputText value="#{kpi.recordStatus}" />
                     </p:column>
@@ -182,7 +137,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Action" width="150" style="text-align:center"
+                    <p:column headerText="Action" width="200" style="text-align:center"
                               exportable="false">
                         <p:button title="View" icon="pi pi-eye" styleClass="ui-button-sm p-mr-2"
                                   outcome="/pages/kpis/KpiDetailView">
@@ -190,19 +145,39 @@
                             <f:param name="returnPage" value="/pages/kpis/DepartmentKPIView" />
                         </p:button>
                         <p:commandButton title="Edit" icon="pi pi-pencil"
-                                         styleClass="ui-button-warning ui-button-sm"
+                                         styleClass="ui-button-warning ui-button-sm p-mr-2"
                                          actionListener="#{departmentKpiForm.show}">
                             <f:setPropertyActionListener value="#{kpi}" target="#{departmentKpiForm.model}" />
                             <p:ajax event="dialogReturn" update="departmentKPIsTable" />
+                        </p:commandButton>
+                        <p:commandButton title="Delete" icon="pi pi-trash"
+                                         styleClass="ui-button-danger ui-button-sm"
+                                         onclick="PF('deleteDepartmentKpiDialog').show(); return false;">
+                            <f:setPropertyActionListener value="#{kpi}" target="#{departmentKPIView.selectedKpiForDeletion}" />
                         </p:commandButton>
                     </p:column>
 
                 </p:dataTable>
             </div>
 
+            <!-- Delete Confirmation Dialog -->
+            <p:confirmDialog widgetVar="deleteDepartmentKpiDialog" header="Confirm Deletion" 
+                             message="Are you sure you want to delete this Department KPI? This action cannot be undone."
+                             severity="warn" width="400">
+                <p:commandButton value="Yes, Delete" icon="pi pi-check"
+                                 styleClass="ui-button-danger"
+                                 actionListener="#{departmentKPIView.deleteSelectedKpi}"
+                                 update="departmentKPIsTable"
+                                 oncomplete="PF('deleteDepartmentKpiDialog').hide();" />
+                <p:commandButton value="Cancel" icon="pi pi-times"
+                                 styleClass="ui-button-secondary"
+                                 onclick="PF('deleteDepartmentKpiDialog').hide(); return false;" />
+            </p:confirmDialog>
+
         </h:form>
 
         <!-- Department KPI Form Dialog -->
         <ui:include src="DepartmentKPIForm.xhtml" />
+
     </ui:define>
 </ui:composition>

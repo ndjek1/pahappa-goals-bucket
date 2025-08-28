@@ -50,6 +50,31 @@
                 color: #1f2937;
                 font-weight: 600;
             }
+            .progress-bar-container {
+                position: relative;
+                background: #e5e7eb;
+                height: 25px;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            .progress-bar {
+                height: 100%;
+                transition: width 0.3s ease;
+                border-radius: 12px;
+            }
+            .progress-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: white;
+                text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+            }
+            .progress-table .ui-datatable-data tr td {
+                vertical-align: middle !important;
+            }
             .progress-section {
                 background: white;
                 padding: 20px;
@@ -183,6 +208,10 @@
                             </h:outputText>
                         </div>
                     </div>
+                    <div class="kpi-info-item">
+                        <div class="kpi-info-label">Review Cycle:</div>
+                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.reviewCycle != null ? kpiDetailView.selectedKpi.reviewCycle.title : 'Not Assigned'}</div>
+                    </div>
                 </div>
 
                 <!-- Progress Section -->
@@ -195,12 +224,26 @@
                     </div>
                 </div>
 
-                <!-- Chart Section -->
+                <!-- Progress Section -->
                 <div class="chart-section">
-                    <div class="chart-header">Updates Overtime</div>
-                    <p:lineChart id="kpiChart" model="#{kpiDetailView.chartModel}" 
-                                 style="width:100%;height:300px" 
-                                 responsive="true" />
+                    <div class="chart-header">KPI Progress Over Time</div>
+                    <div class="progress-visualization">
+                        <p:dataTable value="#{kpiDetailView.chartDataPoints}" var="point"
+                                     styleClass="progress-table" reflow="true">
+                            <p:column headerText="Month" style="width:40%">
+                                <h:outputText value="#{point.label}" />
+                            </p:column>
+                            <p:column headerText="Value" style="width:30%">
+                                <h:outputText value="#{point.value}" />
+                            </p:column>
+                            <p:column headerText="Progress" style="width:30%">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: #{point.value}%; background-color: #28a745;"></div>
+                                    <span class="progress-text">#{point.value}%</span>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
                 </div>
 
                 <!-- Updates Table -->

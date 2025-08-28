@@ -42,6 +42,7 @@ public class HyperLinks {
     public static final String TEAM_KPI_FORM_DIALOG = "/pages/kpis/TeamKPIForm.xhtml";
     public static final String INDIVIDUAL_KPI_FORM_DIALOG = "/pages/kpis/IndividualKPIForm.xhtml";
     public static final String DEPARTMENT_KPI_DETAILS_VIEW = "/pages/kpis/DepartmentKPIDetails.xhtml?faces-redirect=true";
+    public static final String KPI_DETAIL_VIEW = "/pages/kpis/KpiDetailView.xhtml?faces-redirect=true";
 
     // Activity-related constants
     public static final String ACTIVITIES_VIEW = "/pages/activities/ActivitiesView.xhtml?faces-redirect=true";
