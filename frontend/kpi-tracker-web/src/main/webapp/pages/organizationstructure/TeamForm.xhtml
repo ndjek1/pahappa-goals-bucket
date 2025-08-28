@@ -21,22 +21,27 @@
 
                 <!-- Type -->
                 <div class="field col-12 p-m-4">
-
+                    <h5>Name</h5>
+                    <div class="ui-inputgroup">
                     <p:inputText value="#{teamForm.model.teamName}"
                                  required="true"
                                  placeholder="Name"
                                  styleClass="p-inputtext-sm w-full"/>
+                    </div>
                 </div>
 
 
                 <div class="field col-12 md:col-6 p-m-4">
+                    <h5>Description</h5>
+                    <div class="ui-inputgroup">
 
                     <p:inputText value="#{teamForm.model.teamDescription}"
                                  required="true"
                                  placeholder="Description"
                                  styleClass="p-inputtext-sm w-full"/>
+                    </div>
                 </div>
-                <div class="ui-col-12 ui-md-12">
+                <div class=" field col-12 md:col-6 p-m-4">
                     <h5>Team lead</h5>
                     <div class="ui-inputgroup">
                         <p:selectOneMenu id="teamLead" value="#{teamForm.teamLead}"
@@ -50,7 +55,7 @@
                         </p:selectOneMenu>
                     </div>
                 </div>
-                <div class="ui-col-12 ui-md-12">
+                <div class="field col-12 md:col-6 p-m-4">
                     <h5>Users</h5>
                     <div class="ui-inputgroup">
                         <p:selectManyCheckbox id="rolesGrid" value="#{teamForm.selectedTeamMembers}"

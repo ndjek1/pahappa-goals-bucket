@@ -50,7 +50,7 @@
 
                         <!-- Right side: set goal button -->
                         <p:commandButton value="Set Goal" icon="pi pi-plus"
-                                         style="background:#6DBE46"
+                                        styleClass="add-button"
                                          actionListener="#{organizationGoalForm.show}">
                             <f:setPropertyActionListener value="#{null}" target="#{organizationGoalForm.model}"/>
                             <p:ajax event="dialogReturn" listener="#{organizationGoalsView.reloadFilterReset}" update="goalForm"/>
@@ -87,12 +87,6 @@
                                              styleClass="p-button-sm p-mr-2"
                                              action="#{goalDetailsView.prepareForCategory(model.id)}"
                                               />
-
-                            <!-- Edit Button -->
-                            <p:commandButton title="Edit"
-                                             icon="pi pi-pencil"
-                                             styleClass="p-button-sm p-button-warning"
-                                             />
                         </p:column>
 
                     </p:dataTable>
@@ -144,13 +138,7 @@
                                 <f:convertDateTime pattern="dd MMM yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
-                            <p:commandButton title="View"
-                                             icon="pi pi-eye"
-                                             styleClass="p-button-sm p-mr-2"
-
-                            />
-                        </p:column>
+                       
                     </p:dataTable>
                 </p:tab>
 
@@ -199,12 +187,6 @@
                             <h:outputText value="#{teamGoal.dateCreated}">
                                 <f:convertDateTime pattern="dd MMM yyyy"/>
                             </h:outputText>
-                        </p:column>
-                        <p:column headerText="Action" exportable="false" width="100" style="text-align: center">
-                            <p:commandButton title="View"
-                                             icon="pi pi-eye"
-                                             styleClass="p-button-sm p-mr-2"
-                            />
                         </p:column>
                     </p:dataTable>
                 </p:tab>

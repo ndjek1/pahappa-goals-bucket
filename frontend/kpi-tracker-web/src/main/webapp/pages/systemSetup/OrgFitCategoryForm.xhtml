@@ -21,26 +21,33 @@
 
                 <!-- Type -->
                 <div class="field col-12 p-m-4">
-
+                    <h5>Name</h5>
+                    <div class="ui-inputgroup">
                     <p:inputText value="#{orgFitCategoryForm.model.name}"
                                  required="true"
                                  placeholder="Name"
                                  styleClass="p-inputtext-sm w-full"/>
+                    </div>
                 </div>
 
 
                 <div class="field col-12 md:col-6 p-m-4">
-
+                    <h5>Description</h5>
+                    <div class="ui-inputgroup">
                     <p:inputText value="#{orgFitCategoryForm.model.description}"
                                  required="true"
                                  placeholder="Description"
                                  styleClass="p-inputtext-sm w-full"/>
+                    </div>
                 </div>
                 <div class="field col-12 md:col-6 p-m-4">
+                    <h5>Weight(%)</h5>
+                    <div class="ui-inputgroup">
                     <p:inputText value="#{orgFitCategoryForm.model.weight}" required="true"
                                  placeholder="Weight"
                                  styleClass="p-inputtext-sm w-full"
                     />
+                    </div>
                 </div>
 
                 <!-- Buttons -->
@@ -52,7 +59,7 @@
 
                     <p:commandButton value="Save"
                                      process="@form"
-                                     actionListener="#{orgFitCategoryForm.save}"
+                                     actionListener="#{orgFitCategoryForm.persist}"
                                      update="@form growl"
                                      styleClass="ui-button-primary p-mx-5" />
                 </div>

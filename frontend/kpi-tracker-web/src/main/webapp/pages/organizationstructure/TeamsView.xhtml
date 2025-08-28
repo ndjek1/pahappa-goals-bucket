@@ -10,11 +10,11 @@
 
             <!-- Header -->
             <div class="p-d-flex p-jc-between p-ai-center p-mb-4">
-                <h2 style="margin: 0; color: #6c757d;">Teams</h2>
+                <h2 class="p-text-secondary">Teams</h2>
                 <p:commandButton value="Add Team"
+                                 icon="pi pi-plus"
                                  actionListener="#{teamForm.show}"
-                                 styleClass="p-button-success"
-                                 style="padding: 0.5rem 1.5rem; font-weight: 600;">
+                                 styleClass="add-button">
                     <f:setPropertyActionListener value="#{null}" target="#{teamForm.model}" />
                     <p:ajax event="dialogReturn" listener="#{teamsView.reloadFilterReset}" update="teamsGrid" />
                 </p:commandButton>
@@ -22,65 +22,62 @@
 
             <!-- Team Cards Grid -->
             <p:outputPanel id="teamsGrid" layout="block">
-                <div class="p-grid p-dir-col p-nogutter">
+                <div class="p-grid p-nogutter">
                     <ui:repeat value="#{teamsView.dataModels}" var="team" varStatus="status">
-                        <div class="p-col-12 p-md-6 p-lg-4">
-                            <div class="card p-p-3 p-mb-3" style="border: 1px solid #dee2e6; border-radius: 8px;">
+                        <div class="p-col-12 p-md-6 p-lg-4 p-p-2">
+                            <div class="card p-shadow-4 p-p-3"
+                                 style="border-radius: 12px; background-color: #ffffff;">
 
                                 <!-- Row 1: Team Name + Status -->
-                                <div class="p-d-flex p-jc-between p-ai-start">
-                                    <div style="flex:3;">
-                                        <h3 style="margin:0; color:#0a9dff;">#{team.teamName}</h3>
-                                        <h:outputText value="#{team.teamDescription}" style="color:#6c757d;" />
+                                <div class="p-d-flex p-jc-between p-ai-start p-mb-2">
+                                    <div>
+                                        <h3 class="p-text-primary" style="margin:0;">#{team.teamName}</h3>
+                                        <small class="p-text-secondary">#{team.teamDescription}</small>
                                     </div>
-                                    <div style="flex:1; text-align:right;">
-                                        <p:tag value="#{team.teamStatus}" severity="info" rounded="true"/>
-                                    </div>
+                                    <p:tag value="#{team.teamStatus}" severity="info" rounded="true"/>
                                 </div>
 
-                                <hr class="p-my-2"/>
+                                <!-- Divider -->
+                                <p:divider />
 
                                 <!-- Row 2: Team Info (3 columns) -->
-                                <div class="p-d-flex p-jc-between p-ai-start">
+                                <div class="p-grid p-text-center">
 
-                                    <!-- Column 1: Team Head (more space) -->
-                                    <div style="flex:2; padding-right:20px;">
-                                        <h:outputText value="Team Head" style="color: #6c757d;" />
-                                        <h4 style="margin:0; color:#0a9dff;">
+                                    <!-- Team Head -->
+                                    <div class="p-col-12 p-md-6 p-text-left p-p-2">
+                                        <span class="p-text-secondary">Team Head</span>
+                                        <h4 class="p-mt-1 p-text-primary">
                                             #{team.teamHead != null ? team.teamHead.fullName : '[Not assigned]'}
                                         </h4>
                                     </div>
 
-                                    <!-- Column 2: Members Count -->
-                                    <div style="flex:1; text-align:center; border-left:1px solid #e0e0e0; padding-left:15px;">
-                                        <h:outputText value="Members Count" style="color:#6c757d;" />
-                                        <h4 style="margin:0; color:#0a9dff;">
-                                           0
-                                        </h4>
+                                    <!-- Members Count -->
+                                    <div class="p-col-6 p-md-3 p-p-2">
+                                        <span class="p-text-secondary">Members</span>
+                                        <h4 class="p-mt-1 p-text-primary">0</h4>
                                     </div>
 
-                                    <!-- Column 3: Projects Count -->
-                                    <div style="flex:1; text-align:center; border-left:1px solid #e0e0e0; padding-left:15px;">
-                                        <h:outputText value="Projects Count" style="color:#6c757d;" />
-                                        <h4 style="margin:0; color:#0a9dff;">
-                                            0
-                                        </h4>
+                                    <!-- Projects Count -->
+                                    <div class="p-col-6 p-md-3 p-p-2">
+                                        <span class="p-text-secondary">Projects</span>
+                                        <h4 class="p-mt-1 p-text-primary">0</h4>
                                     </div>
                                 </div>
 
-                                <hr class="p-my-2"/>
+                                <!-- Divider -->
+                                <p:divider />
 
-                                <!-- Row 3: Actions aligned to right -->
+                                <!-- Row 3: Actions -->
                                 <div class="p-d-flex p-jc-end p-ai-center p-flex-wrap" style="gap:10px;">
                                     <p:commandButton icon="pi pi-pencil" title="Edit"
-                                                     styleClass="p-button-rounded p-button-text p-mr-2"
+                                                     styleClass="p-button-rounded p-button-text p-button-info"
                                                      actionListener="#{teamForm.show}">
                                         <f:setPropertyActionListener value="#{team}" target="#{teamForm.model}" />
                                         <p:ajax event="dialogReturn" update="teams" />
                                     </p:commandButton>
 
                                     <p:commandButton icon="pi pi-trash" title="Delete"
-                                                     styleClass="p-button-rounded p-button-danger p-button-text"
+                                                     styleClass="p-button-rounded  ui-button-danger"
                                                      update="teams"
                                                      actionListener="#{teamsView.deleteClient(team)}">
                                         <p:confirm header="Delete Team"

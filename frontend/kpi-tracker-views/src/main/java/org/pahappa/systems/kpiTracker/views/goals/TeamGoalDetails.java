@@ -43,7 +43,7 @@ public class TeamGoalDetails implements Serializable {
         this.selectedGoal = this.teamGoalService.getInstanceByID(id);
         this.goalLevel = selectedGoal.getClass().getSimpleName(); // now safe
         loadIndividualGoals(); // only load after goal is set
-        return "/pages/goals/TeamGoalDetails.xhtml?faces-redirect=true";
+        return "/pages/goals/TeamGoalDetails.xhtml";
     }
 
     public String backToGoals(){

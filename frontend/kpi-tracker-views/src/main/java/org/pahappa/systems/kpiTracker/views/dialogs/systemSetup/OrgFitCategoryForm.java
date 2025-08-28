@@ -28,7 +28,7 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
 
 
     public OrgFitCategoryForm() {
-        super(HyperLinks.ORG_FIT_CATEGORY_DIALOG, 500, 300);
+        super(HyperLinks.ORG_FIT_CATEGORY_DIALOG, 500, 350);
     }
 
     @PostConstruct
@@ -48,8 +48,12 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
 
         if (totalWeight + super.model.getWeight() <= globalWeight) {
             orgFitCategoryService.saveInstance(super.model);
+            resetModal();
+            hide();
         }else {
-            UiUtils.showMessageBox("Weight limit reached","The weight don't match config");
+            UiUtils.ComposeFailure("Weight limit reached","The weight don't match Configuration");
+            resetModal();
+            return;
         }
 
     }

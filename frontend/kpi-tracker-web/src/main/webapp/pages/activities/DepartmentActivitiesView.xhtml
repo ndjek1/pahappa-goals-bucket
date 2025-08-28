@@ -47,13 +47,6 @@
     <ui:define name="content">
         <h:form id="departmentActivitiesForm" enctype="multipart/form-data">
 
-            <!-- Breadcrumb -->
-            <div class="card breadcrumb-card">
-                <p:breadCrumb>
-                    <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
-                    <p:menuitem value="Department Activities" icon="pi pi-building" />
-                </p:breadCrumb>
-            </div>
 
             <!-- Filters Section -->
             <div class="card">
@@ -149,7 +142,7 @@
                         <div class="p-d-flex p-jc-between">
                             <span class="table-header-text">Department Activities</span>
                             <p:commandButton value="Add Activity" process="@this" icon="pi pi-plus"
-                                             styleClass="ui-button-success" immediate="true"
+                                             styleClass="add-button" immediate="true"
                                              actionListener="#{departmentActivityFormDialog.show}">
                                 <f:setPropertyActionListener value="#{null}" target="#{departmentActivityFormDialog.model}" />
                                 <p:ajax event="dialogReturn"

@@ -22,12 +22,13 @@
                      <f:facet name="header">
                         <div class="p-d-flex p-jc-between">
                            <div>
-                              <span style="font-weight: bold">Review Cycles</span>
+                              <h3 style="font-weight: bold">Review Cycles</h3>
                            </div>
                            <div>
                               <p:commandButton value="Add new review cycle"
+                                               icon="pi pi-plus"
                                                actionListener="#{reviewCycleForm.show}"
-                              styleClass="ui-button-success"
+                              styleClass="add-button"
                               >
                                  <f:setPropertyActionListener value="#{null}"
                                                               target="#{reviewCycleForm.model}" />

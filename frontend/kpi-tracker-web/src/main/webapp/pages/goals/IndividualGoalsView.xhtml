@@ -58,70 +58,12 @@
         <h:form id="individualGoalsView" enctype="multipart/form-data">
                         <p:growl id="messages" showDetail="true" />
 
-            <!-- Breadcrumb Navigation -->
-            <div class="card breadcrumb-card">
-                <p:breadCrumb>
-                    <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
-                    <p:menuitem value="Individual Goals" icon="pi pi-user" />
-                </p:breadCrumb>
-            </div>
-
-
-            <!-- Statistics Cards -->
-            <div class="card">
-                <div class="p-grid" style="margin-top:-4px;">
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-blue me-3"><i class="pi pi-bullseye"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Total Goals</h6>
-                                    <span class="stat-value text-primary">#{individualGoalsView.dataModels.size()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-green me-3"><i class="pi pi-check-circle"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Active Goals</h6>
-                                    <span class="stat-value text-success">#{individualGoalsView.dataModels.stream().filter(g -> g.status == 'ACTIVE').count()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-warning me-3"><i class="pi pi-clock"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Pending Goals</h6>
-                                    <span class="stat-value text-warning">#{individualGoalsView.dataModels.stream().filter(g -> g.status == 'PENDING').count()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-md-3">
-                        <div class="card activity-nav-card nav-card">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-circle bg-cyan me-3"><i class="pi pi-check"></i></div>
-                                <div class="flex-grow-1 d-flex align-items-center" style="gap:6px;">
-                                    <h6 class="mb-0">Completed Goals</h6>
-                                    <span class="stat-value" style="color:#06b6d4">#{individualGoalsView.dataModels.stream().filter(g -> g.status == 'COMPLETED').count()}</span>
-                                </div>
-                            </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Page Title and Add Button -->
             <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
                 <h2>My Goals</h2>
                 <p:commandButton value="Set Goal" icon="pi pi-plus"
-                                 styleClass="ui-button-success"
+                                 styleClass="add-button"
                                  actionListener="#{individualGoalForm.show}">
                     <f:setPropertyActionListener value="#{null}" target="#{individualGoalForm.model}"/>
                     <p:ajax event="dialogReturn" listener="#{individualGoalsView.reloadFilterReset}" update="individualGoalsView"/>
