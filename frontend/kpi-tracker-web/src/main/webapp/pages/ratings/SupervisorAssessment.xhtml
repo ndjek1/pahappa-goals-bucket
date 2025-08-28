@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+
+    <ui:define name="head">
+        <style>
+            .p-badge {
+                font-size: 0.8rem;
+                padding: 0.4em 0.6em;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="deptGoalForm">
+
+            <p:growl id="growl" showDetail="true" life="4000"/>
+
+            <h2>Members to  Assess</h2>
+
+
+            <!-- Department Goals Table -->
+            <p:dataTable id="deptGoalsTable"
+                         var="staff"
+                         value="#{supervisorAssessment.staffList}"
+                         paginator="true"
+                         rows="10"
+                         lazy="true"
+                         paginatorPosition="bottom"
+                         emptyMessage="No department goals found.">
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{staff.user.fullName}"/>
+                </p:column>
+
+                <p:column headerText="Date created" width="100">
+                    <h:outputText value="#{staff.user.dateCreated}">
+                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+
+                <p:column headerText="Action" width="150" style="text-align: center">
+                    <p:commandButton title="View"
+                                     icon="pi pi-eye"
+                                     ajax="false"
+                                     styleClass="p-button-sm p-mr-2"
+                                     actionListener="#{supervisorAssessmentForm.show}"
+                                    >
+                        <f:setPropertyActionListener value="#{staff}" target="#{supervisorAssessmentForm.staff}"/>
+                    </p:commandButton>
+
+
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes p-button-danger"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no p-button-secondary"/>
+            </p:confirmDialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

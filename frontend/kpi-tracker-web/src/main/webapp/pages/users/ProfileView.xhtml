@@ -3,189 +3,145 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="/pages/californiatemplate/template.xhtml"
->
+                template="/pages/californiatemplate/template.xhtml">
 
-    <ui:define name="title">User Profile</ui:define>
+    <ui:define name="title">Dashboard</ui:define>
 
-    <ui:define name="viewname">User Profile</ui:define>
+    <ui:define name="viewname">Dashboard</ui:define>
 
     <ui:define name="content">
-        <h:form id="profileView" enctype="multipart/form-data">
-            <ui:fragment>
-                <div class="card card-w-title" style="width: 100%; height: 100%">
 
-                    <div class="ui-g ">
-                        <div class="ui-g-12 ui-md-12 ui-lg-3 ">
-                            <div class="ui-g-12 ui-md-12 ui-lg-12">
-                                <div class="ui-g-12 ui-md-12 ui-lg-12  p-d-flex p-jc-center">
-                                    <p:commandLink validateClient="true" disabled="true"
-                                                   oncomplete="PF('imageDialogue').show()">
+        <!-- Add custom CSS for this specific page layout -->
+        <h:outputStylesheet>
+            .profile-cover {
+                background: linear-gradient(90deg, rgba(20,93,204,1) 0%, rgba(3,126,243,1) 100%);
+                height: 180px;
+                border-radius: var(--border-radius); /* Use theme's border radius */
+                position: relative;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-end;
+                padding: 1rem;
+            }
+            .profile-avatar-container {
+                margin-top: -60px; /* Pull the avatar up over the cover */
+                position: relative;
+                display: inline-block; /* To wrap around the image */
+            }
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                border: 4px solid #fff;
+                box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+                background-color: #e9ecef; /* Placeholder bg color */
+            }
+            .avatar-edit-button {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                width: 32px;
+                height: 32px;
+                background-color: #2196F3;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                border: 2px solid white;
+            }
+            .avatar-edit-button i {
+                font-size: 1rem;
+            }
+            .donut-chart-container {
+                position: relative;
+                width: 180px; /* Control size */
+                height: 180px;
+                margin: 0 auto;
+            }
+            .donut-chart-container .ui-chart {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .donut-chart-label {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 2rem;
+                font-weight: 600;
+                color: #495057; /* PrimeFaces text color */
+            }
+        </h:outputStylesheet>
 
-                                        <p:graphicImage id="imageView" name="images/unnamed.png"
-                                                        style="width:80px; height: 80px;"
-                                                        library="california-layout"
-                                                        styleClass="profile-avatar"/>
-                                    </p:commandLink>
+        <h:form id="dashboardForm">
+            <!-- Blue Cover Photo Section -->
+            <div class="profile-cover">
+                <p:commandButton value="Change Cover" icon="pi pi-camera" styleClass="ui-button-outlined ui-button-secondary" />
+            </div>
 
-                                </div>
-                                <h5 style="text-align: center">#{profileView.model.username}</h5>
-                                <div class="ui-g-12 ui-md-12 ui-lg-12 p-d-flex p-jc-center">
+            <div class="p-grid p-mt-3">
 
-                                    <p:commandLink value="Edit profile" id="editBtn"
-                                                   style="text-align: center" validateClient="true"
-                                                   rendered="#{ (componentRenderer.administrator)}"
-                                                   oncomplete="PF('profileViewDialogue').show()"/>
-                                </div>
-                            </div>
+                <!-- Left Column: Profile Card -->
+                <div class="p-col-12 p-lg-4">
+                    <div class="card p-text-center">
+                        <div class="profile-avatar-container">
+                            <p:graphicImage name="images/unnamed.png" library="california-layout" styleClass="profile-avatar"/>
+                            <p:commandLink styleClass="ui-avatar-icon" style="color: white">
+                                <i class="pi pi-camera"></i>
+                            </p:commandLink>
                         </div>
-                        <div class="ui-g-12 ui-md-12 ui-lg-9">
-                            <div class="ui-g-12 ui-md-12 ui-lg-4">
-                                <h4>Profile details</h4>
-                                <div class="ui-g-12 ui-md-12 ui-lg-12">
-                                    <h6><strong>Full name</strong></h6>
 
-                                    <p>#{profileView.model.fullName}</p>
-                                </div>
+                        <h4 class="p-mt-3 p-mb-0">#{profileView.model.fullName}</h4>
+                        <span class="text-secondary">#{profileView.model.roles}</span>
 
+                        <p:divider styleClass="p-my-4"/>
 
-                                <div class="ui-g-12 ui-md-12 ui-lg-12">
-                                    <h6><strong>Email address</strong></h6>
-
-                                    <p>#{profileView.model.emailAddress}</p>
-                                </div>
-
-                                <div class="ui-g-12 ui-md-12 ui-lg-12">
-                                    <h6><strong>Phone number</strong></h6>
-
-                                    <p>#{profileView.model.phoneNumber}</p>
-                                </div>
-                            </div>
-
+                        <h5 class="p-mb-3">Latest Cycle</h5>
+                        <div class="donut-chart-container">
+                            <!-- Donut chart. The model needs to be created in a backing bean. -->
+<!--                            <p:chart type="donut" model="#{dashboardBean.donutModel}" />-->
+                            <div class="donut-chart-label">78%</div>
                         </div>
                     </div>
                 </div>
-                <p:dialog id="profileViewDialogue" height="48%" width="60%"
-                          header="User Form"
-                          widgetVar="profileViewDialogue" minHeight="40" showEffect="fade"
-                          modal="true">
-                    <p:outputPanel rendered="#{profileView.model!=null}">
-                        <div class="p-grid ui-fluid">
 
-                            <div class="p-col-12 p-md-6">
-                                <h5>User name</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.username}"
-                                                 required="true" disabled="true"/>
+                <!-- Right Column: Settings Card -->
+                <div class="p-col-12 p-lg-8">
+                    <div class="card">
+                        <p:tabView>
+                            <p:tab title="Account settings">
+                                <div class="p-fluid p-formgrid p-grid p-mt-2">
+                                    <div class="p-field p-col-12 p-md-6">
+                                        <label for="firstname">First Name</label>
+                                        <p:inputText id="firstname" value="John" />
+                                    </div>
+                                    <div class="p-field p-col-12 p-md-6">
+                                        <label for="lastname">Last Name</label>
+                                        <p:inputText id="lastname" placeholder="Enter last name"/>
+                                    </div>
+                                    <div class="p-field p-col-12">
+                                        <label for="email">Email Address</label>
+                                        <p:inputText id="email" placeholder="Enter email address"/>
+                                    </div>
+                                    <div class="p-col-12 p-mt-3">
+                                        <p:commandButton value="Update" />
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="p-col-12 p-md-6">
-                                <h5>Fist name</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.firstName}"
-                                                 required="true"/>
+                            </p:tab>
+                            <p:tab title="Notification">
+                                <div class="p-p-3">
+                                    <p>Notification settings will be displayed here.</p>
                                 </div>
-                            </div>
-                            <div class="p-col-12 p-md-6">
-                                <h5>Last name</h5>
-                                <div class="ui-inputgroup">
-                                    <p:inputText value="#{profileView.model.lastName}"
-                                                 required="true"/>
-                                </div>
-                            </div>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
 
-                            <div class="p-col-12 p-md-6">
-                                <h5>Email</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.emailAddress}"
-                                                 required="true"/>
-                                </div>
-                            </div>
-
-                            <div class="p-col-12 p-md-6">
-                                <h5>Phone</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.phoneNumber}"
-                                                 required="true"/>
-                                </div>
-                            </div>
-
-                            <div class="p-col-12 p-md-12">
-                                <p>Password</p>
-                            </div>
-                            <div class="p-col-12 p-md-6">
-                                <h5>Change password</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.clearTextPassword}"
-                                                 required="false"/>
-                                </div>
-                            </div>
-
-                            <div class="p-col-12 p-md-6">
-                                <h5>Confirm password</h5>
-                                <div class="ui-inputgroup">
-
-                                    <p:inputText value="#{profileView.model.clearTextPassword}"
-                                                 required="false"/>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                    </p:outputPanel>
-
-                    <f:facet name="footer">
-                        <div class="ui-dialog-footer p-jc-end">
-                            <p:commandButton id="saveBtn" icon="pi pi-check" process="@form"
-                                             actionListener="#{profileView.saveUser()}"
-                                             styleClass="ui-button-raised ui-button-info px-4"
-                                             oncomplete="PF('profileViewDialogue').hide()"
-                                             update="profileView" value="Save"/>
-                        </div>
-                    </f:facet>
-
-
-                </p:dialog>
-
-                <p:dialog id="imageDialogue" height="48%" width="60%"
-                          header="Update profile image" widgetVar="imageDialogue"
-                          minHeight="40" showEffect="fade" modal="true">
-                    <p:outputPanel rendered="#{profileView.model!=null}">
-                        <div class="p-grid ui-fluid ">
-                            <p:growl id="messages" showDetail="true"/>
-                            <div class="p-col-12 p-md-12 p-d-flex p-jc-center">
-                                <p:graphicImage id="dialogueImageView"
-                                                styleClass="profile-image"
-                                                value="#{not empty profileView.model.customPropOne?profileView.model.customPropOne:'/resources/images/default-profile-image.png'}"/>
-                            </div>
-                            <div class="p-col-12 p-md-12">
-
-                                <p:fileUpload multiple="false" style="width: 100%"
-                                              sizeLimit="3145728" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
-                                              invalidSizeMessage="Maximum file size allowed is 3 MB"
-                                              invalidFileMessage="only gif | jpg | jpeg | png is allowed"
-                                              update="dialogueImageView imageView"
-                                              fileUploadListener="#{profileView.fileUploadEvent}"/>
-
-                            </div>
-                        </div>
-                    </p:outputPanel>
-                </p:dialog>
-                <p:blockUI block="profileView" trigger="saveBtn">
-                    <p:graphicImage value="/resources/images/workingicon.png"/>
-                </p:blockUI>
-            </ui:fragment>
+            </div>
         </h:form>
     </ui:define>
+
 </ui:composition>
-
-
-
-

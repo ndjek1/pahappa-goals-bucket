@@ -355,6 +355,14 @@
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                     outcome="/pages/kpis/KPIView" />
                     </p:submenu>
+                    <p:submenu id="apprisal" label="Apprisal"
+                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'ratings') ? 'active-submenu' : ''}"
+                               icon="pi pi-fw pi-chart-line">
+                        <p:menuitem id="supervisorAssess" value="Supervisor Assessment"
+                                    icon="pi pi-chart-line"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/SupervisorAssessment.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/ratings/SupervisorAssessment" />
+                    </p:submenu>
 
 
                     <p:submenu id="activities" label="Manage Activities"
