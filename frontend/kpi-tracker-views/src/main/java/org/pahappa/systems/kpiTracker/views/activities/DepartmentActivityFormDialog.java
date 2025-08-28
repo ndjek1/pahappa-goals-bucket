@@ -2,9 +2,11 @@ package org.pahappa.systems.kpiTracker.views.activities;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.activities.ActivityService;
+import org.pahappa.systems.kpiTracker.core.services.activitiesba.DepartmentActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
-import org.pahappa.systems.kpiTracker.models.activities.Activity;
+import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
+import org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity;
+import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityStatus;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityPriority;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
@@ -17,6 +19,7 @@ import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.service.UserService;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
+import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -28,13 +31,14 @@ import java.util.List;
 @Getter
 @Setter
 @SessionScoped
-public class DepartmentActivityFormDialog extends DialogForm<Activity> {
+public class DepartmentActivityFormDialog extends DialogForm<DepartmentActivity> {
 
     private static final long serialVersionUID = 1L;
     
-    private ActivityService activityService;
+    private DepartmentActivityService departmentActivityService;
     private DepartmentGoalService departmentGoalService;
     private UserService userService;
+    private DepartmentService departmentService;
     
     private List<DepartmentGoal> departmentGoals;
     private List<ActivityStatus> activityStatuses;
@@ -43,26 +47,30 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
     private List<ActivityPriority> priorities;
     
     private DepartmentGoal selectedDepartmentGoal;
-    private User selectedUser;
     private ActivityStatus selectedStatus;
     private ActivityType selectedActivityType;
     private ActivityPriority selectedPriority;
-    
+    private Department department;
+    private User loggedinUser;
+
+
     // Add edit field like user dialogs
     private boolean edit;
 
     public DepartmentActivityFormDialog() {
-        super(HyperLinks.DEPARTMENT_ACTIVITY_FORM_DIALOG, 1200, 750);
+        super(HyperLinks.DEPARTMENT_ACTIVITY_FORM_DIALOG, 700, 400);
     }
 
     @PostConstruct
     public void init() {
-        this.activityService = ApplicationContextProvider.getBean(ActivityService.class);
+        this.departmentActivityService = ApplicationContextProvider.getBean(DepartmentActivityService.class);
         this.departmentGoalService = ApplicationContextProvider.getBean(DepartmentGoalService.class);
         this.userService = ApplicationContextProvider.getBean(UserService.class);
-        
+        this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
+        this.loggedinUser = SharedAppData.getLoggedInUser();
         loadData();
         resetModal();
+        loadDepartment();
     }
 
     private void loadData() {
@@ -87,6 +95,20 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
         // Initialize activity types and priorities
         this.activityTypes = Arrays.asList(ActivityType.values());
         this.priorities = Arrays.asList(ActivityPriority.values());
+
+    }
+
+    public void loadDepartment() {
+        if (this.loggedinUser != null && this.loggedinUser.hasRole("Department Lead")) {
+            this.department = departmentService.getAllInstances()
+                    .stream()
+                    .filter(d -> d.getDepartmentHead() != null && d.getDepartmentHead().equals(this.loggedinUser))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+    public boolean isQuantitativeSelected() {
+        return selectedActivityType == ActivityType.QUANTITATIVE;
     }
 
     @Override
@@ -96,45 +118,24 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
                 UiUtils.showMessageBox("Missing title", "Activity must have a title.");
                 return;
             }
-            
-            if (selectedUser == null) {
-                UiUtils.showMessageBox("Missing user", "Activity must be assigned to a user.");
+
+            // Require target value if quantitative
+            if (selectedActivityType == ActivityType.QUANTITATIVE && model.getTargetValue() <= 0) {
+                UiUtils.ComposeFailure("Validation Error", "Target value is required for quantitative activities.");
                 return;
             }
-            
-            if (selectedDepartmentGoal == null) {
-                UiUtils.showMessageBox("Missing department goal", "Department activity must be linked to a department goal.");
-                return;
-            }
-            
-            // Set the selected user
-            model.setUser(selectedUser);
-            
-            // Set the department goal (clear other goal types)
-            model.setDepartmentGoal(selectedDepartmentGoal);
-            model.setOrganizationGoal(null);
-            model.setTeamGoal(null);
-            
-            // Set status if selected
-            if (selectedStatus != null) {
-                model.setStatus(selectedStatus);
-            }
-            
-            // Set activity type and priority if selected
-            if (selectedActivityType != null) {
-                model.setActivityType(selectedActivityType);
-            }
-            
-            if (selectedPriority != null) {
-                model.setPriority(selectedPriority);
-            }
-            
-            activityService.saveInstance(model);
-        } catch (ValidationFailedException e) {
-            UiUtils.ComposeFailure("Validation Error", e.getMessage());
-            throw e;
-        } catch (OperationFailedException e) {
-            UiUtils.ComposeFailure("Operation Error", e.getMessage());
+
+            if (selectedDepartmentGoal != null) model.setDepartmentGoal(selectedDepartmentGoal);
+            if (selectedStatus != null)        model.setStatus(selectedStatus);
+            if (department != null)            model.setDepartment(department);
+            if (selectedActivityType != null)  model.setActivityType(selectedActivityType);
+            if (selectedPriority != null)      model.setPriority(selectedPriority);
+
+            departmentActivityService.saveInstance(model);
+            resetModal();
+            hide();
+        } catch (ValidationFailedException | OperationFailedException e) {
+            UiUtils.ComposeFailure("Error", e.getMessage());
             throw e;
         } catch (Exception e) {
             UiUtils.ComposeFailure("Error", "Failed to save department activity: " + e.getMessage());
@@ -142,13 +143,15 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
         }
     }
 
+
     @Override
     public void resetModal() {
         super.resetModal();
-        super.model = new Activity();
+        super.model = new DepartmentActivity();
         setEdit(false);
         clearSelections();
     }
+
 
     @Override
     public void setFormProperties() {
@@ -159,7 +162,6 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
             if (model.getDepartmentGoal() != null) {
                 selectedDepartmentGoal = model.getDepartmentGoal();
             }
-            selectedUser = model.getUser();
             selectedStatus = model.getStatus();
             selectedActivityType = model.getActivityType();
             selectedPriority = model.getPriority();
@@ -170,7 +172,6 @@ public class DepartmentActivityFormDialog extends DialogForm<Activity> {
 
     private void clearSelections() {
         selectedDepartmentGoal = null;
-        selectedUser = null;
         selectedStatus = null;
         selectedActivityType = null;
         selectedPriority = null;
