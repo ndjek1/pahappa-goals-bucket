@@ -248,33 +248,45 @@
 
                 <!-- Updates Table -->
                 <div class="card updates-table">
-                    <p:dataTable id="updatesTable" var="update" value="#{kpiDetailView.kpiUpdates}"
-                                 paginator="true" rows="10" 
-                                 emptyMessage="No updates found."
-                                 styleClass="table-striped">
+                                        <p:panel header="Update History" styleClass="ui-panel-no-border">
+                        <p:outputText value="Update history is fetched from the KpiUpdateHistory database table. Each update includes the date, value, user who made the update, and optional comments." 
+                                      style="font-style: italic; color: #666; font-size: 0.9em;" />
+                        <p:spacer height="10" />
                         
-                        <f:facet name="header">
-                            <span style="font-size: 1.1rem; font-weight: 600;">Update History</span>
-                        </f:facet>
-
-                        <p:column headerText="Date" width="120">
-                            <h:outputText value="#{update.dateUpdated}">
-                                <f:convertDateTime pattern="dd MMM, yyyy" />
-                            </h:outputText>
-                        </p:column>
-
-                        <p:column headerText="Value" width="100">
-                            <h:outputText value="#{update.value}" />
-                        </p:column>
-
-                        <p:column headerText="Updated by" width="150">
-                            <h:outputText value="#{update.updatedBy != null ? update.updatedBy.fullName : 'N/A'}" />
-                        </p:column>
-
-                        <p:column headerText="Comment">
-                            <h:outputText value="#{update.comment}" />
-                        </p:column>
-                    </p:dataTable>
+                        <p:dataTable id="updateHistoryTable" 
+                                     var="update" 
+                                     value="#{kpiDetailView.kpiUpdates}" 
+                                     emptyMessage="No update history available"
+                                     paginator="true" 
+                                     rows="10" 
+                                     paginatorPosition="bottom"
+                                     styleClass="history-table">
+                            
+                            <p:column headerText="Date Updated" width="20%">
+                                <h:outputText value="#{update.dateUpdated}">
+                                    <f:convertDateTime pattern="MMM dd, yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column headerText="Value" width="15%">
+                                <h:outputText value="#{update.value}" styleClass="value-text">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column headerText="Updated By" width="25%">
+                                <h:outputText value="#{update.updatedBy.firstName} #{update.updatedBy.lastName}" />
+                            </p:column>
+                            
+                            <p:column headerText="Comments" width="40%">
+                                <h:outputText value="#{update.comment}" 
+                                              rendered="#{not empty update.comment}" />
+                                <h:outputText value="No comment provided" 
+                                              style="font-style: italic; color: #999;" 
+                                              rendered="#{empty update.comment}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
                 </div>
 
             </h:form>
@@ -286,14 +298,16 @@
             <h:form id="updateValueForm">
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12">
-                        <p:outputLabel for="newValue" value="New Value:" />
+                        <p:outputLabel for="newValue" value="New KPI Value:" />
                         <p:inputNumber id="newValue" value="#{kpiDetailView.newValue}" 
-                                      decimalPlaces="2" required="true" />
+                                      decimalPlaces="2" required="true" 
+                                      placeholder="Enter the new value for this KPI"/>
                     </div>
                     <div class="ui-g-12">
-                        <p:outputLabel for="comment" value="Comment:" />
+                        <p:outputLabel for="comment" value="Update Comment (Optional):" />
                         <p:inputTextarea id="comment" value="#{kpiDetailView.updateComment}" 
-                                         rows="3" cols="30" />
+                                         rows="3" cols="30" 
+                                         placeholder="Add a comment about this update (optional)"/>
                     </div>
                     <div class="ui-g-12" style="text-align: right; margin-top: 20px;">
                         <p:commandButton value="Cancel" icon="pi pi-times" 

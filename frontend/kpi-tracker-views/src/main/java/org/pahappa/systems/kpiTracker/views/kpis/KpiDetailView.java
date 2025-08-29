@@ -3,8 +3,10 @@ package org.pahappa.systems.kpiTracker.views.kpis;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -26,9 +28,10 @@ public class KpiDetailView implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private KpisService kpisService;
+    private KpiUpdateHistoryService kpiUpdateHistoryService;
     private ReviewCycleService reviewCycleService;
     private KPI selectedKpi;
-    private List<KpiUpdate> kpiUpdates;
+    private List<KpiUpdateHistory> kpiUpdateHistory;
     private List<ReviewCycle> reviewCycles;
     private User loggedInUser;
     private List<ChartDataPoint> chartDataPoints;
@@ -41,6 +44,7 @@ public class KpiDetailView implements Serializable {
     @PostConstruct
     public void init() {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
+        this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
         this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         this.loggedInUser = SharedAppData.getLoggedInUser();
         
@@ -56,11 +60,12 @@ public class KpiDetailView implements Serializable {
             try {
                 this.selectedKpi = kpisService.getInstanceByID(kpiId);
                 if (this.selectedKpi != null) {
-                    loadKpiUpdates();
-                    createChartData();
+                    loadKpiUpdateHistory();
+                    createChartDataFromHistory();
                 }
             } catch (Exception e) {
                 // Handle invalid ID
+                e.printStackTrace();
             }
         }
     }
@@ -73,46 +78,39 @@ public class KpiDetailView implements Serializable {
         }
     }
 
-    private void loadKpiUpdates() {
-        // Create sample updates for demonstration
-        // In a real application, you would load these from the database
-        this.kpiUpdates = new ArrayList<>();
-        
-        // Sample data - replace with actual database query
-        Calendar cal = Calendar.getInstance();
-        Random random = new Random();
-        
-        for (int i = 0; i < 5; i++) {
-            KpiUpdate update = new KpiUpdate();
-            cal.add(Calendar.DAY_OF_MONTH, -30 + (i * 7));
-            update.setDateUpdated(cal.getTime());
-            update.setValue(Double.valueOf(random.nextInt(100) + 50));
-            update.setUpdatedBy(loggedInUser);
-            update.setComment("Sample update " + (i + 1));
-            kpiUpdates.add(update);
+    private void loadKpiUpdateHistory() {
+        try {
+            // Load actual update history from database
+            this.kpiUpdateHistory = kpiUpdateHistoryService.getUpdateHistoryByKpi(selectedKpi);
+        } catch (Exception e) {
+            this.kpiUpdateHistory = new ArrayList<>();
+            e.printStackTrace();
         }
-        
-        // Sort by date
-        kpiUpdates.sort((a, b) -> b.getDateUpdated().compareTo(a.getDateUpdated()));
     }
 
-    private void createChartData() {
+    private void createChartDataFromHistory() {
         chartDataPoints = new ArrayList<>();
         
-        // Add sample data points for the last 6 months
-        Calendar cal = Calendar.getInstance();
-        Random random = new Random();
-        
-        for (int i = 5; i >= 0; i--) {
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-            cal.add(Calendar.MONTH, -i);
-            String monthLabel = getMonthLabel(cal.get(Calendar.MONTH));
-            Double value = Double.valueOf(random.nextInt(100) + 20);
+        if (kpiUpdateHistory != null && !kpiUpdateHistory.isEmpty()) {
+            // Sort history by date ascending for chart
+            List<KpiUpdateHistory> sortedHistory = new ArrayList<>(kpiUpdateHistory);
+            sortedHistory.sort((a, b) -> a.getUpdateDate().compareTo(b.getUpdateDate()));
             
-            ChartDataPoint point = new ChartDataPoint();
-            point.setLabel(monthLabel);
-            point.setValue(value);
-            chartDataPoints.add(point);
+            // Create chart data from actual history
+            for (KpiUpdateHistory history : sortedHistory) {
+                ChartDataPoint point = new ChartDataPoint();
+                point.setLabel(getDateLabel(history.getUpdateDate()));
+                point.setValue(history.getNewValue());
+                chartDataPoints.add(point);
+            }
+        } else {
+            // If no history available, create a single point with current value
+            if (selectedKpi.getCurrentValue() != null) {
+                ChartDataPoint point = new ChartDataPoint();
+                point.setLabel(getDateLabel(new Date()));
+                point.setValue(selectedKpi.getCurrentValue());
+                chartDataPoints.add(point);
+            }
         }
     }
     
@@ -127,15 +125,21 @@ public class KpiDetailView implements Serializable {
         public void setValue(Double value) { this.value = value; }
     }
 
-    private String getMonthLabel(int month) {
+    private String getDateLabel(Date date) {
+        if (date == null) return "";
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-        return months[month];
+        return months[cal.get(Calendar.MONTH)] + " " + cal.get(Calendar.DAY_OF_MONTH);
     }
 
     public String updateKpiValue() {
         if (selectedKpi != null && newValue != null) {
             try {
+                // Store previous value for history
+                Double previousValue = selectedKpi.getCurrentValue();
+                
                 // Update the KPI current value
                 selectedKpi.setCurrentValue(newValue);
                 
@@ -148,20 +152,18 @@ public class KpiDetailView implements Serializable {
                 // Save the KPI
                 kpisService.saveInstance(selectedKpi);
                 
-                // Create new update record
-                KpiUpdate update = new KpiUpdate();
-                update.setDateUpdated(new Date());
-                update.setValue(newValue);
-                update.setUpdatedBy(loggedInUser);
-                update.setComment(updateComment);
-                kpiUpdates.add(0, update); // Add to beginning of list
+                // Create new update history record
+                kpiUpdateHistoryService.createUpdateHistory(selectedKpi, previousValue, newValue, updateComment);
+                
+                // Reload the update history to show the new record
+                loadKpiUpdateHistory();
                 
                 // Clear form fields
                 newValue = null;
                 updateComment = null;
                 
                 // Recreate chart with new data
-                createChartData();
+                createChartDataFromHistory();
                 
             } catch (Exception e) {
                 // Handle error
@@ -197,7 +199,25 @@ public class KpiDetailView implements Serializable {
         return "N/A";
     }
 
-    // Inner class for KPI updates
+    // Backward compatibility: Convert KpiUpdateHistory to the expected format
+    public List<KpiUpdate> getKpiUpdates() {
+        List<KpiUpdate> updates = new ArrayList<>();
+        
+        if (kpiUpdateHistory != null) {
+            for (KpiUpdateHistory history : kpiUpdateHistory) {
+                KpiUpdate update = new KpiUpdate();
+                update.setDateUpdated(history.getUpdateDate());
+                update.setValue(history.getNewValue());
+                update.setUpdatedBy(history.getUpdatedByUser());
+                update.setComment(history.getUpdateComment() != null ? history.getUpdateComment() : "No comment");
+                updates.add(update);
+            }
+        }
+        
+        return updates;
+    }
+
+    // Inner class for backward compatibility with existing XHTML
     @Getter
     @Setter
     public static class KpiUpdate implements Serializable {
