@@ -169,7 +169,7 @@ public class TeamKPIView implements Serializable {
     }
 
     public void loadTeam() {
-        if (loggedinUser.hasRole("TEAM_LEAD")) {
+        if (loggedinUser.hasRole("Team Lead")) {
             this.team = teamService.getAllInstances()
                     .stream()
                     .filter(t -> t.getTeamHead() != null
