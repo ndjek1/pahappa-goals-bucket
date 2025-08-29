@@ -27,25 +27,20 @@ public class KPI extends BaseEntity {
     private Date lastUpdated;
 
     // References to different goal types
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_goal_id", nullable = true)
+
     private OrganizationGoal organizationGoal;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_goal_id", nullable = true)
+
     private DepartmentGoal departmentGoal;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_goal_id", nullable = true)
+
     private TeamGoal teamGoal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "individual_goal_id", nullable = true)
+
     private IndividualGoal individualGoal;
 
     // Review cycle relationship for KPI evaluation periods
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_cycle_id", nullable = true)
+
     private ReviewCycle reviewCycle;
 
     // Constructors
@@ -140,6 +135,8 @@ public class KPI extends BaseEntity {
         this.lastUpdated = lastUpdated;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organization_goal_id", nullable = true)
     public OrganizationGoal getOrganizationGoal() {
         return organizationGoal;
     }
@@ -148,6 +145,8 @@ public class KPI extends BaseEntity {
         this.organizationGoal = organizationGoal;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_goal_id", nullable = true)
     public DepartmentGoal getDepartmentGoal() {
         return departmentGoal;
     }
@@ -156,6 +155,8 @@ public class KPI extends BaseEntity {
         this.departmentGoal = departmentGoal;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "team_goal_id", nullable = true)
     public TeamGoal getTeamGoal() {
         return teamGoal;
     }
@@ -164,6 +165,8 @@ public class KPI extends BaseEntity {
         this.teamGoal = teamGoal;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "individual_goal_id", nullable = true)
     public IndividualGoal getIndividualGoal() {
         return individualGoal;
     }
@@ -172,6 +175,8 @@ public class KPI extends BaseEntity {
         this.individualGoal = individualGoal;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "review_cycle_id", nullable = true)
     public ReviewCycle getReviewCycle() {
         return reviewCycle;
     }

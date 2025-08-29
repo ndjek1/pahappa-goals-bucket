@@ -185,11 +185,7 @@ public class IndividualKPIView implements Serializable {
     public void loadStaff() {
         try {
             // Get staff record for the logged-in user
-            this.staff = staffService.getAllInstances()
-                    .stream()
-                    .filter(s -> s.getUser() != null && s.getUser().equals(loggedinUser))
-                    .findFirst()
-                    .orElse(null);
+            this.staff = staffService.searchUniqueByPropertyEqual("user.id", loggedinUser.getId());
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error loading staff information", e);
         }

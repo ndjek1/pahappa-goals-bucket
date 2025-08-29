@@ -76,7 +76,7 @@
                     <p:selectOneMenu value="#{teamKPIView.selectedReviewCycle}" styleClass="p-mr-2 p-mb-2" style="min-width: 150px;">
                         <f:selectItem itemLabel="All Review Cycles" itemValue="#{null}"/>
                         <f:selectItems value="#{teamKPIView.reviewCycles}" var="cycle" 
-                                       itemLabel="#{cycle.name}" itemValue="#{cycle}"/>
+                                       itemLabel="#{cycle.title}" itemValue="#{cycle}"/>
                         <p:ajax event="change" listener="#{teamKPIView.reloadFilterReset}" update="teamKPIsTable"/>
                     </p:selectOneMenu>
                     
@@ -146,7 +146,7 @@
 
                             <!-- Review Cycle Column -->
                             <p:column headerText="Review Cycle">
-                                <h:outputText value="#{kpi.reviewCycle != null ? kpi.reviewCycle.name : 'N/A'}" />
+                                <h:outputText value="#{kpi.reviewCycle != null ? kpi.reviewCycle.title : 'N/A'}" />
                             </p:column>
 
                             <!-- Start Date Column -->
@@ -172,7 +172,6 @@
                                 <p:commandButton title="Delete" icon="pi pi-trash"
                                                  styleClass="ui-button-danger ui-button-sm"
                                                  onclick="PF('deleteTeamKpiDialog').show(); return false;">
-                                    <f:setPropertyActionListener value="#{kpi}" target="#{teamKPIView.selectedKpiForDeletion}" />
                                 </p:commandButton>
                             </p:column>
 
@@ -185,7 +184,6 @@
                                      severity="warn" width="400">
                         <p:commandButton value="Yes, Delete" icon="pi pi-check"
                                          styleClass="ui-button-danger"
-                                         actionListener="#{teamKPIView.deleteSelectedKpi}"
                                          update="teamKPIsTable"
                                          oncomplete="PF('deleteTeamKpiDialog').hide();" />
                         <p:commandButton value="Cancel" icon="pi pi-times"
