@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+
+    <ui:define name="content">
+        <h:form styleClass="p-m-4">
+
+            <!-- Back + Title -->
+            <div class="p-d-flex p-ai-center p-mb-3">
+                <p:commandButton icon="pi pi-arrow-left"
+                                 styleClass="ui-button-text ui-button-outlined p-mr-3"
+                                 action="#{individualGoalDetails.backToGoals}"
+                                 immediate="true"/>
+                <h2 style="margin:0;">Goal Details</h2>
+            </div>
+
+            <h:panelGroup rendered="#{not empty individualGoalDetails.selectedGoal}">
+
+                <div class="p-grid p-nogutter p-mb-4">
+
+                    <!-- Left Column: Goal Info -->
+                    <div class="p-col-12 p-md-8 p-pr-2">
+                        <div class="card p-p-4" style="border-radius:12px;">
+                            <h3 style="margin-bottom:1rem;">#{individualGoalDetails.selectedGoal.name}</h3>
+
+                            <div class="p-d-flex p-flex-column p-gap-2">
+                                <span><b>Weight:</b> #{individualGoalDetails.selectedGoal.contributionWeight}%</span>
+                                <span>
+                                    <b>Created On:</b>
+                                    <h:outputText value="#{individualGoalDetails.selectedGoal.dateCreated}">
+                                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                                    </h:outputText>
+                                </span>
+                                <span><b>Status:</b>
+                                    <h:outputText value="#{individualGoalDetails.selectedGoal.status}"
+                                                  style="color:#2563eb; font-weight:bold;"/>
+                                </span>
+                            </div>
+
+                            <hr/>
+                            <p><b>Description:</b> #{individualGoalDetails.selectedGoal.description}</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Activities -->
+                    <div class="p-col-12 p-md-4 p-pl-2">
+                        <div class="card p-p-4" style="border-radius:12px;">
+                            <h3 style="margin-bottom:1rem;">Activities</h3>
+
+                            <ui:repeat value="#{individualGoalDetails.individualActivities}" var="activity">
+                                <div class="p-d-flex p-jc-between p-ai-center p-mb-2"
+                                     style="border-bottom:1px solid #eee; padding-bottom:0.5rem;">
+                                    <span style="font-weight:500;">#{activity.title}</span>
+                                    <h:outputText value="#{activity.status}" style="font-size:0.85rem; color:#6b7280;"/>
+                                </div>
+                            </ui:repeat>
+
+                            <h:panelGroup rendered="#{empty individualGoalDetails.individualActivities}">
+                                <i>No activities yet.</i>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall Goal Progress -->
+                <div class="card p-p-4 p-mb-4" style="border-radius:12px;">
+                    <h3 style="margin-bottom:1rem;">Overall Progress</h3>
+                    <div class="p-d-flex p-ai-center p-gap-2">
+                        <p:progressBar value="#{individualGoalDetails.progress}"
+                                       style="flex:1; height:18px;"/>
+                        <h:outputText value="#{individualGoalDetails.progress}%" style="font-weight:bold;"/>
+                    </div>
+                </div>
+
+                <!-- KPI Progress List -->
+                <div class="card p-p-4" style="border-radius:12px;">
+                    <h3 style="margin-bottom:1rem;">Key Performance Indicators</h3>
+
+                    <ui:repeat value="#{individualGoalDetails.goalKpis}" var="kpi">
+                        <div class="p-d-flex p-ai-center p-jc-between p-mb-3">
+                            <h:outputText value="#{kpi.name}"
+                                          style="font-weight:500; flex:0 0 200px;"/>
+                            <p:progressBar value="#{kpi.progress}" style="flex:1; height:14px; margin:0 1rem;"/>
+                            <h:outputText value="#{kpi.progress}%" style="font-weight:bold; width:50px; text-align:right;"/>
+                        </div>
+                    </ui:repeat>
+
+                    <h:panelGroup rendered="#{empty individualGoalDetails.goalKpis}">
+                        <i>No KPIs linked yet.</i>
+                    </h:panelGroup>
+                </div>
+
+            </h:panelGroup>
+
+            <!-- If no goal selected -->
+            <h:panelGroup rendered="#{empty individualGoalDetails.selectedGoal}">
+                <h:outputText value="No goal selected." style="color:#9ca3af;"/>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

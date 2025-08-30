@@ -46,6 +46,16 @@
                                        itemValue="#{indGoal}"/>
                     </p:selectOneMenu>
                 </div>
+                <!-- Target Value -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="weight" value="Weight" />
+                    <p:inputNumber id="weight"
+                                   value="#{individualKPIForm.model.weight}"
+                                   required="true"
+                                   minValue="0"
+                                   decimalPlaces="2"
+                                   styleClass="p-inputtext-sm w-full"/>
+                </div>
 
                 <!-- Measurement Unit -->
                 <div class="field col-12 md:col-6 p-m-4">

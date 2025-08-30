@@ -71,5 +71,7 @@
 
 <!--        Assessment-->
         <mapping class="org.pahappa.systems.kpiTracker.models.rating.SupervisorAssessment" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.KeeperTest" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.CompanyValue" />
 	</session-factory>
 </hibernate-configuration>

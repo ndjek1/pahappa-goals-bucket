@@ -32,6 +32,12 @@
                             </div>
                             <hr/>
                             <p><b>Description:</b> #{goalDetailsView.selectedGoal.description}</p>
+                            <div class="p-d-flex p-ai-center p-mt-3">
+                                <h:outputText value="Overall Progress:" style="font-weight:bold; margin-right:1rem;" />
+                                <p:progressBar value="#{goalDetailsView.calculateOrganizationGoalProgress()}"
+                                               style="width:300px; height:16px; margin-right:1rem;" />
+                                <h:outputText value="#{goalDetailsView.calculateOrganizationGoalProgress()}%" />
+                            </div>
                         </div>
                     </div>
                     <!-- Right section: Activities -->

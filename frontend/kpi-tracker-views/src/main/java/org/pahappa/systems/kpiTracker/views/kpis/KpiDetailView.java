@@ -142,7 +142,6 @@ public class KpiDetailView implements Serializable {
                 // Calculate accomplishment percentage
                 if (selectedKpi.getTargetValue() != null && selectedKpi.getTargetValue() > 0) {
                     Double percentage = (newValue * 100.0) / selectedKpi.getTargetValue();
-                    selectedKpi.setAccomplishmentPercentage(percentage);
                 }
                 
                 // Save the KPI

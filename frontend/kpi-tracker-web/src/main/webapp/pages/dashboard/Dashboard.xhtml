@@ -6,21 +6,50 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="title">Dashboard</ui:define>
-
     <ui:define name="viewname">Dashboard</ui:define>
 
-    <ui:define name="head">
-        <h:outputScript name="js/chart.js" library="custom"/>
-
-
-    </ui:define>
-
     <ui:define name="content">
-        <div class="dashboard">
-            <div class="p-grid">
-                <h5>Dashboard</h5>
+        <div class="p-grid p-m-3">
+
+            <!-- Review Cycle Card -->
+            <div class="p-col-12 p-md-3 p-d-flex">
+                <div class="card p-d-flex p-flex-column p-ai-center p-jc-center p-p-3"
+                     style="flex: 1; background: linear-gradient(180deg, #2155a3, #3290ed); color: #fff; border-radius: 12px;">
+                    <h:outputText value="Review Cycle" style="font-size: 1.2rem;font-weight: bold; padding-bottom: 0.5rem; opacity: 0.9;"/>
+                    <h:outputText value="#{dashboard.activeReviewCycle.title}" style="font-size: 1.6rem; font-weight: bold;"/>
+                </div>
             </div>
+
+            <!-- Goals Card -->
+            <div class="p-col-12 p-md-3 p-d-flex">
+                <div class="card p-d-flex p-flex-column p-ai-center p-jc-center p-p-3"
+                     style="flex: 1; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h:outputText value="Goals" style="font-size: 0.9rem; color: #6b7280;"/>
+                    <h:outputText value="#{dashboard.goalCount}" style="font-size: 1.6rem; font-weight: bold; color: #3290ED;"/>
+                    <p:commandLink value="Details" style="margin-top: auto; font-size: 1.1rem; color: #2563eb; align-self: flex-end;"/>
+                </div>
+            </div>
+
+            <!-- Departments Card -->
+            <div class="p-col-12 p-md-3 p-d-flex">
+                <div class="card p-d-flex p-flex-column p-ai-center p-jc-center p-p-3"
+                     style="flex: 1; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h:outputText value="Departments" style="font-size: 0.9rem; color: #6b7280;"/>
+                    <h:outputText value="#{dashboard.departmentCount}" style="font-size: 1.6rem; font-weight: bold; color: #3290ED;"/>
+                    <p:commandLink value="Details" style="margin-top: auto; font-size: 1.1rem; color: #2563eb; align-self: flex-end;"/>
+                </div>
+            </div>
+
+            <!-- Users Card -->
+            <div class="p-col-12 p-md-3 p-d-flex">
+                <div class="card p-d-flex p-flex-column p-ai-center p-jc-center p-p-3"
+                     style="flex: 1; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h:outputText value="Users" style="font-size: 0.9rem; color: #6b7280;"/>
+                    <h:outputText value="#{dashboard.staffCount}" style="font-size: 1.6rem; font-weight: bold; color: #3290ED;"/>
+                    <p:commandLink value="Details" style="margin-top: auto; font-size: 1.1rem; color: #2563eb; align-self: flex-end;"/>
+                </div>
+            </div>
+
         </div>
     </ui:define>
-
 </ui:composition>

@@ -20,11 +20,11 @@ public class KPI extends BaseEntity {
     private MeasurementUnit measurementUnit;
     private Double targetValue;
     private Double currentValue;
-    private Double accomplishmentPercentage;
     private Frequency frequency;
     private Date startDate;
     private Date endDate;
     private Date lastUpdated;
+    private Double weight;
 
     // References to different goal types
 
@@ -46,6 +46,7 @@ public class KPI extends BaseEntity {
     // Constructors
     public KPI() {
         super();
+        this.weight = 1.0;
     }
 
     // Getters and Setters
@@ -86,14 +87,6 @@ public class KPI extends BaseEntity {
         this.currentValue = currentValue;
     }
 
-    @Column(name = "accomplishment_percentage")
-    public Double getAccomplishmentPercentage() {
-        return accomplishmentPercentage;
-    }
-
-    public void setAccomplishmentPercentage(Double accomplishmentPercentage) {
-        this.accomplishmentPercentage = accomplishmentPercentage;
-    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "frequency", nullable = false)
@@ -185,6 +178,28 @@ public class KPI extends BaseEntity {
         this.reviewCycle = reviewCycle;
     }
 
+    @Column(name = "weight", nullable = false)
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    @Transient
+    public double getProgress() {
+        if (targetValue == null || targetValue <= 0) {
+            return 0;
+        }
+        if (currentValue == null) {
+            return 0;
+        }
+        return Math.round(((currentValue / targetValue) * 100) * 100.0) / 100.0;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -198,15 +213,7 @@ public class KPI extends BaseEntity {
         return 31;
     }
 
-    // Methods to calculate accomplishment percentage
-    @PrePersist
-    @PreUpdate
-    public void calculateAccomplishment() {
-        if (targetValue != null && targetValue != 0) {
-            this.accomplishmentPercentage = (currentValue != null ? currentValue : 0.0) / targetValue * 100;
-        }
-        this.lastUpdated = new Date();
-    }
+
 
     @Override
     public String toString() {
@@ -216,7 +223,6 @@ public class KPI extends BaseEntity {
                 ", measurementUnit=" + measurementUnit +
                 ", targetValue=" + targetValue +
                 ", currentValue=" + currentValue +
-                ", accomplishmentPercentage=" + accomplishmentPercentage +
                 ", frequency=" + frequency +
                 '}';
     }

@@ -1,9 +1,12 @@
 package org.pahappa.systems.kpiTracker.models.goals;
 
+import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "individual_goals")
@@ -15,6 +18,7 @@ public class IndividualGoal extends BaseEntity {
     private DepartmentGoal parent;
     private TeamGoal teamGoal;
     private Staff staff;
+    private List<KPI> kpis = new ArrayList<>();
 
     public IndividualGoal() {
         this.status = GoalStatus.PENDING;
@@ -87,6 +91,31 @@ public class IndividualGoal extends BaseEntity {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
+
+    @OneToMany(mappedBy = "individualGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public List<KPI> getKpis() {
+        return kpis;
+    }
+
+    public void setKpis(List<KPI> kpis) {
+        this.kpis = kpis;
+    }
+
+    @Transient
+    public double getProgress() {
+        if (kpis == null || kpis.isEmpty()) {
+            return 0;
+        }
+        double weightedSum = 0;
+        double totalWeight = 0;
+        for (KPI kpi : kpis) {
+            weightedSum += kpi.getProgress() * kpi.getWeight();
+            totalWeight += kpi.getWeight();
+        }
+        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

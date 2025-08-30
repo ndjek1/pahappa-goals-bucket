@@ -166,7 +166,6 @@ public class DepartmentKPIDetails implements Serializable {
                 // Calculate new accomplishment percentage
                 if (selectedKPI.getTargetValue() != null && selectedKPI.getTargetValue() > 0) {
                     double percentage = (currentProgressValue / selectedKPI.getTargetValue()) * 100;
-                    selectedKPI.setAccomplishmentPercentage(percentage);
                 }
                 
                 // Save updated KPI
@@ -177,9 +176,7 @@ public class DepartmentKPIDetails implements Serializable {
                     progressHistory = new ArrayList<>();
                 }
                 
-                double percentage = selectedKPI.getAccomplishmentPercentage() != null ? 
-                    selectedKPI.getAccomplishmentPercentage() : 0.0;
-                progressHistory.add(new ProgressData(currentProgressValue, percentage, new Date()));
+
                 
                 // Regenerate chart data
                 generateMonthlyProgressData();
@@ -192,16 +189,7 @@ public class DepartmentKPIDetails implements Serializable {
             }
         }
     }
-    
-    /**
-     * Get current accomplishment percentage
-     */
-    public double getCurrentAccomplishmentPercentage() {
-        if (selectedKPI != null && selectedKPI.getAccomplishmentPercentage() != null) {
-            return selectedKPI.getAccomplishmentPercentage();
-        }
-        return 0.0;
-    }
+
     
     /**
      * Navigate back to department KPIs list

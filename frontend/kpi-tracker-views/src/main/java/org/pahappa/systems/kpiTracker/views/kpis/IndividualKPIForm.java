@@ -1,25 +1,34 @@
 package org.pahappa.systems.kpiTracker.views.kpis;
 
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
+import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
+import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @ManagedBean(name = "individualKPIForm", eager = true)
 @Getter
@@ -28,8 +37,9 @@ import java.util.List;
 public class IndividualKPIForm extends DialogForm<KPI> {
 
     private static final long serialVersionUID = 1L;
-    
+    private static final Logger LOGGER = Logger.getLogger(IndividualKPIForm.class.getSimpleName());
     private KpisService kpisService;
+    private StaffService staffService;
     private IndividualGoalService individualGoalService;
     
     private List<IndividualGoal> individualGoals;
@@ -37,6 +47,8 @@ public class IndividualKPIForm extends DialogForm<KPI> {
     private List<Frequency> frequencies;
     
     private IndividualGoal selectedIndividualGoal;
+    private Staff staff;
+    private User loggedinUser;
     
     // Add edit field like user dialogs
     private boolean edit;
@@ -49,14 +61,21 @@ public class IndividualKPIForm extends DialogForm<KPI> {
     public void init() {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
-        
+        this.staffService = ApplicationContextProvider.getBean(StaffService.class);
+        this.loggedinUser = SharedAppData.getLoggedInUser();
+        loadStaff();
         loadData();
         resetModal();
     }
 
     private void loadData() {
         try {
-            this.individualGoals = individualGoalService.getAllInstances();
+            Search search = new Search(IndividualGoal.class);
+            search.addFilterAnd(
+                    Filter.equal("recordStatus", RecordStatus.ACTIVE),
+                    Filter.equal("staff.id",staff.getId())
+            );
+            this.individualGoals = individualGoalService.getInstances(search,0,0);
         } catch (Exception e) {
             this.individualGoals = Arrays.asList();
         }
@@ -73,7 +92,14 @@ public class IndividualKPIForm extends DialogForm<KPI> {
             this.frequencies = Arrays.asList();
         }
     }
-
+    public void loadStaff() {
+        try {
+            // Get staff record for the logged-in user
+            this.staff = staffService.searchUniqueByPropertyEqual("user.id", loggedinUser.getId());
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error loading staff information", e);
+        }
+    }
     @Override
     public void persist() throws ValidationFailedException, OperationFailedException {
         try {

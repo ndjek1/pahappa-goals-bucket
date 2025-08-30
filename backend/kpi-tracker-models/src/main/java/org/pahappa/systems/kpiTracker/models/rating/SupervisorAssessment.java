@@ -13,6 +13,7 @@ public class SupervisorAssessment extends BaseEntity {
     private Staff supervisor;
     private Staff staff;
     private double score;
+    private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "review_cycle_id", nullable = false)
@@ -51,5 +52,14 @@ public class SupervisorAssessment extends BaseEntity {
 
     public void setScore(double score) {
         this.score = score;
+    }
+
+    @Column(name = "comment")
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

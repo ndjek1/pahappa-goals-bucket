@@ -1,30 +1,39 @@
 package org.pahappa.systems.kpiTracker.views.dialogs.systemSetup;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
 import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
 import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.RatingCategory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.sers.webutils.model.Gender;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ManagedBean(name = "orgFitCategoryForm")
+@Getter
+@Setter
 @SessionScoped
 public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
     private OrgFitCategoryService orgFitCategoryService;
     private GlobalWeightService globalWeightService;
     private ReviewCycleService reviewCycleService;
     private double globalWeight;
+    private List<RatingCategory> ratingCategories;
 
 
     public OrgFitCategoryForm() {
@@ -36,27 +45,30 @@ public class OrgFitCategoryForm extends DialogForm<OrgFitCategory> {
         this.orgFitCategoryService = ApplicationContextProvider.getBean(OrgFitCategoryService.class);
         this.globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
         this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
+        this.ratingCategories = Arrays.asList(RatingCategory.values());
         loadGlobalWeight();
     }
 
     @Override
     public void persist() throws Exception {
-
-        double totalWeight = orgFitCategoryService.getAllInstances().stream()
+        double existingWeights = orgFitCategoryService.getAllInstances().stream()
+                .filter(c -> !c.getId().equals(this.model.getId())) // exclude current model
                 .mapToDouble(OrgFitCategory::getWeight)
                 .sum();
 
-        if (totalWeight + super.model.getWeight() <= globalWeight) {
+        double totalWeight = existingWeights + this.model.getWeight();
+
+        if (totalWeight <= globalWeight) {
             orgFitCategoryService.saveInstance(super.model);
             resetModal();
             hide();
-        }else {
-            UiUtils.ComposeFailure("Weight limit reached","The weight don't match Configuration");
+        } else {
+            UiUtils.ComposeFailure("Weight limit reached", "The weights don't match configuration");
             resetModal();
             return;
         }
-
     }
+
 
     public GlobalWeight getGlobalWeightForActiveCycle() {
         ReviewCycle activeReviewCycle = this.reviewCycleService.searchUniqueByPropertyEqual("status", ReviewCycleStatus.ACTIVE);

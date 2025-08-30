@@ -59,88 +59,67 @@
                         <p:growl id="messages" showDetail="true" />
 
 
-            <!-- Page Title and Add Button -->
-            <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
-                <h2>My Goals</h2>
+            <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
+
+                <!-- Left side: Title + Filters -->
+                <div class="p-d-flex p-ai-center">
+
+
+                    <!-- Search Input -->
+                    <p:inputText placeholder="Search Goal" styleClass="p-mr-2"/>
+
+                    <!-- Status Filter -->
+                    <p:selectOneMenu value="#{individualGoalsView.search}" styleClass="p-mr-2">
+                        <f:selectItem itemLabel="Status" itemValue=""/>
+                        <f:selectItem itemLabel="Active" itemValue="ACTIVE"/>
+                        <f:selectItem itemLabel="Pending" itemValue="PENDING"/>
+                        <f:selectItem itemLabel="Completed" itemValue="COMPLETED"/>
+                    </p:selectOneMenu>
+
+                    <!-- Search Button -->
+                    <p:commandButton value="Search" icon="pi pi-search"
+                                     actionListener="#{individualGoalsView.reloadFilterReset}"/>
+                </div>
+
+                <!-- Right side: Add Goal Button -->
                 <p:commandButton value="Set Goal" icon="pi pi-plus"
                                  styleClass="add-button"
-                                 actionListener="#{individualGoalForm.show}">
-                    <f:setPropertyActionListener value="#{null}" target="#{individualGoalForm.model}"/>
+                                 actionListener="#{teamGoalForm.show}">
+                    <f:setPropertyActionListener value="#{null}" target="#{teamGoalForm.model}"/>
                     <p:ajax event="dialogReturn" listener="#{individualGoalsView.reloadFilterReset}" update="individualGoalsView"/>
                 </p:commandButton>
             </div>
 
-            <!-- Filters -->
-            <div class="p-d-flex p-ai-center p-mb-4">
-                <p:commandButton value="All" styleClass="ui-button-primary p-mr-2" />
-                <p:selectOneMenu value="..." style="margin-right:1rem;">
-                    <f:selectItem itemLabel="Level" itemValue=""/>
-                    <f:selectItems value="..."/>
-                </p:selectOneMenu>
-                <p:selectOneMenu value="..." style="margin-right:1rem;">
-                    <f:selectItem itemLabel="Status" itemValue=""/>
-                    <f:selectItems value="..."/>
-                </p:selectOneMenu>
-                <p:inputText placeholder="Search Goal" label="Search goal..." style="flex:1"/>
-            </div>
-
             <!-- Goal Cards -->
             <div class="p-grid p-nogutter p-mt-2" style="background: white">
-            <ui:repeat value="#{individualGoalsView.dataModels}" var="goal">
-                <div class="p-col-12 p-md-6 p-p-2">
-                <div class="p-card p-p-3 p-mb-3 "
-                     style="border: 1px solid #dee2e6; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <!-- Goals Table -->
+                <p:dataTable value="#{individualGoalsView.dataModels}" var="goal"
+                             paginator="true" rows="10"
+                             paginatorPosition="bottom"
+                             styleClass="p-datatable-striped p-datatable-sm"
+                             responsiveLayout="scroll">
 
-                    <!-- Goal Title -->
-                    <h4 style="margin: 0; margin-bottom: 0.8rem; font-weight: 600;">
-                        #{goal.name}
-                    </h4>
+                    <p:column headerText="Goal Title" >
+                        <h:outputText value="#{goal.name}"/>
+                    </p:column>
 
-                    <!-- Horizontal Divider -->
-                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5rem 0 1rem 0;" />
-                    
-                    <!-- Details Row -->
-                    <div class="p-d-flex p-flex-wrap p-mb-2" style="font-size: 0.9rem; color: #444;">
+                    <p:column headerText="Weight" >
+                        <h:outputText value="#{goal.contributionWeight}"/>
+                        <h:outputText value="%" />
+                    </p:column>
 
-                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 "
-                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                            <span style="font-weight: 600;">Weight</span>
-                            <span style="color: #2155A3 ; margin: 5px" >#{goal.contributionWeight}%</span>
-                        </div>
+                    <p:column headerText="Created On" >
+                        <h:outputText value="#{goal.dateCreated}">
+                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                        </h:outputText>
+                    </p:column>
 
-                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3"
-                             style="border-right: 1px solid #ccc; margin-right: 1rem;">
-                            <span style="font-weight: 600;">Status</span>
-                            <span style="color: #2155A3 ; margin: 5px"  >#{goal.status}</span>
-                        </div>
-
-                        <div class="p-d-flex p-flex-column p-ai-center p-pr-3 p-mx-3">
-                            <span style="font-weight: 600;">Description</span>
-                            <span style="color: #2155A3 ; margin: 5px"  >#{goal.description}</span>
-                                    </div>
-
-                                </div>
-
-                    <!-- Action Buttons -->
-                    <div class="p-d-flex p-jc-end p-mt-3">
-                                <p:commandButton icon="fa fa-edit" title="Edit"
-                                         styleClass="custom-btn"
-                                                 actionListener="#{individualGoalForm.show}">
-                            <f:setPropertyActionListener value="#{goal}" target="#{individualGoalForm.model}" />
-                            <p:ajax event="dialogReturn" update="individualGoalsView" />
-                                </p:commandButton>
-                                <p:commandButton icon="fa fa-trash" title="Delete"
-                                         styleClass="custom-btn"
-                                         actionListener="#{individualGoalsView.deleteClient(goal)}">
-                                    <p:confirm header="Confirmation"
-                                       message="Are you sure you want to delete this goal?"
-                                               icon="fa fa-question-circle" />
-                            <p:ajax event="dialogReturn" update="individualGoalsView" />
-                                </p:commandButton>
-                    </div>
-                </div>
-                </div>
-            </ui:repeat>
+                    <p:column headerText="Actions" style="width:120px; text-align:center;">
+                        <p:commandButton icon="pi pi-eye" title="View"
+                                         styleClass="ui-button-info p-button-sm"
+                                         action="#{individualGoalDetails.prepareForIndividualGoal(goal.id)}"/>
+                    </p:column>
+                </p:dataTable>
             </div>
         </h:form>
     </ui:define>

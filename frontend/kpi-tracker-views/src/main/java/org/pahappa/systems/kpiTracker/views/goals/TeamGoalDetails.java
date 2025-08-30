@@ -1,16 +1,20 @@
 package org.pahappa.systems.kpiTracker.views.goals;
 
+import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -29,41 +33,90 @@ public class TeamGoalDetails implements Serializable {
     private TeamGoal selectedGoal;
     private TeamGoalService teamGoalService;
     private IndividualGoalService individualGoalService;
-    private String goalLevel;
-    List<IndividualGoal> individualGoalsList;
+    private KpisService kpiService;
+
+    private List<IndividualGoal> individualGoalsList;
 
     @PostConstruct
     public void init() {
-        teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
+        this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
+        this.kpiService = ApplicationContextProvider.getBean(KpisService.class);
     }
-
 
     public String prepareForTeamGoal(String id) {
         this.selectedGoal = this.teamGoalService.getInstanceByID(id);
-        this.goalLevel = selectedGoal.getClass().getSimpleName(); // now safe
-        loadIndividualGoals(); // only load after goal is set
-        return "/pages/goals/TeamGoalDetails.xhtml";
+        loadIndividualGoals();
+        return "/pages/goals/TeamGoalDetails.xhtml?faces-redirect=true";
     }
 
     public String backToGoals(){
-        return "/pages/goals/TeamGoalView.xhtml";
+        return "/pages/goals/TeamGoalView.xhtml?faces-redirect=true";
     }
 
     public void loadIndividualGoals(){
-        Search search = new Search();
-        search.addFilterEqual("teamGoal.id",this.selectedGoal.getId());
-        this.individualGoalsList = this.individualGoalService.getInstances(search,0,0);
+        Search search = new Search(IndividualGoal.class);
+        search.addFilterEqual("teamGoal.id", this.selectedGoal.getId());
+        this.individualGoalsList = individualGoalService.getInstances(search,0,0);
     }
+
+    /**
+     * Calculate team goal progress based on its individual goals
+     */
+    public double getProgress() {
+        return calculateProgress(selectedGoal, individualGoalsList);
+    }
+
+
+    public double calculateProgress(TeamGoal teamGoal, List<IndividualGoal> goals) {
+        if (goals == null || goals.isEmpty()) return 0;
+
+        double weightedSum = 0, totalWeight = 0;
+
+        for (IndividualGoal goal : goals) {
+            // Explicitly load KPIs using service
+            List<KPI> kpis = loadKPIs(goal);
+
+            double goalProgress = 0;
+            double kpiWeightedSum = 0, kpiTotalWeight = 0;
+
+            for (KPI kpi : kpis) {
+                kpiWeightedSum += kpi.getProgress() * kpi.getWeight();
+                kpiTotalWeight += kpi.getWeight();
+            }
+
+            if (kpiTotalWeight > 0) {
+                goalProgress = kpiWeightedSum / kpiTotalWeight;
+            }
+
+            double weight = goal.getContributionWeight() > 0 ? goal.getContributionWeight() : 1;
+            weightedSum += goalProgress * weight;
+            totalWeight += weight;
+        }
+
+        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+    }
+
+    public List<KPI> loadKPIs(IndividualGoal goal){
+        Search search = new  Search(KPI.class);
+        search.addFilterAnd(
+                Filter.equal("recordStatus", RecordStatus.ACTIVE),
+                Filter.equal("individualGoal.id",goal.getId())
+        );
+        return kpiService.getInstances(search,0,0);
+    }
+
+
 
     public void approveIndividualGoal(IndividualGoal individualGoal) throws ValidationFailedException, OperationFailedException {
         if(individualGoal != null){
             individualGoal.setStatus(GoalStatus.APPROVED);
             this.individualGoalService.saveInstance(individualGoal);
-            UiUtils.showMessageBox("Team Goal Approved", individualGoal.getName());
-        }else {
-            UiUtils.showMessageBox("Goal is empty", "You did not select any goal");
+            UiUtils.showMessageBox("Goal Approved", individualGoal.getName());
+            loadIndividualGoals(); // refresh
+        } else {
+            UiUtils.showMessageBox("Empty Goal", "No goal selected.");
         }
-
     }
 }
+
