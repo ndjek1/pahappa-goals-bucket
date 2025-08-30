@@ -6,53 +6,153 @@
                 template="/pages/californiatemplate/dialog-template.xhtml">
 
     <ui:define name="content">
-        <title>Assessment</title>
-        <h:form id="globalWeightDialog" styleClass="ui-fluid formgrid grid"
-               >
+        <!--
+            Custom styles to precisely match the target image.
+            These styles override default PrimeFaces styles to achieve the clean, modern look.
+        -->
+        <style type="text/css">
+            /* Main content area, inside the template */
+            .main-content-area {
+                padding: 1rem 2rem; /* Adjust as needed */
+            }
 
-            <p:growl id="growl" showDetail="true" life="4000" />
+            /* The white card holding the form */
+            .assessment-card {
+                background: #ffffff;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 2rem;
+            }
 
-            <div class="field col-12 p-m-4">
-                <div class="field col-12 " >
-                    <h:outputText
-                            value="Assessing #{supervisorAssessmentForm.staff.user.fullName}" />
+            /* Header section with back arrow, name, and review cycle link */
+            .content-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
+            .content-header .title-group {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .content-header .title-text {
+                font-size: 1.75rem;
+                font-weight: 600;
+                color: #212529;
+            }
+            .content-header .review-cycle-link a {
+                color: #0d6efd;
+                text-decoration: none;
+            }
 
+            /* Blue section headers like "Keeper Test" */
+            .section-header {
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: #0d6efd; /* PrimeFaces blue */
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Specific styling for the clean DataTable */
+            .clean-datatable .ui-datatable-thead th {
+                background: none !important;
+                border: none !important;
+                color: #6c757d; /* Light gray text for headers */
+                font-weight: 500 !important; /* Un-bold the header text */
+                text-align: left;
+                padding: 0.5rem 0.75rem 1rem 0.75rem; /* Adjust padding */
+            }
+
+            .clean-datatable .ui-datatable-tbody > tr {
+                border-top: 1px solid #e9ecef; /* The line between rows */
+            }
+
+            .clean-datatable .ui-datatable-tbody > tr > td {
+                border: none !important;
+                padding: 1rem 0.75rem;
+            }
+
+            /* Container for the final buttons */
+            .button-container {
+                margin-top: 2rem;
+                display: flex;
+                justify-content: flex-end; /* Aligns buttons to the right */
+                gap: 0.75rem;
+            }
+        </style>
+
+        <div class="main-content-area">
+            <!-- 1. ADDED: Header with back button, title, and link -->
+            <div class="content-header">
+                <div class="title-group">
+                    <p:commandButton icon="pi pi-arrow-left" styleClass="ui-button-text ui-button-secondary" process="@this" />
+                    <h:outputText value="[Name]" styleClass="title-text" />
                 </div>
-
+                <div class="review-cycle-link">
+                    <h:link value="Review cycle(default)" />
+                </div>
             </div>
 
-            <!-- Business Goal Weight -->
-            <div class="field col-12 p-mx-4 p-mb-2">
-                <p:outputLabel for="score" value="Score /100" />
-                <p:inputText id="score"
-                             value="#{supervisorAssessmentForm.model.score}"
-                             required="true"
-                requiredMessage="Score is required"
-                >
-                </p:inputText>
-            </div>
+            <h:form id="assessmentForm">
+                <div class="assessment-card">
+                    <p:growl id="growl" showDetail="true" life="4000" />
+
+                    <!-- Keeper Test Section -->
+                    <div class="section-header">Keeper Test</div>
+                    <p:dataTable var="ir" value="#{supervisorAssessmentForm1.keeperTestItemRatings}">
+                        <p:column headerText="Item">
+                            <h:outputText value="#{ir.item.name}" />
+                        </p:column>
+                        <p:column headerText="Rating">
+                            <p:rating value="#{ir.rating}" stars="5" cancel="false"/>
+                        </p:column>
+                    </p:dataTable>
 
 
-            <!-- Buttons -->
-            <div class="col-12 p-mx-4" style="margin-top: 2rem; display: flex; justify-content: space-between; gap: 1rem;">
-                <p:commandButton value="Cancel"
-                                 validateClient="false"
-                                 process="@this"
-                                 action="#{supervisorAssessmentForm.hide}"
-                                 styleClass="ui-button-danger p-mx-5"
-                                 style="flex: 1;" />
+                    <!-- Company Values Section -->
+                    <div class="section-header">Company Values</div>
+                    <p:dataTable var="item" value="#{supervisorAssessmentForm1.companyValueItemRatings}" styleClass="clean-datatable">
+                        <p:column headerText="Item">
+                            <h:outputText value="#{item.item.name}" />
+                        </p:column>
+                        <p:column headerText="Rating" style="width: 180px;">
+                            <p:rating value="#{item.rating}"
+                                      stars="5" cancel="false" />
 
-                <p:commandButton value="Save"
-                                 process="@form"
-                                 actionListener="#{supervisorAssessmentForm.persist}"
-                                 update="@form"
-                                 validateClient="true"
-                                 style="flex: 1;"
-                                 styleClass="ui-button-primary p-mx-5"
-                />
-            </div>
 
-        </h:form>
-        <!-- Case: Active review cycle is null -->
+                        </p:column>
+                    </p:dataTable>
+
+                    <!-- Supervisor Assessment Section -->
+                    <div class="section-header">Supervisor Assessment</div>
+                    <div class="p-fluid"> <!-- PrimeFlex helper for fluid inputs -->
+                        <div class="p-field" style="margin-bottom: 1rem;">
+                            <p:inputNumber id="score" value="#{supervisorAssessmentForm1.model.score}" required="true" requiredMessage="Score is required.">
+                            </p:inputNumber>
+                        </div>
+
+                        <div class="p-field">
+                            <p:inputTextarea id="comment" value="#{supervisorAssessmentForm1.model.comment}" placeholder="Comment" rows="5" />
+                        </div>
+                    </div>
+
+                    <!-- 2. CORRECTED: Button styles and container -->
+                    <div class="button-container">
+                        <!-- 'Cancel' button is solid red -->
+                        <p:commandButton value="Cancel"
+                                         action="#{supervisorAssessmentForm1.hide}"
+                                         process="@this"
+                                         styleClass="ui-button-danger" />
+
+                        <!-- 'Submit' button is solid blue (default) -->
+                        <p:commandButton value="Submit"
+                                         actionListener="#{supervisorAssessmentForm1.persist}"
+                                         update="@form" />
+                    </div>
+                </div>
+            </h:form>
+        </div>
     </ui:define>
 </ui:composition>

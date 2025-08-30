@@ -4,6 +4,8 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
+import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryItemService;
+import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.core.services.ratings.SupervisorAssessmentService;
@@ -11,6 +13,9 @@ import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
+import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
+import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.OrgFitCategoryType;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -125,6 +130,7 @@ public class SupervisorAssessmentView implements Serializable {
         );
         return staffService.getInstances(search,0,0);
     }
+
 
 
 }

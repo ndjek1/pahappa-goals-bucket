@@ -46,6 +46,14 @@
                                        itemValue="#{goal}"/>
                     </p:selectOneMenu>
                 </div>
+                <!-- Accomplishment % -->
+                <div class="field col-12 md:col-6 p-m-4">
+                    <p:outputLabel for="weight" value="Weight" />
+                    <p:inputNumber id="weight"
+                                   value="#{teamKpiForm.model.weight}"
+                                   minValue="0" maxValue="100"
+                                   styleClass="p-inputtext-sm w-full"/>
+                </div>
 
                 <!-- Measurement Unit -->
                 <div class="field col-12 md:col-6 p-m-4">
@@ -100,14 +108,7 @@
                                    styleClass="p-inputtext-sm w-full"/>
                 </div>
 
-                <!-- Accomplishment % -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="accomplishmentPercentage" value="Accomplishment %" />
-                    <p:inputNumber id="accomplishmentPercentage"
-                                   value="#{teamKpiForm.model.accomplishmentPercentage}"
-                                   minValue="0" maxValue="100"
-                                   styleClass="p-inputtext-sm w-full"/>
-                </div>
+
 
                 <!-- Start Date -->
                 <div class="field col-12 md:col-6 p-m-4">

@@ -21,19 +21,20 @@ public class OrgFitCategoryMigration {
     private OrgFitCategoryService orgFitCategory;
 
     @Migration(orderNumber = 2)
-    public void initializeDefaultOrgFitCategories1() {
-        createIfNotExists("Team Rating", "Collaboration, Communication, etc.", 5.0);
-        createIfNotExists("Company Values", "Self-management, Resource management, etc.", 20.0);
-        createIfNotExists( "Keeper Test", "Competence, Growth, Innovation", 15.0);
+    public void initializeDefaultOrgFitCategories2() {
+        createIfNotExists("Team Rating", "Collaboration, Communication, etc.", 5.0,OrgFitCategoryType.TEAM_RATING);
+        createIfNotExists("Company Values", "Self-management, Resource management, etc.", 20.0,OrgFitCategoryType.COMPANY_VALUES);
+        createIfNotExists( "Keeper Test", "Competence, Growth, Innovation", 15.0,OrgFitCategoryType.KEEPER_TEST);
     }
 
-    private void createIfNotExists(String name, String description, double weight) {
+    private void createIfNotExists(String name, String description, double weight,OrgFitCategoryType orgFitCategoryType) {
         if (orgFitCategory.getAllInstances().isEmpty()) {
             OrgFitCategory category = new OrgFitCategory();
             category.setName(name);
             category.setDescription(description);
             category.setWeight(weight);
             category.setRecordStatus(RecordStatus.ACTIVE);
+            category.setRatingCategory(orgFitCategoryType);
             category.setDateCreated(new Date());
             category.setDateChanged(new Date());
             orgFitCategory.mergeBG(category);

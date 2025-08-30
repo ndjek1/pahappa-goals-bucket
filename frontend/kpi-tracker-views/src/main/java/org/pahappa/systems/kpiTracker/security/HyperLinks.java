@@ -34,8 +34,6 @@ public class HyperLinks {
     // KPI-related constants
     public static final String KPIS_VIEW = "/pages/kpis/KPIView.xhtml?faces-redirect=true";
     public static final String KPI_FORM_DIALOG = "/pages/kpis/KPIForm.xhtml";
-    public static final String ORGANIZATIONAL_KPIS_VIEW = "/pages/kpis/OrganizationalKPIView.xhtml?faces-redirect=true";
-    public static final String ORGANIZATIONAL_KPI_FORM_DIALOG = "/pages/kpis/OrganizationalKPIForm.xhtml";
     public static final String DEPARTMENT_KPIS_VIEW = "/pages/kpis/DepartmentKPIView.xhtml?faces-redirect=true";
     public static final String DEPARTMENT_KPI_FORM_DIALOG = "/pages/kpis/DepartmentKPIForm.xhtml";
     public static final String TEAM_KPIS_VIEW = "/pages/kpis/TeamKPIView.xhtml?faces-redirect=true";

@@ -33,12 +33,21 @@
                             </div>
                             <hr/>
                             <p><b>Description:</b> #{departmentGoalDetails.selectedGoal.description}</p>
+                            <div class="p-d-flex p-ai-center p-mt-3">
+                                <h:outputText value="Overall Progress:" style="font-weight:bold; margin-right:1rem;" />
+                                <p:progressBar value="#{departmentGoalDetails.calculateProgress()}"
+                                               style="width:300px; height:16px; margin-right:1rem;" />
+                                <h:outputText value="#{departmentGoalDetails.calculateProgress()}%" />
+                            </div>
                         </div>
                     </div>
                     <!-- Right section: Activities -->
                     <div class="p-col-12 p-md-4">
                         <div class="p-card p-p-3 p-mb-3">
                             <h3>Activities</h3>
+                            <ui:repeat value="#{departmentGoalDetails.departmentActivityList}" var="activity">
+                                <span>#{activity.title}</span>
+                            </ui:repeat>
                         </div>
                     </div>
                 </div>
@@ -92,6 +101,21 @@
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
+            <p:outputPanel id="kpi">
+                <ui:repeat value="#{departmentGoalDetails.kpisList}" var="kpi">
+                    <div class="p-d-flex p-jc-end p-ai-center p-mt-4">
+                        <h:outputText value="#{kpi.name}" style="font-weight: bold; margin-right: 1rem;" />
+
+                        <p:progressBar value="#{kpi.progress}"
+                                       style="width: 300px; height: 14px; margin-right: 1rem;"
+                                      />
+
+
+                        <h:outputText value="#{kpi.progress}%" style="font-weight: bold;" />
+                    </div>
+                </ui:repeat>
+
+            </p:outputPanel>
         </h:form>
     </ui:define>
 
