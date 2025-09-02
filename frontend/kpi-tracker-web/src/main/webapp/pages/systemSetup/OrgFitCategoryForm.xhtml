@@ -17,7 +17,7 @@
         <h:form id="orgFitCategoryItem" styleClass="dialog-card">
             <p:growl id="growl" showDetail="true" life="4000" />
 
-            <div class="ui-fluid formgrid grid p-m-4">
+            <div class="ui-fluid formgrid grid ">
 
                 <!-- Type -->
                 <div class="field col-12 p-m-4">
@@ -40,26 +40,18 @@
                                  styleClass="p-inputtext-sm w-full"/>
                     </div>
                 </div>
-<!--                <div class="field col-12 md:col-6 p-m-4">-->
-<!--                    <h5>Rating category</h5>-->
-<!--                    <div class="ui-inputgroup">-->
-<!--                        <p:selectOneMenu value="#{orgFitCategoryForm.model.ratingCategory}"-->
-<!--                                         converter="ratingCategoryConverter" filter="true"-->
-<!--                                         required="true" effect="fold">-->
-<!--                            <f:selectItem itemLabel="Select category type" itemValue="" />-->
-<!--                            <f:selectItems value="#{orgFitCategoryForm.ratingCategories}" var="type" itemValue="#{type.name()}" />-->
-<!--                        </p:selectOneMenu>-->
-<!--                    </div>-->
-<!--                </div>-->
                 <div class="field col-12 md:col-6 p-m-4">
                     <h5>Weight(%)</h5>
                     <div class="ui-inputgroup">
-                    <p:inputText value="#{orgFitCategoryForm.model.weight}" required="true"
-                                 placeholder="Weight"
-                                 styleClass="p-inputtext-sm w-full"
-                    />
+                        <p:inputNumber value="#{orgFitCategoryForm.model.weight}"
+                                       required="true"
+                                       placeholder="Weight"
+                                       styleClass="p-inputtext-sm w-full"
+                                       minValue="0"
+                                       decimalPlaces="0" />
                     </div>
                 </div>
+
 
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">

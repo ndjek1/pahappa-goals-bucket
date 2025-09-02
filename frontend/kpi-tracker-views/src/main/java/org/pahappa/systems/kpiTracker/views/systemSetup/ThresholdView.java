@@ -14,13 +14,14 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import java.util.List;
 import java.util.Map;
 
 @ManagedBean(name = "thresholdsView")
 @Getter
 @Setter
-@SessionScoped
+@ViewScoped
 public class ThresholdView extends PaginatedTableView<Threshold,ThresholdView,ThresholdView> {
 
     private ThresholdService thresholdService;

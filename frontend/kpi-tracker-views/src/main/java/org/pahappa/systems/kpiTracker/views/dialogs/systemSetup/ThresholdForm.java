@@ -46,23 +46,30 @@ public class ThresholdForm extends DialogForm<Threshold> {
 
     @Override
     public void persist() throws Exception {
-        if (model.getLevel() == null) {
-            UiUtils.showMessageBox("Missing Information","Please select both review cycle type and start date.");
-            return;
-        }
-
-        // Check if a threshold already exists for the same level (and it's not the same one being edited)
 
         Threshold existingThreshold = thresholdService.searchUniqueByPropertyEqual("level", model.getLevel());
         if (existingThreshold != null && (model.getId() == null || !existingThreshold.getId().equals(model.getId()))) {
 
-            UiUtils.showMessageBox("Duplicate Threshold","A threshold already exists for level: " + model.getLevel().name());
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,"Duplicate Threshold","A threshold already exists for level: " + model.getLevel().name()));
 
             return;
         }
 
-        thresholdService.saveInstance(super.model);
+        if (model.getMinScore() <= model.getRedFlagScore()) {
+            // 1. Add the message as before
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Invalid Values",
+                            "Minimum score cannot be less than or equal to red flag score."));
 
+            // 3. Return to stop further execution
+            return;
+        }
+
+        thresholdService.saveInstance(super.model);
+        resetModal();
+        hide();
     }
 
 

@@ -6,69 +6,45 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <!-- Custom CSS for the threshold cards -->
         <style type="text/css">
+            /* --- Existing Styles --- */
             .threshold-card {
-                background-color: #fcfcfc; /* A very light off-white background */
+                background-color: #fcfcfc;
                 border: 1px solid #e9ecef;
                 border-radius: 8px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+                /* NEW: Ensure card stretches to fill column height */
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .threshold-card-content {
+                flex-grow: 1; /* Allow content to grow */
             }
             .threshold-card-header {
                 font-size: 1.2rem;
                 font-weight: 500;
                 color: #495057;
             }
-            .score-container {
-                height: 100%; /* Ensure all containers have the same height */
-            }
-            .score-indicator {
-                width: 0.8rem;
-                height: 0.8rem;
-                border-radius: 3px;
-                flex-shrink: 0;
-            }
+            .score-container { height: 100%; }
+            .score-indicator { width: 0.8rem; height: 0.8rem; border-radius: 3px; flex-shrink: 0; }
             .green-indicator { background-color: #5cb85c; }
             .red-indicator { background-color: #d9534f; }
-
-            .score-label {
-                display: block;
-                font-size: 0.8rem;
-                color: #6c757d;
-                margin-bottom: 0.25rem;
-            }
-            .score-value {
-                font-size: 1.1rem;
-                font-weight: 500;
-                color: #343a40;
-            }
-            .date-value {
-                font-size: 0.95rem;
-                font-weight: 500;
-                color: #337ab7; /* A classic blue for links/dates */
-            }
-            /* Vertical divider line for medium screens and up */
+            .score-label { display: block; font-size: 0.8rem; color: #6c757d; margin-bottom: 0.25rem; }
+            .score-value { font-size: 1.1rem; font-weight: 500; color: #343a40; }
+            .date-value { font-size: 0.95rem; font-weight: 500; color: #337ab7; }
             @media (min-width: 768px) {
-                .column-divider {
-                    border-left: 1px solid #e9ecef;
-                    padding-left: 1.5rem !important;
-                }
+                .column-divider { border-left: 1px solid #e9ecef; padding-left: 1.5rem !important; }
             }
         </style>
     </ui:define>
 
     <ui:define name="content">
         <div class="card">
-            <!-- Page Header -->
             <div class="p-d-flex p-jc-between p-ai-center p-mb-4">
                 <h2 class="p-m-0">Thresholds</h2>
-                <!-- The "Add Threshold" button can be placed here if needed -->
-                <p:commandButton value="Add Threshold"
-                                 icon="pi pi-plus"
-                                 styleClass="add-button"
-                                 update="thresholdsForm"
-                                 actionListener="#{thresholdForm.show}"
-                                 process="@this">
+                <p:commandButton value="Add Threshold" icon="pi pi-plus" styleClass="add-button"
+                                 update="thresholdsForm" actionListener="#{thresholdForm.show}" process="@this">
                     <f:setPropertyActionListener value="#{null}" target="#{thresholdForm.model}" />
                     <p:ajax event="dialogReturn" listener="#{thresholdsView.reloadFilterReset}" update="thresholdsForm" />
                 </p:commandButton>
@@ -77,66 +53,69 @@
             <h:form id="thresholdsForm">
                 <p:growl id="messages" showDetail="true"/>
 
-                <!-- Use ui:repeat to generate a card for each threshold -->
-                <ui:repeat value="#{thresholdsView.dataModels}" var="threshold">
-                    <div class="threshold-card p-p-4 p-mb-4">
+                <!-- START: Grid Container -->
+                <div class="p-grid">
+                    <ui:repeat value="#{thresholdsView.dataModels}" var="threshold">
 
-                        <!-- Card Header: e.g., "Organisation" -->
-                        <h:outputText value="#{threshold.level.displayName}" styleClass="threshold-card-header p-d-block p-mb-3"/>
+                        <!-- START: Responsive Column Wrapper -->
+                        <div class="p-col-12 p-md-6 p-lg-4">
 
-                        <!-- Card Body: 3-column layout -->
-                        <div class="p-grid p-ai-center">
-                            <!-- Column 1: Minimum Score -->
-                            <div class="p-col-12 p-md-4">
-                                <div class="score-container p-d-flex p-ai-center">
-                                    <div class="score-indicator green-indicator p-mr-3"></div>
-                                    <div>
-                                        <h:outputText value="Minimum Score" styleClass="score-label"/>
-                                        <h:outputText value="#{threshold.minScore}" styleClass="score-value"/>
+                            <!-- Your existing card code goes here, with a minor tweak for flexbox height -->
+                            <div class="threshold-card p-p-4">
+                                <div class="threshold-card-content">
+                                    <h:outputText value="#{threshold.level.displayName}" styleClass="threshold-card-header p-d-block p-mb-3"/>
+                                    <div class="p-grid p-ai-center">
+                                        <!-- Column 1: Minimum Score -->
+                                        <div class="p-col-12 p-md-4">
+                                            <div class="score-container p-d-flex p-ai-center">
+                                                <div class="score-indicator green-indicator p-mr-3"></div>
+                                                <div>
+                                                    <h:outputText value="Minimum Score" styleClass="score-label"/>
+                                                    <h:outputText value="#{threshold.minScore}" styleClass="score-value"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Column 2: Redflag Score -->
+                                        <div class="p-col-12 p-md-4">
+                                            <div class="score-container column-divider p-d-flex p-ai-center">
+                                                <div class="score-indicator red-indicator p-mr-3"></div>
+                                                <div>
+                                                    <h:outputText value="Redflag Score" styleClass="score-label"/>
+                                                    <h:outputText value="#{threshold.redFlagScore}" styleClass="score-value"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Column 3: Date Updated -->
+                                        <div class="p-col-12 p-md-4">
+                                            <div class="score-container column-divider p-d-flex p-ai-center">
+                                                <div>
+                                                    <h:outputText value="Date Updated" styleClass="score-label"/>
+                                                    <h:outputText value="#{threshold.dateChanged}" styleClass="date-value">
+                                                        <f:convertDateTime pattern="dd MMM, yyyy" />
+                                                    </h:outputText>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Column 2: Redflag Score -->
-                            <div class="p-col-12 p-md-4">
-                                <div class="score-container column-divider p-d-flex p-ai-center">
-                                    <div class="score-indicator red-indicator p-mr-3"></div>
-                                    <div>
-                                        <h:outputText value="Redflag Score" styleClass="score-label"/>
-                                        <h:outputText value="#{threshold.redFlagScore}" styleClass="score-value"/>
-                                    </div>
-                                </div>
-                            </div>
+                                <hr class="p-my-3" style="border-top: 1px solid #e9ecef;"/>
 
-                            <!-- Column 3: Date Updated -->
-                            <div class="p-col-12 p-md-4">
-                                <div class="score-container column-divider p-d-flex p-ai-center">
-                                    <div>
-                                        <h:outputText value="Date Updated" styleClass="score-label"/>
-                                        <h:outputText value="#{threshold.dateChanged}" styleClass="date-value">
-                                            <f:convertDateTime pattern="dd MMM, yyyy" />
-                                        </h:outputText>
-                                    </div>
+                                <div class="p-d-flex p-jc-end">
+                                    <p:commandButton value="Edit" icon="pi pi-pencil" styleClass="p-button-text"
+                                                     actionListener="#{thresholdForm.show}" process="@this" immediate="true">
+                                        <f:setPropertyActionListener value="#{threshold}" target="#{thresholdForm.model}" />
+                                        <p:ajax event="dialogReturn" listener="#{thresholdsView.reloadFilterReset}" update="thresholdsForm" />
+                                    </p:commandButton>
                                 </div>
                             </div>
                         </div>
+                        <!-- END: Responsive Column Wrapper -->
 
-                        <hr class="p-my-3" style="border-top: 1px solid #e9ecef;"/>
+                    </ui:repeat>
+                </div>
+                <!-- END: Grid Container -->
 
-                        <!-- Card Footer: Edit Button -->
-                        <div class="p-d-flex p-jc-end">
-                            <p:commandButton value="Edit" icon="pi pi-pencil"
-                                             styleClass="p-button-text"
-                                             actionListener="#{thresholdForm.show}"
-                                             process="@this"
-                                             immediate="true">
-                                <f:setPropertyActionListener value="#{threshold}" target="#{thresholdForm.model}" />
-                                <p:ajax event="dialogReturn" listener="#{thresholdsView.reloadFilterReset}" update="thresholdsForm" />
-                            </p:commandButton>
-                        </div>
-
-                    </div>
-                </ui:repeat>
             </h:form>
         </div>
     </ui:define>
