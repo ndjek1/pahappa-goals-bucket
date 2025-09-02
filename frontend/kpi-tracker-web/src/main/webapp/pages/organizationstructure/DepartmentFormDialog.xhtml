@@ -18,7 +18,7 @@
         <h:form id="departmentFormDialog" styleClass="dialog-card">
             <p:growl id="growl" showDetail="true" life="4000" />
 
-            <div class="ui-fluid formgrid grid p-m-4">
+            <div class="ui-fluid formgrid grid ">
 
                 <!-- Department Name -->
                 <div class="field col-12 p-m-4">
@@ -36,22 +36,7 @@
                                  placeholder="Enter department description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
-
-                <!-- Department Head -->
-                <div class="field col-12 p-m-4">
-                    <p:outputLabel for="deptHead" value="Department Head" />
-                    <p:selectOneMenu id="deptHead"
-                                     value="#{departmentFormDialog.model.departmentHead}"
-                                     converter="userConverter"
-                                     filter="true"
-                                     filterMatchMode="contains"
-                                     placeholder="Select Department Head"
-                                     styleClass="w-full">
-                        <f:selectItem itemLabel="Select Department Head" itemValue="" />
-                        <f:selectItems value="#{departmentFormDialog.completeUsers}" var="user"
-                                       itemLabel="#{user.fullName}" itemValue="#{user}" />
-                    </p:selectOneMenu>
-                </div>
+                
 
                 <!-- Status -->
                 <div class="field col-12 p-m-4">
