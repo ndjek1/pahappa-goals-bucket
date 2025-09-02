@@ -74,15 +74,7 @@
                                                 <f:setPropertyActionListener value="#{category}" target="#{orgFitCategoryForm.model}" />
                                                 <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
                                             </p:commandButton>
-
-                                            <p:commandButton title="Delete" icon="pi pi-trash"
-                                                             styleClass="p-button-text ui-button-danger"
-                                                             update=":orgFitForm:categoryListPanel :orgFitForm:weightPanel"
-                                                             actionListener="#{orgFitCategoryView.deleteClient(category)}">
-                                                <p:confirm header="Confirmation"
-                                                           message="Are you sure you want to delete '#{category.name}'?"
-                                                           icon="pi pi-exclamation-triangle" />
-                                            </p:commandButton>
+                                            
                                         </div>
                                     </div>
                                 </div>

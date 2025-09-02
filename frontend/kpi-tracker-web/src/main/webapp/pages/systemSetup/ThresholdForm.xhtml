@@ -7,54 +7,66 @@
 
    <ui:define name="content">
       <h:form id="thresholdDialog">
+          <title>Add Threshold</title>
 
-         <p:growl id="growl" showDetail="true" life="4000" />
+         <p:growl id="growl" showDetail="true" globalOnly="true" life="4000" />
 
-         <h3 class="p-m-4">Add THreshold</h3>
 
-         <div class="ui-fluid formgrid grid p-m-4">
+         <div class="ui-fluid  grid p-m-4">
 
-            <!-- Type -->
-            <div class="field col-12 p-m-4">
+          <div class="ui-col-12 ui-md-6">
+              <h5>Type</h5>
+              <div class="ui-inputgroup">
 
                <p:selectOneMenu id="type" value="#{thresholdForm.model.level}">
                   <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
                   <f:selectItems value="#{thresholdForm.thresholdLevels}" />
                </p:selectOneMenu>
             </div>
+          </div>
 
-            <div class="field col-12 p-m-4">
-
-                <p:outputLabel title="Mininmun score" for="minScore"/>
-               <p:inputText
+          <div class="ui-col-12 ui-md-6 p-my-4">
+              <h5>Minimum Score</h5>
+              <div class="ui-inputgroup">
+               <p:inputNumber
                        id="minScore"
                        value="#{thresholdForm.model.minScore}"
                             required="true"
-                            styleClass="p-inputtext-sm w-full"/>
+                            styleClass="p-inputtext-sm w-full"
+                            minValue="0"
+                       maxValue="100"
+                       decimalPlaces="0"
+               />
             </div>
+          </div>
 
 
-            <div class="field col-12 md:col-6 p-m-4">
-                <p:outputLabel title="Red flag score" for="redFlagScore"/>
+          <div class="ui-col-12 ui-md-6">
+              <h5>Red flag score</h5>
+              <div class="ui-inputgroup">
 
-               <p:inputText value="#{thresholdForm.model.redFlagScore}"
+               <p:inputNumber value="#{thresholdForm.model.redFlagScore}"
                             id="redFlagScore"
                             required="true"
+                              minValue="0"
+                              maxValue="100"
+                              decimalPlaces="0"
                             styleClass="p-inputtext-sm w-full"/>
             </div>
+          </div>
 
             <!-- Buttons -->
-            <div class="field col-12 p-d-flex p-jc-between">
+            <div class=" col-12 p-d-flex p-jc-between ">
                <p:commandButton value="Cancel"
                                 immediate="true"
                                 action="#{thresholdForm.hide}"
-                                styleClass="ui-button-danger p-mx-5" />
+                                styleClass="ui-button-danger p-m-3 " />
 
                <p:commandButton value="Save"
                                 process="@form"
-                                actionListener="#{thresholdForm.save}"
+                                actionListener="#{thresholdForm.persist}"
                                 update="@form growl"
-                                styleClass="ui-button-primary p-mx-5" />
+                                styleClass="ui-button-primary p-m-3" />
             </div>
 
          </div>
