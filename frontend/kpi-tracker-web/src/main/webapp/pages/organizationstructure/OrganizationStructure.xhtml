@@ -22,7 +22,7 @@
                         <p:inputText id="searchTerm" value="#{departmentsView.searchTerm}"
                                      placeholder="Search department"
                                      style="border-radius: 6px; padding: 10px 14px; font-size: 14px; min-width: 250px; border: 1px solid #ddd;">
-                            <p:ajax event="keyup" listener="#{departmentsView.reloadFilterReset()}" update="departmentsList"/>
+                            <p:ajax event="keyup" listener="#{departmentsView.reloadFilterReset()}" update="departmentsView:departmentsList"/>
                         </p:inputText>
 
                     </div>
@@ -31,10 +31,11 @@
                     <p:commandButton value="Add Department" process="@this"
                                      icon="pi pi-plus"
                                      styleClass="add-button"
+                                     update="departmentsView"
                                      style="background-color: #5cb85c; "
                                      actionListener="#{departmentFormDialog.show}">
                         <f:setPropertyActionListener value="#{null}" target="#{departmentFormDialog.model}" />
-                        <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView" />
+                        <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView:departmentsList" />
                     </p:commandButton>
 
                 </div>
@@ -43,7 +44,7 @@
                 <!-- Departments Grid -->
                 <p:outputPanel id="departmentsList" layout="block">
                     <div class="p-grid p-nogutter">
-                        <ui:repeat value="#{departmentsView.departmentModels}" var="department" >
+                        <ui:repeat value="#{departmentsView.dataModels}" var="department" >
                             <div class="p-col-12 p-md-6 p-lg-6" style="padding: 0 5px ">
                                 <div class="p-card p-p-3 p-mb-4" style="border: 1px solid #dee2e6; border-radius: 6px;">
 
@@ -113,6 +114,8 @@
                                                              styleClass="p-button-text p-mr-2"
                                                              update="departmentsView"
                                                              actionListener="#{departmentsView.deleteSelectedDepartment(department)}">
+                                                <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView:departmentsList messages" />
+
                                                 <p:confirm header="Confirmation"
                                                            message="Are you sure you want to delete '#{department.departmentName}'?"
                                                            icon="pi pi-exclamation-triangle" />
@@ -126,7 +129,14 @@
                         </ui:repeat>
                     </div>
                 </p:outputPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                </p:confirmDialog>
+
             </h:form>
+
+
         </div>
 
         <style>

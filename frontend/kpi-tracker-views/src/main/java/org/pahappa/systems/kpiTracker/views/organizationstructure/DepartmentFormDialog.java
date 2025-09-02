@@ -41,7 +41,7 @@ public class DepartmentFormDialog extends DialogForm<Department> {
     }
 
     public DepartmentFormDialog() {
-        super("DepartmentFormDialog", 550, 4500);
+        super("DepartmentFormDialog", 550, 400);
     }
 
     private Department department = new Department();
@@ -58,6 +58,7 @@ public class DepartmentFormDialog extends DialogForm<Department> {
         try {
             departmentsView.getDepartmentService().saveInstance(department);
             departmentsView.reloadFilterReset();
+            hide();
         } catch (org.sers.webutils.model.exception.ValidationFailedException | org.sers.webutils.model.exception.OperationFailedException e) {
             e.printStackTrace();
         }
