@@ -23,7 +23,6 @@ public class Department extends BaseEntity {
 
     // CONSTRUCTORS
     public Department() {
-        super();
     }
 
     public Department(String departmentName, String departmentDescription, User departmentHead) {

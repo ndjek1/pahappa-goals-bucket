@@ -153,15 +153,6 @@
         <div class="kpi-detail-container">
             <h:form id="kpiDetailForm">
                 
-                <!-- Breadcrumb -->
-                <div class="card breadcrumb-card">
-                    <p:breadCrumb>
-                        <p:menuitem value="Dashboard" icon="pi pi-home" outcome="/pages/dashboard/Dashboard" />
-                        <p:menuitem value="KPIs" icon="pi pi-chart-bar" action="#{kpiDetailView.goBack()}" />
-                        <p:menuitem value="KPI Details" icon="pi pi-eye" />
-                    </p:breadCrumb>
-                </div>
-
                 <!-- Back Button and Update Value Button -->
                 <div style="position: relative; margin-bottom: 20px;">
                     <p:commandButton value="← Back" icon="pi pi-arrow-left" 
@@ -237,48 +228,6 @@
                     </div>
                 </div>
 
-                <!-- Updates Table -->
-                <div class="card updates-table">
-                                        <p:panel header="Update History" styleClass="ui-panel-no-border">
-                        <p:outputText value="Update history is fetched from the KpiUpdateHistory database table. Each update includes the date, value, user who made the update, and optional comments." 
-                                      style="font-style: italic; color: #666; font-size: 0.9em;" />
-                        <p:spacer height="10" />
-                        
-                        <p:dataTable id="updateHistoryTable" 
-                                     var="update" 
-                                     value="#{kpiDetailView.kpiUpdates}" 
-                                     emptyMessage="No update history available"
-                                     paginator="true" 
-                                     rows="10" 
-                                     paginatorPosition="bottom"
-                                     styleClass="history-table">
-                            
-                            <p:column headerText="Date Updated" width="20%">
-                                <h:outputText value="#{update.dateUpdated}">
-                                    <f:convertDateTime pattern="MMM dd, yyyy HH:mm" />
-                                </h:outputText>
-                            </p:column>
-                            
-                            <p:column headerText="Value" width="15%">
-                                <h:outputText value="#{update.value}" styleClass="value-text">
-                                    <f:convertNumber pattern="#,##0.00" />
-                                </h:outputText>
-                            </p:column>
-                            
-                            <p:column headerText="Updated By" width="25%">
-                                <h:outputText value="#{update.updatedBy.firstName} #{update.updatedBy.lastName}" />
-                            </p:column>
-                            
-                            <p:column headerText="Comments" width="40%">
-                                <h:outputText value="#{update.comment}" 
-                                              rendered="#{not empty update.comment}" />
-                                <h:outputText value="No comment provided" 
-                                              style="font-style: italic; color: #999;" 
-                                              rendered="#{empty update.comment}" />
-                            </p:column>
-                        </p:dataTable>
-                    </p:panel>
-                </div>
 
             </h:form>
         </div>
@@ -308,7 +257,7 @@
                         <p:commandButton value="Update" icon="pi pi-check" 
                                          styleClass="ui-button-success"
                                          action="#{kpiDetailView.updateKpiValue()}"
-                                         update="kpiDetailForm:updatesTable, kpiDetailForm"
+
                                          oncomplete="PF('updateValueDialog').hide()" />
                     </div>
                 </div>
