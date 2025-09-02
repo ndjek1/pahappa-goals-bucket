@@ -60,7 +60,6 @@ public class KpiDetailView implements Serializable {
             try {
                 this.selectedKpi = kpisService.getInstanceByID(kpiId);
                 if (this.selectedKpi != null) {
-                    loadKpiUpdateHistory();
                     createChartDataFromHistory();
                 }
             } catch (Exception e) {
@@ -75,16 +74,6 @@ public class KpiDetailView implements Serializable {
             this.reviewCycles = reviewCycleService.getAllInstances();
         } catch (Exception e) {
             this.reviewCycles = new ArrayList<>();
-        }
-    }
-
-    private void loadKpiUpdateHistory() {
-        try {
-            // Load actual update history from database
-            this.kpiUpdateHistory = kpiUpdateHistoryService.getUpdateHistoryByKpi(selectedKpi);
-        } catch (Exception e) {
-            this.kpiUpdateHistory = new ArrayList<>();
-            e.printStackTrace();
         }
     }
 
@@ -150,12 +139,8 @@ public class KpiDetailView implements Serializable {
                 
                 // Save the KPI
                 kpisService.saveInstance(selectedKpi);
-                
-                // Create new update history record
-                kpiUpdateHistoryService.createUpdateHistory(selectedKpi, previousValue, newValue, updateComment);
-                
-                // Reload the update history to show the new record
-                loadKpiUpdateHistory();
+
+
                 
                 // Clear form fields
                 newValue = null;
@@ -198,23 +183,6 @@ public class KpiDetailView implements Serializable {
         return "N/A";
     }
 
-    // Backward compatibility: Convert KpiUpdateHistory to the expected format
-    public List<KpiUpdate> getKpiUpdates() {
-        List<KpiUpdate> updates = new ArrayList<>();
-        
-        if (kpiUpdateHistory != null) {
-            for (KpiUpdateHistory history : kpiUpdateHistory) {
-                KpiUpdate update = new KpiUpdate();
-                update.setDateUpdated(history.getUpdateDate());
-                update.setValue(history.getNewValue());
-                update.setUpdatedBy(history.getUpdatedByUser());
-                update.setComment(history.getUpdateComment() != null ? history.getUpdateComment() : "No comment");
-                updates.add(update);
-            }
-        }
-        
-        return updates;
-    }
 
     // Inner class for backward compatibility with existing XHTML
     @Getter

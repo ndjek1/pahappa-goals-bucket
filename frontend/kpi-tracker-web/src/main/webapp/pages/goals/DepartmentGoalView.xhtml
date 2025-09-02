@@ -34,7 +34,14 @@
                     <p:commandButton value="Search" icon="pi pi-search"
                                      actionListener="#{departmentGoalsView.reloadFilterReset}"
                                      update="deptGoalsTable"/>
+                    <p:commandButton value="Set Goal" icon="pi pi-plus"
+                                     styleClass="add-button"
+                                     actionListener="#{departmentGoalsForm.show}">
+                        <f:setPropertyActionListener value="#{null}" target="#{departmentGoalsForm.model}"/>
+                        <p:ajax event="dialogReturn" listener="#{departmentGoalsView.reloadFilterReset}" update="deptGoalForm"/>
+                    </p:commandButton>
                 </div>
+
             </div>
 
             <!-- Department Goals Table -->
