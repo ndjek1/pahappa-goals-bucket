@@ -7,12 +7,12 @@
 
     <ui:define name="content">
         <h:form id="reviewCycleDialogForm">
+            <title>Add Review Cycle</title>
 
             <p:growl id="growl" showDetail="true" life="5000" />
 
-            <h3 class="p-m-4">Add Review Cycle</h3>
 
-            <div class="ui-fluid formgrid grid p-m-4">
+            <div class="ui-fluid grid ">
 
                 <!-- Type -->
                 <div class="field col-12 p-m-4">
@@ -31,23 +31,29 @@
                                  placeholder="Title"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
-                <!-- Start Date -->
-                <div class="field col-12 md:col-6 p-m-4">
 
-                    <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}" placeholder="Start Date" showIcon="true">
+
+                <!-- Dates Row -->
+                <div class=" md:col-6 p-m-4">
+                    <p:datePicker id="startDate" value="#{reviewCycleForm.model.startDate}"
+                                  placeholder="Start Date" showIcon="true">
                         <p:ajax event="dateSelect" update="endDate" listener="#{reviewCycleForm.updateEndDate}" />
                     </p:datePicker>
                 </div>
 
-                <!-- End Date -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:datePicker id="endDate" value="#{reviewCycleForm.model.endDate}" placeholder="End Date" readonlyInput="true" disabled="true" showIcon="true" />
+                <div class="field md:col-6 p-m-4">
+                    <p:datePicker id="endDate" value="#{reviewCycleForm.model.endDate}"
+                                  placeholder="End Date" readonlyInput="true" disabled="true" showIcon="true" />
                 </div>
+
+
 
                 <!-- Status -->
                 <div class="field col-12 p-m-4">
 
-                    <p:selectOneMenu id="status" value="#{reviewCycleForm.model.status}">
+                    <p:selectOneMenu id="status" value="#{reviewCycleForm.model.status}"
+                                        rendered="#{reviewCycleForm.model.title ne null}"
+                    >
                         <f:selectItem itemLabel="Select Status" itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{reviewCycleForm.reviewCycleStatusList}" />
                     </p:selectOneMenu>

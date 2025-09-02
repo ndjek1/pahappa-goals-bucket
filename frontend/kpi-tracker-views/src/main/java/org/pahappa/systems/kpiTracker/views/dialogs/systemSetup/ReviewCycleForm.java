@@ -38,7 +38,7 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
     private List<ReviewCycleStatus> reviewCycleStatusList = new ArrayList<>();
 
     public ReviewCycleForm() {
-        super(HyperLinks.REVIEW_CYCLE_DIALOG, 500, 400);
+        super(HyperLinks.REVIEW_CYCLE_DIALOG, 500, 300);
     }
 
     @PostConstruct
@@ -50,42 +50,65 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
 
     @Override
     public void persist() throws Exception {
-        if (model.getStartDate() == null || model.getType() == null) {
+        if (model.getTitle() == null || model.getType() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "Missing Information",
-                            "Please select both review cycle type and start date."));
+                            "Please provide both review cycle title and type."));
             return;
         }
 
-    if(super.model.getStatus() == ReviewCycleStatus.ACTIVE) {
-        Search search = new Search();
-        search.addFilterAnd(
-                Filter.equal("status", ReviewCycleStatus.ACTIVE),
-                Filter.equal("recordStatus", RecordStatus.ACTIVE)
-        );
-        List<ReviewCycle> reviewCycleList = this.reviewCycleService.getInstances(search,0,0);
-        if (reviewCycleList.isEmpty()) {
-            // Auto-set end date based on type
-            model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
-            reviewCycleService.saveInstance(super.model);
-            UiUtils.showMessageBox("Action successful", "Review cycle save successfully");
-            super.resetModal();
-            hide();
-        }else {
-            UiUtils.ComposeFailure("Duplicate review cycles", "Cannot have two active review cycles of the same type");
+
+        Search titleSearch = new Search(ReviewCycle.class);
+        titleSearch.addFilterILike("title", model.getTitle().trim());
+        titleSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+
+        List<ReviewCycle> existingCycles = reviewCycleService.getInstances(titleSearch, 0, 0);
+        boolean duplicateTitle = existingCycles.stream()
+                .anyMatch(cycle -> !cycle.getId().equals(model.getId())); // exclude self when editing
+
+        if (duplicateTitle) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Duplicate Title",
+                            "A review cycle with this title already exists."));
+            return;
         }
-    }else{
-        // Auto-set end date based on type
+
+
         model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
-        reviewCycleService.saveInstance(super.model);
-        UiUtils.showMessageBox("Action successful", "Review cycle save successfully");
+
+        if (model.getStatus() == ReviewCycleStatus.ACTIVE) {
+            // Check for another ACTIVE cycle
+            Search activeSearch = new Search(ReviewCycle.class);
+            activeSearch.addFilterAnd(
+                    Filter.equal("status", ReviewCycleStatus.ACTIVE),
+                    Filter.equal("recordStatus", RecordStatus.ACTIVE)
+            );
+
+            List<ReviewCycle> activeCycles = reviewCycleService.getInstances(activeSearch, 0, 0);
+
+            if (!activeCycles.isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                "Activation Denied",
+                                "Another active review cycle already exists."));
+                return;
+            }
+        }
+
+
+        reviewCycleService.saveInstance(model);
+
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Action Successful",
+                        "Review cycle saved successfully."));
+
         super.resetModal();
         hide();
     }
 
-
-    }
 
 
 
