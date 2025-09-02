@@ -1,11 +1,13 @@
 package org.pahappa.systems.kpiTracker.views.systemSetup;
 
+import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 
 import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
 import org.sers.webutils.model.RecordStatus;
@@ -26,12 +28,12 @@ import java.util.Map;
 public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWeightService, GlobalWeightService> {
     private GlobalWeightService globalWeightService;
     private Search search;
-
+    private boolean createWeight;
 
     @PostConstruct
     public void init(){
         globalWeightService = ApplicationContextProvider.getBean(GlobalWeightService.class);
-
+        canCreateNewWeights();
         reloadFilterReset();
     }
     @Override
@@ -72,5 +74,15 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
+    }
+
+    public  void canCreateNewWeights(){
+        Search search = new Search(GlobalWeight.class);
+        search.addFilterAnd(
+                Filter.equal("recordStatus",RecordStatus.ACTIVE),
+                Filter.equal("reviewCycle.status", ReviewCycleStatus.ACTIVE)
+        );
+        List<GlobalWeight> weights = globalWeightService.getInstances(search,0,0);
+        this.createWeight = weights.isEmpty();
     }
 }

@@ -26,12 +26,10 @@ public class CustomMigrationService extends MigrationTemplate {
     @Autowired
     CustomPermissionRoleMigrations permissionRoleMigrations;
     @Autowired
-    GlobalWeightMigration globalWeightMigration;
-    @Autowired
     OrgFitCategoryMigration orgFitCategoryMigration;
 
     private final List<Class<?>> migrationClasses = Arrays
-            .asList(new Class<?>[]{CustomPermissionRoleMigrations.class, GlobalWeightMigration.class, OrgFitCategoryMigration.class});
+            .asList(new Class<?>[]{CustomPermissionRoleMigrations.class, OrgFitCategoryMigration.class});
 
     public static boolean EXECUTED_MIGRATIONS = false;
 
