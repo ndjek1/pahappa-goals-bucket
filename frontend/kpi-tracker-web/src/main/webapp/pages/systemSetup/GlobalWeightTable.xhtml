@@ -27,6 +27,7 @@
                             <p:commandButton value="Add new weights"
                                              icon="pi pi-plus"
                                              styleClass="add-button"
+                                             disabled="#{!globalWeightView.createWeight}"
                                              actionListener="#{globalWeightsForm.show}">
                                 <f:setPropertyActionListener value="#{null}"
                                                              target="#{globalWeightsForm.model}" />
@@ -54,7 +55,7 @@
                         <f:facet name="header">
                            <h:outputText value="Review cycle" />
                         </f:facet>
-                        <h:outputText value="#{model.reviewCycle.title}" />
+                        <h:outputText value="#{model.reviewCycle ne null ? model.reviewCycle.title :'Not set'}" />
                      </p:column>
 
 
@@ -73,6 +74,7 @@
                         </p:commandButton>
 
                         <p:commandButton icon="fa fa-trash" title="Delete"
+                                         disabled="#{model.reviewCycle.status.toString() eq 'ACTIVE'}"
                                          styleClass="ui-button-danger" immediate="true"
                                          actionListener="#{globalWeightView.deleteClient(model)}" >
                            <p:confirm header="Confirmation"
