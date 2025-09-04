@@ -64,7 +64,7 @@ public class TeamActivityFormDialog extends DialogForm<TeamActivity> {
     private boolean edit;
 
     public TeamActivityFormDialog() {
-        super(HyperLinks.TEAM_ACTIVITY_FORM_DIALOG, 700, 400);
+        super(HyperLinks.TEAM_ACTIVITY_FORM_DIALOG, 700, 420);
     }
 
     @PostConstruct
@@ -132,7 +132,7 @@ public class TeamActivityFormDialog extends DialogForm<TeamActivity> {
             }
 
             if (teamGoal != null) model.setTeamGoal(teamGoal);
-            if (selectedStatus != null)        model.setStatus(selectedStatus);
+            model.setStatus(ActivityStatus.IN_PROGRESS);
             if (team != null)            model.setTeam(team);
             if (selectedActivityType != null)  model.setActivityType(selectedActivityType);
             if (selectedPriority != null)      model.setPriority(selectedPriority);
