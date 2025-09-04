@@ -1,14 +1,13 @@
 package org.pahappa.systems.kpiTracker.views.users;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +53,8 @@ public class UserFormDialog extends DialogForm<User> {
     @PostConstruct
     public void init() {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
-        this.listOfGenders = Arrays.asList(Gender.values());
+        this.listOfGenders = new ArrayList<>();
+        loadGender();
         this.databaseRoles = userService.getRoles();
         this.staffService = ApplicationContextProvider.getBean(StaffService.class);
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
@@ -90,7 +90,13 @@ public class UserFormDialog extends DialogForm<User> {
         // 5. Save Staff
         this.staffService.saveInstance(staff);
     }
-
+public void loadGender(){
+        for(Gender g : Arrays.asList(Gender.values())){
+            if(g != Gender.UNKNOWN){
+                listOfGenders.add(g);
+            }
+        }
+}
 
     @Override
     public void resetModal() {

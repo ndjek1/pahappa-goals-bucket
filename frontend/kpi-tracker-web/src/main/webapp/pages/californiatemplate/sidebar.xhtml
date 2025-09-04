@@ -238,12 +238,12 @@
                                 styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/organizationstructure/OrganizationStructure.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                 outcome="/pages/organizationstructure/OrganizationStructure" />
 
-                    <p:submenu id="settings" label="Manage Users"
+                    <p:submenu id="settings" label="Manage Staff"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, '/users/') ? 'active-menuitem persistent-active' : ''}"
                                expanded="#{fn:contains(facesContext.viewRoot.viewId, '/users/')}"
                                icon="pi pi-fw pi-user">
-                        <p:menuitem id="users" value="Users" icon="pi pi-fw pi-users"
+                        <p:menuitem id="users" value="Staffs" icon="pi pi-fw pi-users"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/users/UsersView.xhtml' ? 'active-menuitem persistent-active' : ''}"
                                     outcome="/pages/users/UsersView" />
                         <p:menuitem id="roles" value="Roles" icon="pi pi-fw pi-lock"
