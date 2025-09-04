@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -41,7 +42,7 @@ public class DepartmentFormDialog extends DialogForm<Department> {
     }
 
     public DepartmentFormDialog() {
-        super("DepartmentFormDialog", 550, 400);
+        super("DepartmentFormDialog", 550, 300);
     }
 
     private Department department = new Department();

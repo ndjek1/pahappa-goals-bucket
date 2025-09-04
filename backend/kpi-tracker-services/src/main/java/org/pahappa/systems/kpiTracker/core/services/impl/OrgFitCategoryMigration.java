@@ -22,9 +22,9 @@ public class OrgFitCategoryMigration {
 
     @Migration(orderNumber = 2)
     public void initializeDefaultOrgFitCategories2() {
-        createIfNotExists("Team Rating", "Collaboration, Communication, etc.", 5.0,OrgFitCategoryType.TEAM_RATING);
-        createIfNotExists("Company Values", "Self-management, Resource management, etc.", 20.0,OrgFitCategoryType.COMPANY_VALUES);
-        createIfNotExists( "Keeper Test", "Competence, Growth, Innovation", 15.0,OrgFitCategoryType.KEEPER_TEST);
+        createIfNotExists("Team Rating", "Collaboration, Communication, etc.", 0.0,OrgFitCategoryType.TEAM_RATING);
+        createIfNotExists("Company Values", "Self-management, Resource management, etc.", 0.0,OrgFitCategoryType.COMPANY_VALUES);
+        createIfNotExists( "Keeper Test", "Competence, Growth, Innovation", 0.0,OrgFitCategoryType.KEEPER_TEST);
     }
 
     private void createIfNotExists(String name, String description, double weight,OrgFitCategoryType orgFitCategoryType) {

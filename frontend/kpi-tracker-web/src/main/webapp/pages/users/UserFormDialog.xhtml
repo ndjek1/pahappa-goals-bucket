@@ -13,7 +13,7 @@
     </ui:define>
     <ui:define name="content">
         <title>
-            #{userFormDialog.edit ? 'Update user' : 'Add user'}
+            #{userFormDialog.edit ? 'Update staff' : 'Add staff'}
         </title>
 
         <h:form id="userFormDialog" style="height: 450px" styleClass="card">
@@ -75,7 +75,7 @@
                                          converter="genderConverter" filter="true"
                                          required="true" effect="fold">
                             <f:selectItem itemLabel="Select gender" itemValue="" />
-                            <f:selectItems value="#{userFormDialog.listOfGenders}" />
+                            <f:selectItems value="#{userFormDialog.listOfGenders}" var="gender" itemLabel="#{gender.name()} " itemValue="#{gender}" />
                         </p:selectOneMenu>
                     </div>
                 </div>
