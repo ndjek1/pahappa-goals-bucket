@@ -76,6 +76,9 @@ public class IndividualActivitiesView extends PaginatedTableView<IndividualActiv
                 Filter.equal("recordStatus",RecordStatus.ACTIVE),
                 Filter.equal("staff.id",loggedinStaff.getId())
         );
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            search.addFilterILike("name", "%" + searchTerm + "%");
+        }
         super.setTotalRecords(individualActivityService.countInstances(this.search));
         try {
             super.reloadFilterReset();

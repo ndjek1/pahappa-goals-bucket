@@ -72,7 +72,7 @@ public class IndividualActivityForm extends DialogForm<IndividualActivity> {
     private boolean edit;
 
     public IndividualActivityForm() {
-        super(HyperLinks.INDIVIDUAL_ACTIVITY_FORM_DIALOG, 700, 400);
+        super(HyperLinks.INDIVIDUAL_ACTIVITY_FORM_DIALOG, 700, 420);
     }
 
     @PostConstruct
@@ -157,7 +157,7 @@ public class IndividualActivityForm extends DialogForm<IndividualActivity> {
             }
             if (loggedinStaff != null) model.setStaff(loggedinStaff);
             if (individualGol != null) model.setIndividualGoal(individualGol);
-            if (selectedStatus != null)        model.setStatus(selectedStatus);
+            model.setStatus(ActivityStatus.IN_PROGRESS);
             if (selectedActivityType != null)  model.setActivityType(selectedActivityType);
             if (selectedPriority != null)      model.setPriority(selectedPriority);
 
