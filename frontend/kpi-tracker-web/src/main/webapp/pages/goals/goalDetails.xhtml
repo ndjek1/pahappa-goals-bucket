@@ -4,17 +4,30 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="head">
+        <style>
+            .progress-circle {
+                width: 150px;
+                height: 150px;
+            }
+
+            .progress-value-text {
+                margin-top: 1rem;
+                font-weight: bold;
+                font-size: 1.2rem;
+            }
+        </style>
+    </ui:define>
     <ui:define name="content">
         <h:form>
             <h:panelGroup rendered="#{not empty goalDetailsView.selectedGoal}">
                 <!-- Back arrow + Title -->
                 <div class="p-d-flex p-ai-center p-gap-2">
-                <p:commandButton icon="pi pi-arrow-left"
-                                 styleClass="ui-button-text ui-button-outlined p-mr-3 "
-                                 action="#{goalDetailsView.backToGoals}"
-                                 immediate="true"
-                />
-                <h2>Goal Details</h2>
+                    <p:commandButton icon="pi pi-arrow-left"
+                                     styleClass="ui-button-text ui-button-outlined p-mr-3 "
+                                     action="#{goalDetailsView.backToGoals}"
+                                     immediate="true"/>
+                    <h2>Goal Details</h2>
                 </div>
                 <div class="p-grid">
                     <!-- Left section -->
@@ -24,33 +37,46 @@
                             <div class="p-d-flex p-flex-column">
                                 <span style="margin: 5px 0"><b>Level:</b> #{goalDetailsView.goalLevel}</span>
                                 <span style="margin: 5px 0"><b>Created On:</b>
-
-                                <h:outputText  value="#{goalDetailsView.selectedGoal.dateCreated}">
-                                    <f:convertDateTime pattern="dd MMM yyyy"/>
-                                </h:outputText>
-                            </span>
+                                    <h:outputText value="#{goalDetailsView.selectedGoal.dateCreated}">
+                                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                                    </h:outputText>
+                                </span>
                             </div>
                             <hr/>
                             <p><b>Description:</b> #{goalDetailsView.selectedGoal.description}</p>
-                            <div class="p-d-flex p-ai-center p-mt-3">
-                                <h:outputText value="Overall Progress:" style="font-weight:bold; margin-right:1rem;" />
-                                <p:progressBar value="#{goalDetailsView.calculateOrganizationGoalProgress()}"
-                                               style="width:300px; height:16px; margin-right:1rem;" />
-                                <h:outputText value="#{goalDetailsView.calculateOrganizationGoalProgress()}%" />
-                            </div>
                         </div>
                     </div>
-                    <!-- Right section: Activities -->
+
+                    <!-- Right section: Donut Progress -->
                     <div class="p-col-12 p-md-4">
-                        <div class="p-card p-p-3 p-mb-3">
-                            <h3>Activities</h3>
+                        <div class="p-card   p-d-flex p-flex-column p-ai-center p-jc-center">
+                            <h3>Overall Progress</h3>
+
+                            <p:donutChart id="goalDonut"
+                                          model="#{goalDetailsView.progressDonutModel}"
+                                          style="width:200px;height:200px;" />
+
+                            <div class="p-d-flex p-ai-center p-jc-center" style="margin-top:1rem;">
+                                <h:outputText value="#{goalDetailsView.calculateOrganizationGoalProgress()}"
+                                              style="font-weight:bold; font-size:1.4rem;">
+                                    <f:convertNumber maxFractionDigits="1" />
+                                </h:outputText>
+                                <h:outputText value="%"
+                                              style="margin-left:4px; font-weight:bold; font-size:1.4rem;" />
+                            </div>
+
+
                         </div>
                     </div>
+
                 </div>
             </h:panelGroup>
+
             <h:panelGroup rendered="#{empty goalDetailsView.selectedGoal}">
                 <h:outputText value="No goal selected."/>
             </h:panelGroup>
+
+            <!-- Child Goals Table -->
             <h:panelGroup>
                 <p:dataTable id="childGoals" var="model" value="#{goalDetailsView.departmentGoalList}"
                              widgetVar="deptGoalsTable"
@@ -76,7 +102,6 @@
                         <h:outputText value="#{model.status.name()}" />
                     </p:column>
 
-
                     <p:column headerText="Action" width="140" exportable="false" style="text-align:center">
                         <p:commandButton icon="fa fa-check" styleClass="ui-button-primary"
                                          ajax="false"
@@ -99,6 +124,4 @@
             </h:panelGroup>
         </h:form>
     </ui:define>
-
-
 </ui:composition>

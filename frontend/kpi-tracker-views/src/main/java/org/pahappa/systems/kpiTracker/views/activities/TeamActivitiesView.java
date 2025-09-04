@@ -73,6 +73,9 @@ public class TeamActivitiesView extends PaginatedTableView<TeamActivity, Departm
                 Filter.equal("recordStatus",RecordStatus.ACTIVE),
                 Filter.equal("team.id",this.team.getId())
         );
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            search.addFilterILike("title", "%" + searchTerm + "%");
+        }
         super.setTotalRecords(teamActivityService.countInstances(this.search));
         try {
             super.reloadFilterReset();
