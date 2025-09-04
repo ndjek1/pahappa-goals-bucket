@@ -71,6 +71,9 @@ public class DepartmentActivitiesView extends PaginatedTableView<DepartmentActiv
                 Filter.equal("recordStatus",RecordStatus.ACTIVE),
                 Filter.equal("department.id",this.currentDepartment.getId())
         );
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            search.addFilterILike("title", "%" + searchTerm + "%");
+        }
         super.setTotalRecords(departmentActivityService.countInstances(this.search));
         try {
             super.reloadFilterReset();

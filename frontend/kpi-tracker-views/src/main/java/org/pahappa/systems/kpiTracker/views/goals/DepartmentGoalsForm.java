@@ -42,7 +42,7 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
     private User loggedinUser;
 
     public DepartmentGoalsForm() {
-        super(HyperLinks.DEPARTMENT_GOAL_DIALOG, 500, 400);
+        super(HyperLinks.DEPARTMENT_GOAL_DIALOG, 600, 400);
     }
 
     @PostConstruct

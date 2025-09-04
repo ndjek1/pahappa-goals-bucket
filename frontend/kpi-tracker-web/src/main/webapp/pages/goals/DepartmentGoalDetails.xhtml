@@ -29,26 +29,31 @@
                                 <h:outputText  value="#{departmentGoalDetails.selectedGoal.dateCreated}">
                                     <f:convertDateTime pattern="dd MMM yyyy"/>
                                 </h:outputText>
+
                             </span>
+                                <p><b>Description:</b> #{departmentGoalDetails.selectedGoal.description}</p>
                             </div>
-                            <hr/>
-                            <p><b>Description:</b> #{departmentGoalDetails.selectedGoal.description}</p>
-                            <div class="p-d-flex p-ai-center p-mt-3">
-                                <h:outputText value="Overall Progress:" style="font-weight:bold; margin-right:1rem;" />
-                                <p:progressBar value="#{departmentGoalDetails.calculateProgress()}"
-                                               style="width:300px; height:16px; margin-right:1rem;" />
-                                <h:outputText value="#{departmentGoalDetails.calculateProgress()}%" />
-                            </div>
+
                         </div>
                     </div>
-                    <!-- Right section: Activities -->
-                    <div class="p-col-12 p-md-4">
-                        <div class="p-card p-p-3 p-mb-3">
-                            <h3>Activities</h3>
-                            <ui:repeat value="#{departmentGoalDetails.departmentActivityList}" var="activity">
-                                <span>#{activity.title}</span>
-                            </ui:repeat>
+                <!-- Right section: Donut Progress -->
+                <div class="p-col-12 p-md-4">
+                    <div class="p-card   p-d-flex p-flex-column p-ai-center p-jc-center">
+
+                        <p:donutChart id="goalDonut"
+                                      model="#{departmentGoalDetails.progressDonutModel}"
+                                      style="width:200px;height:200px;" />
+
+                        <div class="p-d-flex p-ai-center p-jc-center" style="margin-top:1rem;">
+                            <h:outputText value="#{departmentGoalDetails.calculateProgress()}"
+                                          style="font-weight:bold; font-size:1.4rem;">
+                                <f:convertNumber maxFractionDigits="1" />
+                            </h:outputText>
+                            <h:outputText value="%"
+                                          style="margin-left:4px; font-weight:bold; font-size:1.4rem;" />
                         </div>
+
+                    </div>
                     </div>
                 </div>
             </h:panelGroup>
