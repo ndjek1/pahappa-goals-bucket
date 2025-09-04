@@ -58,7 +58,7 @@ public class DepartmentActivityFormDialog extends DialogForm<DepartmentActivity>
     private boolean edit;
 
     public DepartmentActivityFormDialog() {
-        super(HyperLinks.DEPARTMENT_ACTIVITY_FORM_DIALOG, 700, 400);
+        super(HyperLinks.DEPARTMENT_ACTIVITY_FORM_DIALOG, 700, 420);
     }
 
     @PostConstruct
@@ -126,7 +126,7 @@ public class DepartmentActivityFormDialog extends DialogForm<DepartmentActivity>
             }
 
             if (selectedDepartmentGoal != null) model.setDepartmentGoal(selectedDepartmentGoal);
-            if (selectedStatus != null)        model.setStatus(selectedStatus);
+           model.setStatus(ActivityStatus.IN_PROGRESS);
             if (department != null)            model.setDepartment(department);
             if (selectedActivityType != null)  model.setActivityType(selectedActivityType);
             if (selectedPriority != null)      model.setPriority(selectedPriority);

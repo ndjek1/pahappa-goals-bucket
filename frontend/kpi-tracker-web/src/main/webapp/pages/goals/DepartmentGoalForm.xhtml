@@ -16,67 +16,85 @@
     <ui:define name="content">
         <title>Add Department Goal</title>
 
-        <h:form id="deptGoalForm" styleClass="dialog-card">
+        <h:form id="deptGoalForm" styleClass="card">
             <p:growl id="growl" showDetail="true" life="4000" />
 
-            <div class="ui-fluid formgrid grid p-m-4">
+            <div class="p-grid ui-fluid" style="display: flex;">
 
                 <!-- Goal Name -->
-                <div class="field col-12 p-m-4">
-                    <p:outputLabel for="goalName" value="Goal Name" />
-                    <p:inputText id="goalName"
-                                 value="#{departmentGoalsForm.model.name}"
-                                 required="true"
-                                 placeholder="Enter goal name"
-                                 styleClass="p-inputtext-sm w-full"/>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Goal Name</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText id="goalName"
+                                     value="#{departmentGoalsForm.model.name}"
+                                     required="true"
+                                     requiredMessage="Goal name is required."
+                                     placeholder="Enter goal name"
+                                     styleClass="full-width"/>
+                    </div>
                 </div>
 
                 <!-- Description -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="goalDesc" value="Description" />
-                    <p:inputText id="goalDesc"
-                                 value="#{departmentGoalsForm.model.description}"
-                                 required="true"
-                                 placeholder="Enter description"
-                                 styleClass="p-inputtext-sm w-full"/>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Description</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText id="goalDesc"
+                                     value="#{departmentGoalsForm.model.description}"
+                                     required="true"
+                                     requiredMessage="Description is required."
+                                     placeholder="Enter description"
+                                     styleClass="full-width"/>
+                    </div>
                 </div>
 
                 <!-- Parent Goal -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="parentGoal" value="Parent Goal" />
-                    <p:selectOneMenu id="parentGoal"
-                                     value="#{departmentGoalsForm.selectedOrganizationGoal}"
-                                     converter="organizationGoalConverter">
-                        <f:selectItem itemLabel="Select parent goal" itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{departmentGoalsForm.organizationGoals}"
-                                       var="parentGoal"
-                                       itemLabel="#{parentGoal.name}"
-                                       itemValue="#{parentGoal}"/>
-                    </p:selectOneMenu>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Parent Goal</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu id="parentGoal"
+                                         value="#{departmentGoalsForm.selectedOrganizationGoal}"
+                                         converter="organizationGoalConverter"
+                                         styleClass="full-width">
+                            <f:selectItem itemLabel="Select parent goal" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{departmentGoalsForm.organizationGoals}"
+                                           var="parentGoal"
+                                           itemLabel="#{parentGoal.name}"
+                                           itemValue="#{parentGoal}"/>
+                        </p:selectOneMenu>
+                    </div>
                 </div>
 
                 <!-- Contribution Weight -->
-                <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="weight" value="Weight (%)" />
-                    <p:inputText id="weight"
-                                 value="#{departmentGoalsForm.model.contributionWeight}"
-                                 required="true"
-                                 placeholder="Enter weight"
-                                 styleClass="p-inputtext-sm w-full"/>
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Weight (%)</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="weight"
+                                       value="#{departmentGoalsForm.model.contributionWeight}"
+                                       required="true"
+                                       requiredMessage="Weight is required."
+                                       minValue="0"
+                                       maxValue="100"
+                                       decimalPlaces="0"
+                                       placeholder="Enter weight"
+                                       styleClass="full-width"/>
+                    </div>
                 </div>
 
-                <!-- Buttons -->
-                <div class="field col-12 p-d-flex p-jc-between">
-                    <p:commandButton value="Cancel"
-                                     immediate="true"
-                                     action="#{departmentGoalsForm.hide}"
-                                     styleClass="ui-button-danger p-mx-5" />
-
-                    <p:commandButton value="Save"
-                                     process="@form"
-                                     actionListener="#{departmentGoalsForm.persist}"
-                                     update="@form growl"
-                                     styleClass="ui-button-primary p-mx-5" />
+                <!-- Buttons Row -->
+                <div class="ui-col-12 p-grid ui-fluid" style="display: flex; margin-top: 1em;">
+                    <div class="ui-col-12 ui-md-6">
+                        <p:commandButton value="Cancel"
+                                         immediate="true"
+                                         action="#{departmentGoalsForm.hide}"
+                                         styleClass="ui-button-danger full-width"/>
+                    </div>
+                    <div class="ui-col-12 ui-md-6">
+                        <p:commandButton value="Save"
+                                         process="@form"
+                                         actionListener="#{departmentGoalsForm.persist}"
+                                         update="@form growl"
+                                         styleClass="ui-button-primary full-width"/>
+                    </div>
                 </div>
 
             </div>
