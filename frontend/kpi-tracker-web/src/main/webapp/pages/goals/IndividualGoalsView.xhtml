@@ -6,52 +6,7 @@
                 template="/pages/californiatemplate/template.xhtml">
 
     <ui:define name="head">
-        <style>
-            .capitalized { text-transform: capitalize; }
-            .activity-nav-card {
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: 1px solid #e0e0e0;
-                padding: 2px;
-                border-radius: 8px;
-                background: #f9fafb;
-            }
-            .activity-nav-card:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-            .icon-circle { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; color:#fff; font-size:10px; }
-            .nav-card { background: #f9fafb; }
-            .bg-green { background:#22c55e; } .bg-blue { background:#3b82f6; } .bg-purple { background:#8b5cf6; } .bg-orange { background:#f59e0b; } .bg-cyan { background:#06b6d4; }
-            .nav-card h6 { margin:0; font-size:0.7rem; }
-            .nav-card p { margin:0; font-size:0.64rem; color:#6b7280; }
-            .stat-value { margin-left:auto; font-size:0.95rem; font-weight:600; }
-            .text-primary { color:#3b82f6; } .text-success { color:#10b981; } .text-warning { color:#f59e0b; }
-            .p-grid { margin:0 -0.2rem; } [class*='p-col-'] { padding:0 0.2rem; box-sizing: border-box; }
-            .filter-input, .filter-select, .filter-calendar { width:100%; font-size:0.72rem; padding:0.16rem 0.28rem; border:1px solid #d1d5db; border-radius:0.3rem; }
-            .breadcrumb-card { padding:3px 5px; margin:0 0 4px 0; }
-            .breadcrumb-card .ui-breadcrumb { font-size:0.76rem; padding:0; margin:0; }
-            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link { padding:1px 5px; }
-            .d-flex { display:flex; } .align-items-center { align-items:center; } .flex-grow-1 { flex-grow:1; } .me-3 { margin-right:0.35rem; }
-            
-            /* Custom button styles */
-            .custom-btn {
-                background: transparent !important;
-                border: none !important;
-                box-shadow: none !important;
-                display: flex;
-                align-items: center;
-                padding: 6px 10px;
-            }
-            .custom-btn:hover {
-                background: #b3d1e6 !important;
-                border-radius: 8px;
-            }
-            .custom-icon {
-                font-size: 1.2rem;
-            }
-            .custom-icon-edit {
-                color: orange;
-                font-size: 1.2rem;
-            }
-        </style>
+        
     </ui:define>
 
     <ui:define name="content">
@@ -84,8 +39,8 @@
                 <!-- Right side: Add Goal Button -->
                 <p:commandButton value="Set Goal" icon="pi pi-plus"
                                  styleClass="add-button"
-                                 actionListener="#{teamGoalForm.show}">
-                    <f:setPropertyActionListener value="#{null}" target="#{teamGoalForm.model}"/>
+                                 actionListener="#{individualGoalForm.show}">
+                    <f:setPropertyActionListener value="#{null}" target="#{individualGoalForm.model}"/>
                     <p:ajax event="dialogReturn" listener="#{individualGoalsView.reloadFilterReset}" update="individualGoalsView"/>
                 </p:commandButton>
             </div>
