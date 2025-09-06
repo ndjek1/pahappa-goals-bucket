@@ -73,6 +73,7 @@ public class GoalDetails implements Serializable {
     public void loadDepartmentGoals(){
         Search search = new Search();
         search.addFilterEqual("parent.id",this.selectedGoal.getId());
+        search.addFilterEqual("status",GoalStatus.APPROVED);
         this.departmentGoalList = this.departmentGoalService.getInstances(search,0,0);
     }
 

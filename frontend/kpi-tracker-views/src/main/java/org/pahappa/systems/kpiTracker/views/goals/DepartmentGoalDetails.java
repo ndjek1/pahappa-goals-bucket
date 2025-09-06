@@ -77,6 +77,7 @@ public class DepartmentGoalDetails implements Serializable {
     public void loadTeamGoals(){
         Search search = new Search();
         search.addFilterEqual("parent.id",this.selectedGoal.getId());
+        search.addFilterEqual("status",GoalStatus.APPROVED);
         this.teamGoalGoalList = this.teamGoalService.getInstances(search,0,0);
     }
 
@@ -115,20 +116,20 @@ public class DepartmentGoalDetails implements Serializable {
     public double calculateProgress() {
         double weightedSum = 0, totalWeight = 0;
 
-        // 1. KPIs directly under Department Goal
-        if (kpisList != null && !kpisList.isEmpty()) {
-            double kpiWeightedSum = 0, kpiTotalWeight = 0;
-            for (KPI kpi : kpisList) {
-                kpiWeightedSum += kpi.getProgress() * (kpi.getWeight() != null ? kpi.getWeight() : 1);
-                kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
-            }
-            if (kpiTotalWeight > 0) {
-                double kpiProgress = kpiWeightedSum / kpiTotalWeight;
-                // Treat all KPIs as one "bucket" with weight 1
-                weightedSum += kpiProgress;
-                totalWeight += 1;
-            }
-        }
+//        // 1. KPIs directly under Department Goal
+//        if (kpisList != null && !kpisList.isEmpty()) {
+//            double kpiWeightedSum = 0, kpiTotalWeight = 0;
+//            for (KPI kpi : kpisList) {
+//                kpiWeightedSum += kpi.getProgress() * (kpi.getWeight() != null ? kpi.getWeight() : 1);
+//                kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
+//            }
+//            if (kpiTotalWeight > 0) {
+//                double kpiProgress = kpiWeightedSum / kpiTotalWeight;
+//                // Treat all KPIs as one "bucket" with weight 1
+//                weightedSum += kpiProgress;
+//                totalWeight += 1;
+//            }
+//        }
 
         // 2. Progress from Team Goals
         if (teamGoalGoalList != null && !teamGoalGoalList.isEmpty()) {
