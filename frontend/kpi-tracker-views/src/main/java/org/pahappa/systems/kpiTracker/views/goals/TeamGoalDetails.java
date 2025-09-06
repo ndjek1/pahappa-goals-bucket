@@ -14,6 +14,9 @@ import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.donut.DonutChartDataSet;
+import org.primefaces.model.charts.donut.DonutChartModel;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
@@ -23,6 +26,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
 
 @ManagedBean(name = "teamGoalDetails")
@@ -57,6 +63,7 @@ public class TeamGoalDetails implements Serializable {
     public void loadIndividualGoals(){
         Search search = new Search(IndividualGoal.class);
         search.addFilterEqual("teamGoal.id", this.selectedGoal.getId());
+        search.addFilterEqual("status",GoalStatus.APPROVED);
         this.individualGoalsList = individualGoalService.getInstances(search,0,0);
     }
 
@@ -117,6 +124,28 @@ public class TeamGoalDetails implements Serializable {
         } else {
             UiUtils.showMessageBox("Empty Goal", "No goal selected.");
         }
+    }
+
+    public DonutChartModel getProgressDonutModel() {
+        DonutChartModel model = new DonutChartModel();
+        ChartData data = new ChartData();
+
+        DonutChartDataSet dataSet = new DonutChartDataSet();
+
+        double preciseProgress = getProgress();
+        BigDecimal bd = new BigDecimal(Double.toString(preciseProgress));
+        bd = bd.setScale(1, RoundingMode.HALF_UP); // Set scale to 1 for one decimal place
+        double progress = bd.doubleValue();
+        double remaining = 100 - progress;
+
+        dataSet.setData(Arrays.asList(progress, remaining));
+        dataSet.setBackgroundColor(Arrays.asList("#58a73a", "#c92c2c"));
+
+        data.addChartDataSet(dataSet);
+        data.setLabels(Arrays.asList("Progress", "Remaining"));
+
+        model.setData(data);
+        return model;
     }
 }
 

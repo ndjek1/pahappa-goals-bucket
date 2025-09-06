@@ -12,6 +12,9 @@ import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.donut.DonutChartDataSet;
+import org.primefaces.model.charts.donut.DonutChartModel;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
@@ -22,6 +25,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
 
 @ManagedBean(name = "individualGoalDetails")
@@ -81,5 +87,27 @@ public class IndividualGoalDetails implements Serializable {
         );
         this.individualActivities = this.getIndividualActivityService().getInstances(search,0,0);
 
+    }
+
+    public DonutChartModel getProgressDonutModel() {
+        DonutChartModel model = new DonutChartModel();
+        ChartData data = new ChartData();
+
+        DonutChartDataSet dataSet = new DonutChartDataSet();
+
+        double preciseProgress = getProgress();
+        BigDecimal bd = new BigDecimal(Double.toString(preciseProgress));
+        bd = bd.setScale(1, RoundingMode.HALF_UP); // Set scale to 1 for one decimal place
+        double progress = bd.doubleValue();
+        double remaining = 100 - progress;
+
+        dataSet.setData(Arrays.asList(progress, remaining));
+        dataSet.setBackgroundColor(Arrays.asList("#58a73a", "#c92c2c"));
+
+        data.addChartDataSet(dataSet);
+        data.setLabels(Arrays.asList("Progress", "Remaining"));
+
+        model.setData(data);
+        return model;
     }
 }

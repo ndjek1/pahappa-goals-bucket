@@ -38,17 +38,26 @@
                                     </div>
                                     <hr/>
                                     <p><b>Description:</b> #{teamGoalDetails.selectedGoal.description}</p>
-                                    <hr/>
-                                    <p><b>Progress:</b></p>
-                                    <p:progressBar value="#{teamGoalDetails.progress}" labelTemplate="{value}%" styleClass="p-mb-2"/>
                                 </div>
                             </div>
 
-                            <!-- Right section: Activities -->
+                            <!-- Right section: Donut Progress -->
                             <div class="p-col-12 p-md-4">
-                                <div class="p-card p-p-3 p-mb-3">
-                                    <h3>Activities</h3>
-                                    <!-- Add activity details here -->
+                                <div class="p-card   p-d-flex p-flex-column p-ai-center p-jc-center">
+
+                                    <p:donutChart id="goalDonut"
+                                                  model="#{teamGoalDetails.progressDonutModel}"
+                                                  style="width:200px;height:200px;" />
+
+                                    <div class="p-d-flex p-ai-center p-jc-center" style="margin-top:1rem;">
+                                        <h:outputText value="#{teamGoalDetails.progress}"
+                                                      style="font-weight:bold; font-size:1.4rem;">
+                                            <f:convertNumber maxFractionDigits="1" />
+                                        </h:outputText>
+                                        <h:outputText value="%"
+                                                      style="margin-left:4px; font-weight:bold; font-size:1.4rem;" />
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
