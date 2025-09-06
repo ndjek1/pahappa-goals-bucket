@@ -47,7 +47,7 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
     private Staff loggedinStaff;
 
     public IndividualGoalForm() {
-        super(HyperLinks.INDIVIDUAL_GOAL_DIALOG, 500, 400);
+        super(HyperLinks.INDIVIDUAL_GOAL_DIALOG, 700, 430);
     }
 
     @PostConstruct
@@ -68,15 +68,86 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
             UiUtils.showMessageBox("Missing goal name", "Goal must have a type.");
             return;
         }
-        if(this.selectedTeamGoal != null) {
-            model.setTeamGoal(this.selectedTeamGoal);
+        if(this.model.getTeamGoal() != null) {
+            double percent = calculateRemainingPercentage(model.getTeamGoal());
+            if(model.getContributionWeight() <= 0){
+                UiUtils.showMessageBox("Contribution weight too low", "Contribution weight cannot be less or equal to 0");
+            }
+            if( percent<model.getContributionWeight()){
+                if(percent<=0){
+                    UiUtils.showMessageBox("Contribution weight is reached", "Can no longer  contribute to that parent goal");
+                }else {
+                    UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + calculateRemainingPercentage(this.model.getTeamGoal()) + " to this selected goal");
+                }
+                return;
+            }
         }
+
         if(this.selectedDepartmentGoal != null) {
-            model.setParent(this.selectedDepartmentGoal);
+            double percent = calculateDeptRemainingPercentage(model.getParent());
+            if(percent < model.getContributionWeight()){
+                if(percent<=0){
+                    UiUtils.showMessageBox("Contribution weight is reached", "Can no longer  contribute to that parent goal");
+                }else {
+                    UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + calculateRemainingPercentage(this.selectedTeamGoal) + " to this selected goal");
+                    return;
+                }
+
+            }
         }
         model.setStaff(this.loggedinStaff);
         individualGoalService.saveInstance(super.model);
+        resetModal();
+        hide();
     }
+
+    public double calculateRemainingPercentage(TeamGoal teamGoal){
+        if (teamGoal == null) return 100.0; // no parent, nothing to restrict
+
+        double total = 0.0;
+        Search search = new Search(IndividualGoal.class);
+        search.addFilterEqual("teamGoal.id", teamGoal.getId());
+        List<IndividualGoal> goals = this.individualGoalService.getInstances(search,0,0);
+
+        if(goals != null && !goals.isEmpty()){
+            for(IndividualGoal goal: goals){
+                total += goal.getContributionWeight();
+            }
+        }
+
+        return Math.max(0, 100 - total);
+    }
+
+
+    public double calculateDeptRemainingPercentage(DepartmentGoal departmentGoal){
+        if (departmentGoal == null) return 100.0;
+
+        double total = 0.0;
+
+        // Individual goals attached to department
+        Search search = new Search(IndividualGoal.class);
+        search.addFilterEqual("departmentGoal.id", departmentGoal.getId());
+        List<IndividualGoal> goals = this.individualGoalService.getInstances(search,0,0);
+        if(goals != null){
+            for(IndividualGoal goal: goals){
+                total += goal.getContributionWeight();
+            }
+        }
+
+        // Team goals under this department
+        Search teamGoalSearch = new Search(TeamGoal.class);
+        teamGoalSearch.addFilterEqual("parent.id", departmentGoal.getId());
+        List<TeamGoal> teamGoals = this.teamGoalService.getInstances(teamGoalSearch,0,0);
+        if(teamGoals != null){
+            for(TeamGoal goal: teamGoals){
+                total += goal.getContributionWeight();
+            }
+        }
+
+        return Math.max(0, 100 - total);
+    }
+
+
 
     public void loadTeam() {
 
