@@ -9,6 +9,7 @@ import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
@@ -112,8 +113,23 @@ public class IndividualKPIForm extends DialogForm<KPI> {
                 model.setDepartmentGoal(null);
                 model.setTeamGoal(null);
             }
-            
+
+            double remaining = 0.0;
+            if(this.selectedIndividualGoal != null) {
+                remaining =  canAddKPIForGoal(this.selectedIndividualGoal);
+            }
+
+            if( remaining<model.getWeight()){
+                if(remaining<=0){
+                    UiUtils.showMessageBox("Warning", "Can no longer  contribute to the selected goal");
+                }else {
+                    UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + remaining + " to this selected goal");
+                }
+                return;
+            }
             kpisService.saveInstance(super.model);
+            resetModal();
+            hide();
         } catch (ValidationFailedException e) {
             UiUtils.ComposeFailure("Validation Error", e.getMessage());
             throw e;
@@ -176,6 +192,23 @@ public class IndividualKPIForm extends DialogForm<KPI> {
         } else {
             this.edit = false;
         }
+    }
+
+    public double canAddKPIForGoal(IndividualGoal goal){
+            double totalWeight = 0.0;
+            Search search = new Search(KPI.class);
+            search.addFilterAnd(
+                    Filter.equal("recordStatus" , RecordStatus.ACTIVE),
+                    Filter.equal("individualGoal.id", goal.getId())
+            );
+
+            List<KPI> kpis = this.kpisService.getInstances(search,0,0);
+            if(kpis.size() > 0){
+                for(KPI kp : kpis){
+                    totalWeight += kp.getWeight();
+                }
+            }
+            return  Math.max(0,100-totalWeight);
     }
 
     private void clearSelections() {

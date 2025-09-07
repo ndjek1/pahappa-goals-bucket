@@ -8,6 +8,10 @@ import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
+import org.primefaces.model.charts.line.LineChartModel;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.line.LineChartDataSet;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
@@ -19,23 +23,27 @@ import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.*;
 
+import static org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency.ANNUALLY;
+
 @ManagedBean(name = "kpiDetailView")
 @Getter
 @Setter
 @ViewScoped
 public class KpiDetailView implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private KpisService kpisService;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
     private ReviewCycleService reviewCycleService;
+
     private KPI selectedKpi;
     private List<KpiUpdateHistory> kpiUpdateHistory;
     private List<ReviewCycle> reviewCycles;
     private User loggedInUser;
     private List<ChartDataPoint> chartDataPoints;
-    
+    private LineChartModel lineModel;
+
     // Update form fields
     private Double newValue;
     private String updateComment;
@@ -47,23 +55,22 @@ public class KpiDetailView implements Serializable {
         this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
         this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         this.loggedInUser = SharedAppData.getLoggedInUser();
-        
-        // Load review cycles
+
         loadReviewCycles();
-        
+
         // Get KPI ID from request parameter
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String kpiId = params.get("kpiId");
         this.returnPage = params.get("returnPage");
-        
+
         if (kpiId != null) {
             try {
                 this.selectedKpi = kpisService.getInstanceByID(kpiId);
                 if (this.selectedKpi != null) {
+                    loadKpiHistory();
                     createChartDataFromHistory();
                 }
             } catch (Exception e) {
-                // Handle invalid ID
                 e.printStackTrace();
             }
         }
@@ -77,85 +84,177 @@ public class KpiDetailView implements Serializable {
         }
     }
 
-    private void createChartDataFromHistory() {
-        chartDataPoints = new ArrayList<>();
-        
-        if (kpiUpdateHistory != null && !kpiUpdateHistory.isEmpty()) {
-            // Sort history by date ascending for chart
-            List<KpiUpdateHistory> sortedHistory = new ArrayList<>(kpiUpdateHistory);
-            sortedHistory.sort((a, b) -> a.getUpdateDate().compareTo(b.getUpdateDate()));
-            
-            // Create chart data from actual history
-            for (KpiUpdateHistory history : sortedHistory) {
-                ChartDataPoint point = new ChartDataPoint();
-                point.setLabel(getDateLabel(history.getUpdateDate()));
-                point.setValue(history.getNewValue());
-                chartDataPoints.add(point);
-            }
+    private void loadKpiHistory() {
+        if (selectedKpi != null) {
+            this.kpiUpdateHistory = kpiUpdateHistoryService.getUpdateHistoryByKpi(selectedKpi);
         } else {
-            // If no history available, create a single point with current value
-            if (selectedKpi.getCurrentValue() != null) {
-                ChartDataPoint point = new ChartDataPoint();
-                point.setLabel(getDateLabel(new Date()));
-                point.setValue(selectedKpi.getCurrentValue());
-                chartDataPoints.add(point);
-            }
+            this.kpiUpdateHistory = new ArrayList<>();
         }
     }
-    
-    // Simple data class for chart visualization
+
+
+    private String getFrequencyLabel(Date date, Frequency frequency) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        switch (frequency) {
+            case DAILY:
+                return cal.get(Calendar.DAY_OF_MONTH) + " "
+                        + new java.text.DateFormatSymbols().getMonths()[cal.get(Calendar.MONTH)];
+            case WEEKLY:
+                int week = cal.get(Calendar.WEEK_OF_YEAR);
+                return "Week " + week + " (" + cal.get(Calendar.YEAR) + ")";
+            case MONTHLY:
+                return new java.text.DateFormatSymbols().getMonths()[cal.get(Calendar.MONTH)]
+                        + " " + cal.get(Calendar.YEAR);
+            case QUARTERLY:
+                int quarter = (cal.get(Calendar.MONTH) / 3) + 1;
+                return "Q" + quarter + " " + cal.get(Calendar.YEAR);
+            case BIANNUALLY:
+                return (cal.get(Calendar.MONTH) < 6 ? "H1 " : "H2 ") + cal.get(Calendar.YEAR);
+            case ANNUALLY:
+                return String.valueOf(cal.get(Calendar.YEAR));
+            default:
+                return date.toString();
+        }
+    }
+
+
+
+    // === Chart data class ===
     public static class ChartDataPoint {
         private String label;
         private Double value;
-        
         public String getLabel() { return label; }
         public void setLabel(String label) { this.label = label; }
         public Double getValue() { return value; }
         public void setValue(Double value) { this.value = value; }
     }
 
-    private String getDateLabel(Date date) {
-        if (date == null) return "";
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-        return months[cal.get(Calendar.MONTH)] + " " + cal.get(Calendar.DAY_OF_MONTH);
+    private void createChartDataFromHistory() {
+        chartDataPoints = new ArrayList<>();
+        lineModel = new LineChartModel();
+
+        if (kpiUpdateHistory != null && !kpiUpdateHistory.isEmpty()) {
+            List<KpiUpdateHistory> sortedHistory = new ArrayList<>(kpiUpdateHistory);
+            sortedHistory.sort(Comparator.comparing(KpiUpdateHistory::getUpdateDate));
+
+            ChartData data = new ChartData();
+            LineChartDataSet dataSet = new LineChartDataSet();
+
+            List<Object> values = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
+
+            for (KpiUpdateHistory history : sortedHistory) {
+                labels.add(getFrequencyLabel(history.getUpdateDate(), selectedKpi.getFrequency()));
+                values.add(history.getValue());
+            }
+
+            dataSet.setLabel("Progress");
+            dataSet.setData(values);
+            dataSet.setFill(false);
+            dataSet.setBorderColor("rgb(75, 192, 192)");
+
+
+            data.addChartDataSet(dataSet);
+            data.setLabels(labels);
+
+            lineModel.setData(data);
+
+        } else if (selectedKpi.getCurrentValue() != null) {
+            ChartData data = new ChartData();
+            LineChartDataSet dataSet = new LineChartDataSet();
+
+            List<Object> values = Collections.singletonList(selectedKpi.getCurrentValue());
+            List<String> labels = Collections.singletonList(getFrequencyLabel(new Date(), selectedKpi.getFrequency()));
+
+            dataSet.setLabel("Progress");
+            dataSet.setData(values);
+            dataSet.setFill(false);
+            dataSet.setBorderColor("rgb(75, 192, 192)");
+
+            data.addChartDataSet(dataSet);
+            data.setLabels(labels);
+
+            lineModel.setData(data);
+        }
     }
+
+
 
     public String updateKpiValue() {
         if (selectedKpi != null && newValue != null) {
             try {
-                // Store previous value for history
-                Double previousValue = selectedKpi.getCurrentValue();
-                
-                // Update the KPI current value
-                selectedKpi.setCurrentValue(newValue);
-                
-                // Calculate accomplishment percentage
-                if (selectedKpi.getTargetValue() != null && selectedKpi.getTargetValue() > 0) {
-                    Double percentage = (newValue * 100.0) / selectedKpi.getTargetValue();
+                // Check last update against frequency
+                if (!canUpdateBasedOnFrequency()) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new javax.faces.application.FacesMessage(javax.faces.application.FacesMessage.SEVERITY_WARN,
+                                    "Update Not Allowed",
+                                    "KPI can only be updated once per " + selectedKpi.getFrequency().getDisplayName()));
+                    return null;
                 }
-                
-                // Save the KPI
+
+                selectedKpi.setCurrentValue(newValue);
                 kpisService.saveInstance(selectedKpi);
 
+                // Save history
+                KpiUpdateHistory history = new KpiUpdateHistory();
+                history.setKpi(selectedKpi);
+                history.setValue(newValue);
+                history.setUpdateDate(new Date());
+                history.setComment(updateComment);
+                history.setChangedBy(loggedInUser);
+                kpiUpdateHistoryService.saveInstance(history);
 
-                
-                // Clear form fields
+                loadKpiHistory();
+                createChartDataFromHistory();
+
                 newValue = null;
                 updateComment = null;
-                
-                // Recreate chart with new data
-                createChartDataFromHistory();
-                
+
             } catch (Exception e) {
-                // Handle error
                 e.printStackTrace();
             }
         }
-        return null; // Stay on same page
+        return null;
     }
+    private boolean canUpdateBasedOnFrequency() {
+        if (kpiUpdateHistory == null || kpiUpdateHistory.isEmpty()) {
+            return true; // no restriction if no history
+        }
+
+        // get most recent history
+        KpiUpdateHistory lastUpdate = Collections.max(kpiUpdateHistory,
+                Comparator.comparing(KpiUpdateHistory::getUpdateDate));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(lastUpdate.getUpdateDate());
+
+        Calendar now = Calendar.getInstance();
+
+        switch (selectedKpi.getFrequency()) {
+            case DAILY:
+                return now.get(Calendar.DAY_OF_YEAR) != cal.get(Calendar.DAY_OF_YEAR)
+                        || now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            case WEEKLY:
+                return now.get(Calendar.WEEK_OF_YEAR) != cal.get(Calendar.WEEK_OF_YEAR)
+                        || now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            case MONTHLY:
+                return now.get(Calendar.MONTH) != cal.get(Calendar.MONTH)
+                        || now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            case QUARTERLY:
+                return (now.get(Calendar.MONTH) / 3) != (cal.get(Calendar.MONTH) / 3)
+                        || now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            case BIANNUALLY:
+                return (now.get(Calendar.MONTH) < 6 ? 0 : 1) != (cal.get(Calendar.MONTH) < 6 ? 0 : 1)
+                        || now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            case ANNUALLY:
+                return now.get(Calendar.YEAR) != cal.get(Calendar.YEAR);
+            default:
+                return true;
+        }
+    }
+
 
     public String goBack() {
         if (returnPage != null && !returnPage.isEmpty()) {
@@ -166,31 +265,10 @@ public class KpiDetailView implements Serializable {
 
     public String getGoalName() {
         if (selectedKpi == null) return "N/A";
-        
-        if (selectedKpi.getOrganizationGoal() != null) {
-            return selectedKpi.getOrganizationGoal().getName();
-        }
-        if (selectedKpi.getDepartmentGoal() != null) {
-            return selectedKpi.getDepartmentGoal().getName();
-        }
-        if (selectedKpi.getTeamGoal() != null) {
-            return selectedKpi.getTeamGoal().getName();
-        }
-        if (selectedKpi.getIndividualGoal() != null) {
-            return selectedKpi.getIndividualGoal().getName();
-        }
-        
+        if (selectedKpi.getOrganizationGoal() != null) return selectedKpi.getOrganizationGoal().getName();
+        if (selectedKpi.getDepartmentGoal() != null) return selectedKpi.getDepartmentGoal().getName();
+        if (selectedKpi.getTeamGoal() != null) return selectedKpi.getTeamGoal().getName();
+        if (selectedKpi.getIndividualGoal() != null) return selectedKpi.getIndividualGoal().getName();
         return "N/A";
-    }
-
-
-    // Inner class for backward compatibility with existing XHTML
-    @Getter
-    @Setter
-    public static class KpiUpdate implements Serializable {
-        private Date dateUpdated;
-        private Double value;
-        private User updatedBy;
-        private String comment;
     }
 }
