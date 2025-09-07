@@ -23,37 +23,30 @@
 
                 <!-- Goal Name -->
                 <div class="field col-12 p-m-4">
-                    <p:outputLabel for="goalName" value="Goal Name" />
-                    <p:inputText id="goalName"
-                                 value="#{organizationGoalForm.model.name}"
-                                 required="true"
-                                 placeholder="Enter goal name"
-                                 styleClass="p-inputtext-sm w-full"/>
+                    <h5>Name</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputText id="goalName"
+                                     value="#{departmentGoalsForm.model.name}"
+                                     required="true"
+                                     requiredMessage="Goal name is required."
+                                     placeholder="Enter goal name"
+                                     styleClass="full-width"/>
+                    </div>
                 </div>
 
                 <!-- Description -->
                 <div class="field col-12 md:col-6 p-m-4">
-                    <p:outputLabel for="goalDesc" value="Description" />
-                    <p:inputText id="goalDesc"
-                                 value="#{organizationGoalForm.model.description}"
-                                 required="true"
-                                 placeholder="Enter description"
-                                 styleClass="p-inputtext-sm w-full"/>
+                    <h5>Description</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputTextarea id="goalDesc"
+                                         value="#{departmentGoalsForm.model.description}"
+                                         required="true"
+                                         requiredMessage="Description is required."
+                                         placeholder="Enter description"
+                                         styleClass="full-width"/>
+                    </div>
                 </div>
-
-                <!-- Review Cycle -->
-                <div class="field col-12 p-m-4">
-                    <p:outputLabel for="orgGoal" value="Review Cycle" />
-                    <p:selectOneMenu id="orgGoal"
-                                     value="#{organizationGoalForm.reviewCycle}"
-                                     converter="reviewCycleConverter">
-                        <f:selectItem itemLabel="Select Review Cycle" itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{organizationGoalForm.reviewCycles}"
-                                       var="reviewCycle"
-                                       itemLabel="#{reviewCycle.title}"
-                                       itemValue="#{reviewCycle}"/>
-                    </p:selectOneMenu>
-                </div>
+                
 
                 <!-- Buttons -->
                 <div class="field col-12 p-d-flex p-jc-between">

@@ -37,7 +37,7 @@ public class OrganizationGoalForm extends DialogForm<OrganizationGoal> {
 
 
     public OrganizationGoalForm() {
-        super(HyperLinks.ORGANIZATION_GOAL_DIALOG, 500, 300);
+        super(HyperLinks.ORGANIZATION_GOAL_DIALOG, 500, 330);
     }
 
     @PostConstruct
