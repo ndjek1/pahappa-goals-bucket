@@ -57,6 +57,7 @@
 
 
         <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KPI" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory" />
 
         <mapping class="org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity" />
         <mapping class="org.pahappa.systems.kpiTracker.models.activities.TeamActivity" />

@@ -89,11 +89,13 @@
 
                 <!-- Current Value -->
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Current Value</h5>
+                    <h5>Weight(%) </h5>
                     <div class="ui-inputgroup">
                         <p:inputNumber id="currentValue"
-                                       value="#{individualKPIForm.model.currentValue}"
-                                       minValue="0" decimalPlaces="2"
+                                       value="#{individualKPIForm.model.weight}"
+                                       minValue="0" decimalPlaces="0"
+                                       required="true"
+                                       requiredMessage="Weight must be filled"
                                        styleClass="full-width"/>
                     </div>
                 </div>
@@ -133,7 +135,7 @@
                 <div class="ui-col-12 ui-md-6">
                     <p:commandButton value="Save"
                                      process="@form"
-                                     actionListener="#{individualKPIForm.save}"
+                                     actionListener="#{individualKPIForm.persist}"
                                      update="@form messages"
                                      styleClass="ui-button-primary full-width"/>
                 </div>

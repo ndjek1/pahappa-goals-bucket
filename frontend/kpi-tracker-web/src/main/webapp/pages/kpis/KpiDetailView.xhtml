@@ -209,24 +209,11 @@
                 <!-- Progress Section -->
                 <div class="chart-section">
                     <div class="chart-header">KPI Progress Over Time</div>
-                    <div class="progress-visualization">
-                        <p:dataTable value="#{kpiDetailView.chartDataPoints}" var="point"
-                                     styleClass="progress-table" reflow="true">
-                            <p:column headerText="Month" style="width:40%">
-                                <h:outputText value="#{point.label}" />
-                            </p:column>
-                            <p:column headerText="Value" style="width:30%">
-                                <h:outputText value="#{point.value}" />
-                            </p:column>
-                            <p:column headerText="Progress" style="width:30%">
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" style="width: #{point.value}%; background-color: #28a745;"></div>
-                                    <span class="progress-text">#{point.value}%</span>
-                                </div>
-                            </p:column>
-                        </p:dataTable>
-                    </div>
+
+                    <p:lineChart type="line" model="#{kpiDetailView.lineModel}"
+                             style="width:100%;height:350px;" responsive="true" />
                 </div>
+
 
 
             </h:form>

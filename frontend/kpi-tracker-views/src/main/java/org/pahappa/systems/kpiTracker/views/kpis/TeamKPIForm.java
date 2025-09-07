@@ -1,9 +1,12 @@
 package org.pahappa.systems.kpiTracker.views.kpis;
 
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
@@ -11,6 +14,7 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -85,8 +89,23 @@ public class TeamKPIForm extends DialogForm<KPI> {
                 model.setOrganizationGoal(null);
                 model.setDepartmentGoal(null);
             }
+            double remaining = 0.0;
+            if(this.selectedTeamGoal != null) {
+                remaining =  canAddKPIForGoal(this.selectedTeamGoal);
+            }
+
+            if( remaining<model.getWeight()){
+                if(remaining<=0){
+                    UiUtils.showMessageBox("Warning", "Can no longer  contribute to the selected goal");
+                }else {
+                    UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + remaining + " to this selected goal");
+                }
+                return;
+            }
             
             kpisService.saveInstance(super.model);
+            resetModal();
+            hide();
         } catch (ValidationFailedException e) {
             UiUtils.ComposeFailure("Validation Error", e.getMessage());
             throw e;
@@ -139,6 +158,23 @@ public class TeamKPIForm extends DialogForm<KPI> {
         super.model = new KPI();
         setEdit(false);
         clearSelections();
+    }
+
+    public double canAddKPIForGoal(TeamGoal goal){
+        double totalWeight = 0.0;
+        Search search = new Search(KPI.class);
+        search.addFilterAnd(
+                Filter.equal("recordStatus" , RecordStatus.ACTIVE),
+                Filter.equal("teamGoal.id", goal.getId())
+        );
+
+        List<KPI> kpis = this.kpisService.getInstances(search,0,0);
+        if(kpis.size() > 0){
+            for(KPI kp : kpis){
+                totalWeight += kp.getWeight();
+            }
+        }
+        return  Math.max(0,100-totalWeight);
     }
 
     @Override

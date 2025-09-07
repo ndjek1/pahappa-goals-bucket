@@ -11,6 +11,7 @@ import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "kpis")
@@ -48,6 +49,9 @@ public class KPI extends BaseEntity {
         super();
         this.weight = 1.0;
     }
+
+    @OneToMany(mappedBy = "kpi", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<KpiUpdateHistory> updateHistory;
 
     // Getters and Setters
     @Column(name = "name", nullable = false)

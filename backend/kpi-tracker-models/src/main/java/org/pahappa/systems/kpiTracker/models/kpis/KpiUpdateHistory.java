@@ -1,27 +1,20 @@
 package org.pahappa.systems.kpiTracker.models.kpis;
 
-import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.sers.webutils.model.BaseEntity;
-import org.sers.webutils.model.security.User;
-
 import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Entity to track KPI update history with value changes and comments
+ * Entity to track KPI update history with value changes
  */
 @Entity
 @Table(name = "kpi_update_history")
 public class KpiUpdateHistory extends BaseEntity {
-    
+
     private KPI kpi;
-    private Double previousValue;
-    private Double newValue;
-    private String updateComment;
-    private Double accomplishmentPercentage;
-    private Date updateDate;
-    private User updatedByUser;
-    private Staff updatedByStaff;
+    private Double value;        // Value at this update
+    private Date updateDate;     // When it was updated
+    private String comment;      // Optional comment
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kpi_id", nullable = false)
@@ -33,44 +26,17 @@ public class KpiUpdateHistory extends BaseEntity {
         this.kpi = kpi;
     }
 
-    @Column(name = "previous_value")
-    public Double getPreviousValue() {
-        return previousValue;
+    @Column(name = "value", nullable = false)
+    public Double getValue() {
+        return value;
     }
 
-    public void setPreviousValue(Double previousValue) {
-        this.previousValue = previousValue;
+    public void setValue(Double value) {
+        this.value = value;
     }
 
-    @Column(name = "new_value", nullable = false)
-    public Double getNewValue() {
-        return newValue;
-    }
-
-    public void setNewValue(Double newValue) {
-        this.newValue = newValue;
-    }
-
-    @Column(name = "update_comment", length = 1000)
-    public String getUpdateComment() {
-        return updateComment;
-    }
-
-    public void setUpdateComment(String updateComment) {
-        this.updateComment = updateComment;
-    }
-
-    @Column(name = "accomplishment_percentage")
-    public Double getAccomplishmentPercentage() {
-        return accomplishmentPercentage;
-    }
-
-    public void setAccomplishmentPercentage(Double accomplishmentPercentage) {
-        this.accomplishmentPercentage = accomplishmentPercentage;
-    }
-
-    @Column(name = "update_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date", nullable = false)
     public Date getUpdateDate() {
         return updateDate;
     }
@@ -79,24 +45,13 @@ public class KpiUpdateHistory extends BaseEntity {
         this.updateDate = updateDate;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by_user", nullable = false)
-    public User getUpdatedByUser() {
-        return updatedByUser;
+    @Column(name = "comment", length = 500)
+    public String getComment() {
+        return comment;
     }
 
-    public void setUpdatedByUser(User updatedByUser) {
-        this.updatedByUser = updatedByUser;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by_staff")
-    public Staff getUpdatedByStaff() {
-        return updatedByStaff;
-    }
-
-    public void setUpdatedByStaff(Staff updatedByStaff) {
-        this.updatedByStaff = updatedByStaff;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
@@ -117,8 +72,7 @@ public class KpiUpdateHistory extends BaseEntity {
         return "KpiUpdateHistory{" +
                 "id='" + id + '\'' +
                 ", kpi=" + (kpi != null ? kpi.getName() : "null") +
-                ", previousValue=" + previousValue +
-                ", newValue=" + newValue +
+                ", value=" + value +
                 ", updateDate=" + updateDate +
                 '}';
     }

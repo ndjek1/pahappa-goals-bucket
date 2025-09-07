@@ -27,7 +27,7 @@ public class KpiUpdateHistoryServiceImpl extends GenericServiceImpl<KpiUpdateHis
     public KpiUpdateHistory saveInstance(KpiUpdateHistory entityInstance) throws ValidationFailedException, OperationFailedException {
         Validate.notNull(entityInstance, "KPI Update History details missing");
         Validate.notNull(entityInstance.getKpi(), "KPI reference missing");
-        Validate.notNull(entityInstance.getNewValue(), "New value is required");
+        Validate.notNull(entityInstance.getValue(), "New value is required");
         Validate.notNull(entityInstance.getUpdateDate(), "Update date is required");
         
         return save(entityInstance);
@@ -66,20 +66,18 @@ public class KpiUpdateHistoryServiceImpl extends GenericServiceImpl<KpiUpdateHis
         try {
             KpiUpdateHistory updateHistory = new KpiUpdateHistory();
             updateHistory.setKpi(kpi);
-            updateHistory.setPreviousValue(previousValue);
-            updateHistory.setNewValue(newValue);
-            updateHistory.setUpdateComment(comment);
+            updateHistory.setValue(newValue);
+            updateHistory.setComment(comment);
             updateHistory.setUpdateDate(new Date());
             
             // Calculate accomplishment percentage
             if (kpi.getTargetValue() != null && kpi.getTargetValue() > 0) {
                 Double percentage = (newValue * 100.0) / kpi.getTargetValue();
-                updateHistory.setAccomplishmentPercentage(percentage);
             }
             
             // Set the user who made the update
             User loggedInUser = SharedAppData.getLoggedInUser();
-            updateHistory.setUpdatedByUser(loggedInUser);
+            updateHistory.setChangedBy(loggedInUser);
             
             // Try to get staff record for the logged-in user
             try {
@@ -90,7 +88,7 @@ public class KpiUpdateHistoryServiceImpl extends GenericServiceImpl<KpiUpdateHis
                 // Filter manually since search might not be available
                 for (Staff staff : staffList) {
                     if (staff.getUser() != null && staff.getUser().equals(loggedInUser)) {
-                        updateHistory.setUpdatedByStaff(staff);
+                        updateHistory.setChangedBy(staff.getUser());
                         break;
                     }
                 }
