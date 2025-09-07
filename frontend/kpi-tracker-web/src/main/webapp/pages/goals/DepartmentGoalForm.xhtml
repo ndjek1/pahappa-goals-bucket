@@ -1,3 +1,7 @@
+
+
+
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
@@ -5,99 +9,93 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
 
-    <ui:define name="head">
-        <style type="text/css">
-            .capitalized {
-                text-transform: capitalize;
-            }
-        </style>
-    </ui:define>
+<ui:define name="content">
+    <title>Add Department Goal</title>
 
-    <ui:define name="content">
-        <title>Add Department Goal</title>
+    <h:form id="teamGoalForm" styleClass="card">
+        <p:growl id="messages" showDetail="true" life="5000" />
 
-        <h:form id="deptGoalForm" styleClass="card">
-            <p:growl id="growl" showDetail="true" life="4000" />
+        <div class="p-grid ui-fluid" style="display: flex;">
 
-            <div class="p-grid ui-fluid" style="display: flex;">
-
-                <!-- Goal Name -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Goal Name</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText id="goalName"
-                                     value="#{departmentGoalsForm.model.name}"
-                                     required="true"
-                                     requiredMessage="Goal name is required."
-                                     placeholder="Enter goal name"
-                                     styleClass="full-width"/>
-                    </div>
+            <!-- Name -->
+            <div class="ui-col-12 ui-md-12">
+                <h5>Name</h5>
+                <div class="ui-inputgroup">
+                    <p:inputText id="goalName"
+                                 value="#{departmentGoalsForm.model.name}"
+                                 required="true"
+                                 requiredMessage="Goal name is required."
+                                 placeholder="Enter goal name"
+                                 styleClass="full-width"/>
                 </div>
+            </div>
 
-                <!-- Description -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Description</h5>
+            <!-- Description -->
+            <div class="ui-col-12 ui-md-12">
+                <h5>Description</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText id="goalDesc"
+                        <p:inputTextarea id="goalDesc"
                                      value="#{departmentGoalsForm.model.description}"
                                      required="true"
                                      requiredMessage="Description is required."
                                      placeholder="Enter description"
                                      styleClass="full-width"/>
                     </div>
-                </div>
-
-                <!-- Parent Goal -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Parent Goal</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu id="parentGoal"
-                                         value="#{departmentGoalsForm.selectedOrganizationGoal}"
-                                         converter="organizationGoalConverter"
-                                         styleClass="full-width">
-                            <f:selectItem itemLabel="Select parent goal" itemValue="#{null}" noSelectionOption="true"/>
-                            <f:selectItems value="#{departmentGoalsForm.organizationGoals}"
-                                           var="parentGoal"
-                                           itemLabel="#{parentGoal.name}"
-                                           itemValue="#{parentGoal}"/>
-                        </p:selectOneMenu>
-                    </div>
-                </div>
-
-                <!-- Contribution Weight -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Weight (%)</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber id="weight"
-                                       value="#{departmentGoalsForm.model.contributionWeight}"
-                                       required="true"
-                                       requiredMessage="Weight is required."
-                                       minValue="0"
-                                       maxValue="100"
-                                       decimalPlaces="0"
-                                       placeholder="Enter weight"
-                                       styleClass="full-width"/>
-                    </div>
-                </div>
-
-                <!-- Buttons Row -->
-                <div class="ui-col-12 p-grid ui-fluid" style="display: flex; margin-top: 1em;">
-                    <div class="ui-col-12 ui-md-6">
-                        <p:commandButton value="Cancel"
-                                         immediate="true"
-                                         action="#{departmentGoalsForm.hide}"
-                                         styleClass="ui-button-danger full-width"/>
-                    </div>
-                    <div class="ui-col-12 ui-md-6">
-                        <p:commandButton value="Save"
-                                         process="@form"
-                                         actionListener="#{departmentGoalsForm.persist}"
-                                         update="@form growl"
-                                         styleClass="ui-button-primary full-width"/>
-                    </div>
-                </div>
-
             </div>
-        </h:form>
-    </ui:define>
+
+            <!-- Contribution Weight -->
+            <div class="ui-col-12 ui-md-6">
+                <h5>Weight (%)</h5>
+                <div class="ui-inputgroup">
+                    <p:inputNumber id="weight"
+                                   value="#{departmentGoalsForm.model.contributionWeight}"
+                                   required="true"
+                                   requiredMessage="Weight is required."
+                                   minValue="0"
+                                   maxValue="100"
+                                   decimalPlaces="0"
+                                   placeholder="Enter weight"
+                                   styleClass="full-width"/>
+                </div>
+            </div>
+
+            <!-- Parent Department Goal -->
+            <div class="ui-col-12 ui-md-6">
+                <h5>Parent  Goal</h5>
+                <div class="ui-inputgroup">
+                    <p:selectOneMenu id="parentGoal"
+                                     value="#{departmentGoalsForm.selectedOrganizationGoal}"
+                                     converter="organizationGoalConverter"
+                                     styleClass="full-width">
+                        <f:selectItem itemLabel="Select parent goal" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{departmentGoalsForm.organizationGoals}"
+                                       var="parentGoal"
+                                       itemLabel="#{parentGoal.name}"
+                                       itemValue="#{parentGoal}"/>
+                    </p:selectOneMenu>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Buttons Row -->
+        <div class="ui-col-12 p-grid ui-fluid" style="display: flex; margin-top: 1em;">
+            <div class="ui-col-12 ui-md-6">
+                <p:commandButton value="Cancel"
+                                  immediate="true"
+                                  action="#{departmentGoalsForm.hide}"
+                                  styleClass="ui-button-danger full-width"/>
+            </div>
+            <div class="ui-col-12 ui-md-6">
+                <p:commandButton value="Save"
+                                 process="@form"
+                                 actionListener="#{departmentGoalsForm.persist}"
+                                 update="@form messages"
+                                 styleClass="ui-button-primary full-width"/>
+            </div>
+        </div>
+
+    </h:form>
+</ui:define>
 </ui:composition>
