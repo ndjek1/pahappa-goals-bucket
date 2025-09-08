@@ -147,13 +147,23 @@
                                     outcome="/pages/kpis/KPIView" />
                     </p:submenu>
                     <p:submenu id="apprisal" label="Apprisal"
-                               rendered="#{!dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
+                               rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'ratings') ? 'active-submenu' : ''}"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="supervisorAssess" value="Supervisor Assessment"
+                                    rendered="#{dashboard.loggedinUser.hasRole('Department Lead') or dashboard.loggedinUser.hasRole('Team Lead') }"
                                     icon="pi pi-chart-line"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/SupervisorAssessment.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/ratings/SupervisorAssessment" />
+                        <p:menuitem id="scores" value="View scores"
+                                    icon="pi pi-chart-line"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/ScoresView.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/ratings/ScoresView" />
+
+                        <p:menuitem id="peerRating" value="Rate peers"
+                                    icon="pi pi-chart-line"
+                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/PeerRatingsView.xhtml' ? 'active-link' : ''}"
+                                    outcome="/pages/ratings/PeerRatingsView" />
                     </p:submenu>
 
 
