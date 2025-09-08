@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+
+    <ui:define name="content">
+        <h:form id="scoresForm">
+            <p:card>
+                <f:facet name="title">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Performance Scores</span>
+                        <h:panelGroup rendered="#{not empty scoresView.activeReviewCycle}">
+                             <span style="font-size: 0.9rem; font-weight: normal; color: #6c757d;">
+                                Active Cycle: #{scoresView.activeReviewCycle.title}
+                             </span>
+                        </h:panelGroup>
+                    </div>
+                </f:facet>
+
+                <p:messages id="messages" showDetail="true" closable="true"/>
+
+                <p:panel rendered="#{empty scoresView.activeReviewCycle}">
+                    <div class="ui-message-warn ui-corner-all" style="padding: 1em;">
+                        <span class="ui-message-warn-icon pi pi-exclamation-triangle" style="margin-right: .5em;"></span>
+                        <span class="ui-message-warn-summary">There is currently no active review cycle. Data cannot be displayed.</span>
+                    </div>
+                </p:panel>
+
+                <p:tabView rendered="#{not empty scoresView.activeReviewCycle}">
+                    <!-- Tab 1: Company Value Ratings -->
+                    <p:tab title="Company Values">
+                        <p:dataTable var="rating" value="#{scoresView.companyValueRatings}"
+                                     paginator="true" rows="10" paginatorPosition="bottom"
+                                     emptyMessage="No company value ratings found for this cycle.">
+
+                            <p:column headerText="Staff Member" sortBy="#{rating.staff.user.fullName}">
+                                <h:outputText value="#{rating.staff.user.fullName}"/>
+                            </p:column>
+
+                            <p:column headerText="Score" sortBy="#{rating.score}" style="width: 100px; text-align: center;">
+                                <h:outputText value="#{rating.score}%"/>
+                            </p:column>
+
+                            <p:column headerText="Date Rated" sortBy="#{rating.dateCreated}" style="width: 150px;">
+                                <h:outputText value="#{rating.dateCreated}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+
+                    <!-- Tab 2: Keeper Test Ratings -->
+                    <p:tab title="Keeper Test">
+                        <p:dataTable var="rating" value="#{scoresView.keeperTestRatings}"
+                                     paginator="true" rows="10" paginatorPosition="bottom"
+                                     emptyMessage="No keeper test ratings found for this cycle.">
+
+                            <p:column headerText="Staff Member" sortBy="#{rating.staff.user.fullName}">
+                                <h:outputText value="#{rating.staff.user.fullName}"/>
+                            </p:column>
+
+                            <p:column headerText="Score" sortBy="#{rating.score}" style="width: 100px; text-align: center;">
+                                <h:outputText value="#{rating.score}%"/>
+                            </p:column>
+
+                            <p:column headerText="Date Rated" sortBy="#{rating.dateCreated}" style="width: 150px;">
+                                <h:outputText value="#{rating.dateCreated}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+
+                    <!-- Tab 3: Peer Ratings -->
+                    <p:tab title="Peer Ratings">
+                        <p:dataTable var="rating" value="#{scoresView.peerRatings}"
+                                     paginator="true" rows="10" paginatorPosition="bottom"
+                                     emptyMessage="No peer ratings found for this cycle.">
+
+                            <p:column headerText="Rated By (Peer)" sortBy="#{rating.staff.user.fullName}">
+                                <h:outputText value="#{rating.staff.user.fullName}"/>
+                            </p:column>
+
+                            <p:column headerText="Staff Member Rated" sortBy="#{rating.peer.user.fullName}">
+                                <h:outputText value="#{rating.peer.user.fullName}"/>
+                            </p:column>
+
+                            <p:column headerText="Score" sortBy="#{rating.score}" style="width: 100px; text-align: center;">
+                                <h:outputText value="#{rating.score}"/>
+                            </p:column>
+
+                            <p:column headerText="Date Rated" sortBy="#{rating.dateCreated}" style="width: 150px;">
+                                <h:outputText value="#{rating.dateCreated}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:tab>
+                </p:tabView>
+            </p:card>
+        </h:form>
+    </ui:define>
+</ui:composition>
