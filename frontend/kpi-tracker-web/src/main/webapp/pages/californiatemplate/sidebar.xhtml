@@ -151,7 +151,7 @@
                                styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'ratings') ? 'active-submenu' : ''}"
                                icon="pi pi-fw pi-chart-line">
                         <p:menuitem id="supervisorAssess" value="Supervisor Assessment"
-                                    rendered="#{#{dashboard.loggedinUser.hasRole('Department Lead') or #{dashboard.loggedinUser.hasRole('Team Lead') }"
+                                    rendered="#{dashboard.loggedinUser.hasRole('Department Lead') or dashboard.loggedinUser.hasRole('Team Lead') }"
                                     icon="pi pi-chart-line"
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/SupervisorAssessment.xhtml' ? 'active-link' : ''}"
                                     outcome="/pages/ratings/SupervisorAssessment" />
