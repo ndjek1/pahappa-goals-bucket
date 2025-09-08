@@ -59,5 +59,6 @@ public class HyperLinks {
 
     //Assessment or Rating
     public static final String SUPERVISOR_ASSESSMENT_FORM_DIALOG = "/pages/ratings/SupervisorAssessmentForm.xhtml";
+    public static final String PEER_RATING_FORM_DIALOG = "/pages/ratings/PeerRating.xhtml";
 
 }

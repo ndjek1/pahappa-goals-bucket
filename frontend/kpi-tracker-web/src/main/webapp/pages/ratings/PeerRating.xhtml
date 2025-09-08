@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/dialog-template.xhtml">
+
+    <ui:define name="content">
+        <!--
+            Custom styles to precisely match the target image.
+            These styles override default PrimeFaces styles to achieve the clean, modern look.
+        -->
+        <style type="text/css">
+            /* Main content area, inside the template */
+            .main-content-area {
+                padding: 1rem 2rem; /* Adjust as needed */
+            }
+
+            /* The white card holding the form */
+            .assessment-card {
+                background: #ffffff;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 2rem;
+            }
+
+            /* Header section with back arrow, name, and review cycle link */
+            .content-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
+            .content-header .title-group {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .content-header .title-text {
+                font-size: 1.75rem;
+                font-weight: 600;
+                color: #212529;
+            }
+            .content-header .review-cycle-link a {
+                color: #0d6efd;
+                text-decoration: none;
+            }
+
+            /* Blue section headers like "Keeper Test" */
+            .section-header {
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: #0d6efd; /* PrimeFaces blue */
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Specific styling for the clean DataTable */
+            .clean-datatable .ui-datatable-thead th {
+                background: none !important;
+                border: none !important;
+                color: #6c757d; /* Light gray text for headers */
+                font-weight: 500 !important; /* Un-bold the header text */
+                text-align: left;
+                padding: 0.5rem 0.75rem 1rem 0.75rem; /* Adjust padding */
+            }
+
+            .clean-datatable .ui-datatable-tbody > tr {
+                border-top: 1px solid #e9ecef; /* The line between rows */
+            }
+
+            .clean-datatable .ui-datatable-tbody > tr > td {
+                border: none !important;
+                padding: 1rem 0.75rem;
+            }
+
+            /* Container for the final buttons */
+            .button-container {
+                margin-top: 2rem;
+                display: flex;
+                justify-content: flex-end; /* Aligns buttons to the right */
+                gap: 0.75rem;
+            }
+        </style>
+
+        <div class="main-content-area">
+            <!-- 1. ADDED: Header with back button, title, and link -->
+            <div class="content-header">
+                <div class="title-group">
+                    <p:commandButton icon="pi pi-arrow-left" styleClass="ui-button-text ui-button-secondary" process="@this" />
+                    <h:outputText value="#{test.staff.user.fullName}" styleClass="title-text" />
+                </div>
+                <div class="review-cycle-link">
+                    <h:link value="Review cycle(default)" />
+                </div>
+            </div>
+
+            <h:form id="assessmentForm">
+                <div class="assessment-card">
+                    <p:growl id="growl" showDetail="true" life="4000" />
+
+                    <!-- Keeper Test Section -->
+                    <div class="section-header">Peer rating</div>
+                    <p:dataTable var="ir" value="#{test.peerRating}">
+                        <p:column headerText="Item">
+                            <h:outputText value="#{ir.item.name}" />
+                        </p:column>
+                        <p:column headerText="Rating">
+                            <p:rating value="#{ir.rating}" stars="5" cancel="false"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <!-- 2. CORRECTED: Button styles and container -->
+                    <div class="button-container">
+                        <!-- 'Cancel' button is solid red -->
+                        <p:commandButton value="Cancel"
+                                         action="#{test.hide}"
+                                         process="@this"
+                                         styleClass="ui-button-danger" />
+
+                        <!-- 'Submit' button is solid blue (default) -->
+                        <p:commandButton value="Submit"
+                                         actionListener="#{test.persist}"
+                                         update="@form" />
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
