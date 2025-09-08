@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+         
+		<!-- JDBC connection pool (using c3p0) -->
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">1800</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">true</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<mapping
+			class="org.sers.webutils.model.migrations.DBChangeset" />
+		<mapping class="org.sers.webutils.model.migrations.Migration" />
+		<mapping class="org.sers.webutils.model.security.User" />
+		<mapping class="org.sers.webutils.model.security.Role" />
+		<mapping class="org.sers.webutils.model.security.Permission" />
+		<mapping class="org.sers.webutils.model.Country" />
+		<mapping class="org.sers.webutils.model.Lookup" />
+		<mapping class="org.sers.webutils.model.LookupCategory" />
+		<mapping class="org.sers.webutils.model.bgtasks.BackgroundJobLog" />
+		<mapping class="org.sers.webutils.model.bgtasks.BackgroundTask" />
+		<mapping class="org.sers.webutils.model.bgtasks.RoutineTaskData" />
+		<mapping class="org.sers.webutils.model.bgtasks.TaskSchedule" />
+		<mapping class="org.sers.webutils.model.bgtasks.MethodParameter" />
+		<mapping class="org.sers.webutils.model.security.PasswordToken" />
+
+
+		<mapping class="org.pahappa.systems.kpiTracker.models.MailSetting"/>
+		<mapping class="org.pahappa.systems.kpiTracker.models.settings.ApplicationSettings"/>
+		<mapping class="org.pahappa.systems.kpiTracker.models.demo.MyDemo" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.systemSetup.Threshold" />
+
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.TeamGoal" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.goals.IndividualGoal" />
+
+
+        <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KPI" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory" />
+
+        <mapping class="org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.activities.TeamActivity" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.activities.IndividualActivity" />
+
+
+        <!-- Removed obsolete Staff mapping; using org.sers.webutils.model.security.User -->
+        <mapping class="org.pahappa.systems.kpiTracker.models.staff.Staff" />
+
+		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Department" />
+		<mapping class="org.pahappa.systems.kpiTracker.models.organization_structure.Team" />
+
+<!--        Assessment-->
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.SupervisorAssessment" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.KeeperTest" />
+        <mapping class="org.pahappa.systems.kpiTracker.models.rating.CompanyValue" />
+	</session-factory>
+</hibernate-configuration>
