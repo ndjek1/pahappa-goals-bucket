@@ -6,6 +6,7 @@ import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
+import org.sers.webutils.model.RecordStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,6 @@ public class TeamServiceImpl extends GenericServiceImpl<Team> implements TeamSer
         if (department == null) {
             return Collections.emptyList();
         }
-        Search search = new Search();
-        search.addFilterEqual("department", department);
-        return this.search(search);
+        return super.searchByPropertyEqual("department.id", department.getId(), RecordStatus.ACTIVE);
     }
 }

@@ -3,8 +3,10 @@ package org.pahappa.systems.kpiTracker.views.organizationstructure;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
+import org.omnifaces.util.Faces;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
@@ -15,9 +17,10 @@ import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.*;
 
 @ManagedBean(name = "departmentsView")
@@ -29,6 +32,7 @@ public class OrganizationStructureView extends PaginatedTableView<Department, Or
     private DepartmentService departmentService;
     private TeamService teamService;
     private UserService userService;
+    private StaffService staffService;
 
     private List<RecordStatus> recordStatusList;
 
@@ -46,12 +50,15 @@ public class OrganizationStructureView extends PaginatedTableView<Department, Or
     private List<Team> teamModels;
     private String dataEmptyMessage = "No departments found.";
 
+    private  boolean savedDepartment;
+    private boolean editedDepartment;
+
     @PostConstruct
     public void init() {
         departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
         teamService = ApplicationContextProvider.getBean(TeamService.class);
         userService = ApplicationContextProvider.getBean(UserService.class);
-
+        this.staffService = ApplicationContextProvider.getBean(StaffService.class);
         this.recordStatusList = Arrays.asList(RecordStatus.values());
 
         reloadFilterReset();
@@ -67,6 +74,7 @@ public class OrganizationStructureView extends PaginatedTableView<Department, Or
         for (Department department : this.getDataModels()) {
             int count = teamService.getTeamsByDepartment(department).size();
             department.setTeamsCount(count);
+            department.setMemberCount(staffService.getMembersByTeam(department).size());
         }
     }
 
@@ -111,16 +119,31 @@ public class OrganizationStructureView extends PaginatedTableView<Department, Or
         }
     }
 
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.savedDepartment) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Department created successfully."));
+            this.savedDepartment = false; // Reset the flag
+        }
+
+        if (this.editedDepartment) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Department updated successfully."));
+            this.editedDepartment = false; // Reset the flag
+        }
+    }
+
     public void deleteSelectedDepartment(Department department) {
         try {
             departmentService.deleteInstance(department);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Department deleted successfully."));
             reloadFilterReset();
         } catch (OperationFailedException e) {
             e.printStackTrace();
         }
     }
 
-    public int getTeamsCount(Department department) {
-        return teamService.getTeamsByDepartment(department).size();
-    }
 }

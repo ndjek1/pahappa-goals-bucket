@@ -19,6 +19,7 @@ import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.service.UserService;
@@ -28,6 +29,8 @@ import org.sers.webutils.server.shared.SharedAppData;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import java.util.HashSet;
 import java.util.List;
 
 @ManagedBean(name = "teamForm")
@@ -61,7 +64,6 @@ public class TeamForm extends DialogForm<Team> {
         this.userService = ApplicationContextProvider.getBean(UserService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
         loadDepartment();
-        loadDepartmentMembers();
     }
 
     @Override
@@ -75,6 +77,8 @@ public class TeamForm extends DialogForm<Team> {
         model.setDepartment(this.selectedDepartment);
         if(this.teamLead != null){
             super.model.setTeamHead(teamLead.getUser());
+            teamLead.setTeam(this.model);
+            staffService.saveInstance(teamLead);
         }
         Team savedTeam = teamService.saveInstance(super.model);
         if( !this.selectedTeamMembers.isEmpty()){
@@ -84,7 +88,7 @@ public class TeamForm extends DialogForm<Team> {
             }
         }
 
-        if (savedTeam != null) {
+        if (savedTeam != null && this.teamLead != null) {
             this.teamLead.setTeam(savedTeam);
             this.teamLead.getUser().addRole(this.userService.getRoleByRoleName(RoleConstants.ROLE_TEAM_LEAD));
             userService.saveUser(this.teamLead.getUser());
@@ -102,8 +106,10 @@ public class TeamForm extends DialogForm<Team> {
                     .orElse(null);
         }
     }
-    private void loadDepartmentMembers(){
-        if(this.selectedDepartment != null){
+    // In TeamForm.java
+
+    private void loadDepartmentMembers() {
+        if (this.selectedDepartment != null) {
             Search search = new Search(Staff.class);
             search.addFilterAnd(
                     Filter.equal("recordStatus", RecordStatus.ACTIVE),
@@ -111,10 +117,16 @@ public class TeamForm extends DialogForm<Team> {
                     Filter.notEqual("user.id", selectedDepartment.getDepartmentHead().getId())
             );
 
-            // Exclude department head if set
-            if (selectedDepartment.getDepartmentHead() != null) {
-                search.addFilterNotEqual("id", selectedDepartment.getDepartmentHead().getId());
+            if (isEditing && super.model != null && super.model.getId() != null) {
+                search.addFilterOr(
+                        Filter.isNull("team"),
+                        Filter.equal("team.id", super.model.getId())
+                );
+            } else {
+                // For new teams, only show unassigned staff.
+                search.addFilter(Filter.isNull("team"));
             }
+            // --- END OF FIX ---
 
             this.departmentMembers = this.staffService.getInstances(search, 0, 0);
         } else {
@@ -123,6 +135,29 @@ public class TeamForm extends DialogForm<Team> {
     }
 
 
+    public void setSelectedDepartment(Department selectedDepartment) {
+        this.selectedDepartment = selectedDepartment;
+        if (this.selectedDepartment != null) {
+            loadDepartmentMembers(); // reload staff whenever department changes
+        }
+    }
+
+
+
+    @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        if (super.model != null) {
+            isEditing = true;
+            loadDepartmentMembers();
+
+            if (super.model.getTeamHead() != null) {
+                this.teamLead = staffService.searchUniqueByPropertyEqual(
+                        "user.id", super.model.getTeamHead().getId()
+                );
+            }
+        }
+    }
 
 
 

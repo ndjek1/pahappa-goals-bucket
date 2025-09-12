@@ -5,8 +5,10 @@ import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
 
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
+import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.utils.Validate;
+import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,13 @@ public class StaffServiceImpl extends GenericServiceImpl<Staff> implements Staff
     }
 
     @Override
-    public List<Staff> getMembersByDepartment(Department department) {
-        return super.search(new Search().addFilterEqual("department", department));
+    public List<Staff> getMembersByTeam(Department department) {
+        return super.searchByPropertyEqual("department.id", department.getId(), RecordStatus.ACTIVE);
+    }
+
+    @Override
+    public List<Staff> getMembersByTeam(Team team) {
+        return super.searchByPropertyEqual("team.id", team.getId(), RecordStatus.ACTIVE);
     }
 
 }
