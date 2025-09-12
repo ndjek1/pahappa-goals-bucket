@@ -47,7 +47,7 @@
                         <p:selectOneMenu id="teamLead" value="#{teamForm.teamLead}"
                                          converter="staffConverter" style="width: 100%"
                                          onchange="PF('teamMembersWidget').clearFilters()"> <!-- reset member list if lead changes -->
-                            <f:selectItem itemLabel="-- Select Team Lead --" itemValue="#{null}" />
+                            <f:selectItem itemLabel="Select Team Lead" itemValue="#{null}" />
                             <f:selectItems value="#{teamForm.departmentMembers}"
                                            var="member"
                                            itemValue="#{member}"
@@ -55,16 +55,20 @@
                         </p:selectOneMenu>
                     </div>
                 </div>
-                <div class="field col-12 md:col-6 p-m-4">
-                    <h5>Users</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectManyCheckbox id="rolesGrid" value="#{teamForm.selectedTeamMembers}"
-                                              converter="staffConverter"
-                                              layout="grid" columns="3" >
-                            <f:selectItems value="#{teamForm.departmentMembers}" var="staff" itemLabel="#{staff.user.fullName}" itemValue="#{staff}"/>
-                        </p:selectManyCheckbox>
+                <h:panelGroup rendered="#{teamForm.model.id eq null}">
+                    <div class="field col-12 md:col-6 p-m-4">
+                        <h5>Users</h5>
+                        <div class="ui-inputgroup">
+                            <p:selectManyCheckbox id="rolesGrid" value="#{teamForm.selectedTeamMembers}"
+                                                  widgetVar="teamMembersWidget"
+                                                  converter="staffConverter"
+                                                  layout="grid" columns="3" >
+                                <f:selectItems value="#{teamForm.departmentMembers}" var="staff" itemLabel="#{staff.user.fullName}" itemValue="#{staff}"/>
+                            </p:selectManyCheckbox>
+                        </div>
                     </div>
-                </div>
+                </h:panelGroup>
+
 
 
 

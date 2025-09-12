@@ -22,20 +22,33 @@
 
                 <!-- Department Name -->
                 <div class="field col-12 p-m-4">
-                    <p:outputLabel for="deptName" value="Department Name" />
+                    <h5>Department name</h5>
                     <p:inputText id="deptName" value="#{departmentFormDialog.model.departmentName}"
                                  required="true"
+                                 requiredMessage="Department name is required"
                                  placeholder="Enter department name"
+                                 styleClass="p-inputtext-sm w-full"/>
+                    <p:message for="deptName" style="color: red"/>
+                </div>
+
+                <!-- Department Description -->
+                <div class="field col-12 p-m-4">
+                    <h5>Description</h5>
+                    <p:inputTextarea id="deptDesc" value="#{departmentFormDialog.model.departmentDescription}"
+                                 placeholder="Enter department description"
                                  styleClass="p-inputtext-sm w-full"/>
                 </div>
 
                 <!-- Department Description -->
                 <div class="field col-12 p-m-4">
-                    <p:outputLabel for="deptDesc" value="Department Description" />
-                    <p:inputTextarea id="deptDesc" value="#{departmentFormDialog.model.departmentDescription}"
-                                 placeholder="Enter department description"
-                                 styleClass="p-inputtext-sm w-full"/>
+                    <h5>Head of department</h5>
+                    <p:selectOneMenu  value="#{departmentFormDialog.model.departmentHead}" converter="userConverter">
+                        <f:selectItem itemLabel="Select the HOD" itemValue="#{null}"/>
+                        <f:selectItems value="#{departmentFormDialog.availableStaffs}" var="s" itemValue="#{s.user}" itemLabel="#{s.user.fullName}"/>
+                    </p:selectOneMenu>
                 </div>
+
+
 
 
                 <!-- Buttons -->
@@ -46,12 +59,28 @@
                                      styleClass="ui-button-danger p-mx-5" />
 
                     <p:commandButton value="Save"
+                                     rendered="#{departmentFormDialog.model.id eq null}"
                                      process="@form"
-                                     actionListener="#{departmentFormDialog.save}"
+                                     actionListener="#{departmentFormDialog.persist}"
                                      update="@form growl"
                                      validateClient="true"
                                      styleClass="ui-button-primary p-mx-5"
-                                     oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();" />
+                                     oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();">
+                        <f:setPropertyActionListener value="#{true}" target="#{departmentsView.savedDepartment}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{departmentsView.editedDepartment}"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Update"
+                                     rendered="#{departmentFormDialog.model.id ne null}"
+                                     process="@form"
+                                     actionListener="#{departmentFormDialog.persist}"
+                                     update="@form growl"
+                                     validateClient="true"
+                                     styleClass="ui-button-primary p-mx-5"
+                                     oncomplete="if (!args.validationFailed) PF('departmentFormDialog').hide();">
+                        <f:setPropertyActionListener value="#{false}" target="#{departmentsView.savedDepartment}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{departmentsView.editedDepartment}"/>
+                    </p:commandButton>
                 </div>
 
             </div>

@@ -5,6 +5,7 @@ import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.security.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="teams")
@@ -16,6 +17,9 @@ public class Team extends BaseEntity {
     private RecordStatus teamStatus;
 
     private Department department;
+
+    @Transient
+    private int memberCount;
 
     public Team() {
         super();
@@ -69,5 +73,25 @@ public class Team extends BaseEntity {
     }
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public int getMemberCount() {
+        return memberCount;
+    }
+
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return Objects.equals(getTeamName(), team.getTeamName()) && Objects.equals(getTeamDescription(), team.getTeamDescription()) && Objects.equals(getTeamHead(), team.getTeamHead()) && getTeamStatus() == team.getTeamStatus() && Objects.equals(getDepartment(), team.getDepartment());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTeamName(), getTeamDescription(), getTeamHead(), getTeamStatus(), getDepartment());
     }
 }

@@ -4,6 +4,7 @@ import org.sers.webutils.model.BaseEntity;
 import org.sers.webutils.model.security.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "departments")
@@ -85,7 +86,6 @@ public class Department extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getDepartmentName(), getDepartmentDescription(), getDepartmentHead(), getTeamsCount(), getMemberCount());
     }
-
 }
