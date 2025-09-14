@@ -11,23 +11,23 @@
 
             <h:form id="departmentsView" enctype="multipart/form-data">
                 <p:growl id="messages" showDetail="true" life="4000"/>
-            <div class="p-d-flex p-ai-center p-gap-2">
-                <p:commandButton icon="pi pi-arrow-left"
-                                 styleClass="ui-button-text ui-button-outlined p-mr-3"
-                                 action="#{departmentTeamsView.cancel}"
-                                 immediate="true"/>
-                <h2 style="margin: 0; color: #343a40; font-weight:600;">Department Members</h2>
-            </div>
+                <div class="p-d-flex p-ai-center p-gap-2">
+                    <p:commandButton icon="pi pi-arrow-left"
+                                     styleClass="ui-button-text ui-button-outlined p-mr-3"
+                                     action="#{teamMembersView.cancel}"
+                                     immediate="true"/>
+                    <h2 style="margin: 0; color: #343a40; font-weight:600;">Team Members</h2>
+                </div>
 
                 <!-- 2. MEMBERS TABLE -->
                 <div class="members-table-container">
                     <!-- MEMBERS TABLE -->
                     <div class="members-table-container">
                         <p:dataTable id="membersTable"
-                                     value="#{departmentMembersView.departmentMembers}"
+                                     value="#{teamMembersView.teamMembers}"
                                      var="member"
                                      styleClass="members-table"
-                                     emptyMessage="No department members found"
+                                     emptyMessage="No team members found"
                                      rows="10"
                                      paginator="true"
                                      paginatorAlwaysVisible="false"
@@ -40,11 +40,11 @@
                                 <div class="p-d-flex p-jc-between p-ai-center">
                                     <!-- Left: Search -->
                                     <p:inputText id="searchTerm"
-                                                 value="#{departmentMembersView.searchTerm}"
+                                                 value="#{teamMembersView.searchTerm}"
                                                  placeholder="Search members..."
                                                  style="border-radius: 6px; padding: 6px 10px; font-size: 14px; min-width: 220px; border: 1px solid #ccc;">
                                         <p:ajax event="keyup"
-                                                listener="#{departmentMembersView.reloadFilterReset()}"
+                                                listener="#{teamMembersView.reloadFilterReset()}"
                                                 update="membersTable"/>
                                     </p:inputText>
 
@@ -77,7 +77,7 @@
                                 <p:commandButton title="Remove"
                                                  styleClass="remove-button"
                                                  icon="pi pi-trash"
-                                                 actionListener="#{departmentMembersView.deleteSelectedDepartment(member)}"
+                                                 actionListener="#{teamMembersView.deleteSelectedTeam(member)}"
                                                  update="membersTable departmentsView:messages"
                                                  process="@this">
                                     <p:confirm header="Confirmation"
@@ -94,30 +94,32 @@
 
 
 
-
             </h:form>
-
+            <!-- Add Member Dialog -->
             <!-- Add Member Dialog -->
             <p:dialog id="addMemberDialog"
                       header="Select Staff to Add"
                       widgetVar="addMemberDialog"
                       modal="true"
                       resizable="false"
-                      width="500">
+                      width="700">
 
                 <h:form id="addMemberForm">
+
+
                     <p:selectManyCheckbox id="staffCheckbox"
                                           converter="staffConverter"
-                                          value="#{departmentMembersView.selectedMembers}"
+                                          value="#{teamMembersView.selectedMembers}"
                                           layout="grid"
                                           columns="1"
                                           style="width:100%">
-                        <f:selectItems value="#{departmentMembersView.availableMembers}"
+                        <f:selectItems value="#{teamMembersView.availableMembers}"
                                        var="staff"
                                        itemLabel="#{staff.user.fullName} (#{staff.user.emailAddress})"
                                        itemValue="#{staff}" />
                     </p:selectManyCheckbox>
 
+                    <!-- ✅ Buttons inside the form, not facet -->
                     <div class="p-d-flex p-jc-end p-mt-3">
                         <p:commandButton value="Cancel"
                                          icon="pi pi-times"
@@ -127,10 +129,11 @@
                         <p:commandButton value="Add Selected"
                                          icon="pi pi-check"
                                          styleClass="ui-button-success"
-                                         actionListener="#{departmentMembersView.addMembers}"
+                                         actionListener="#{teamMembersView.addMembers}"
                                          update=":departmentsView:membersTable :departmentsView:messages"
                                          oncomplete="PF('addMemberDialog').hide()" />
                     </div>
+
                 </h:form>
             </p:dialog>
 

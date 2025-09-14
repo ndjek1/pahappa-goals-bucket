@@ -1,11 +1,15 @@
 package org.pahappa.systems.kpiTracker.views.organizationstructure;
 
+import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
+import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.sers.webutils.model.RecordStatus;
+import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
@@ -39,8 +43,10 @@ public class DepartmentTeamsView implements Serializable {
         this.selectedDepartment = department;
         if (department != null) {
             Search search = new Search(Team.class);
-            search.addFilterEqual("department.id", department.getId());
-
+            search.addFilterAnd(
+                    Filter.equal("recordStatus", RecordStatus.ACTIVE),
+                    Filter.equal("department.id", department.getId())
+            );
             this.teams = teamService.getInstances(search,0,0);
         } else {
             this.teams = null;
@@ -49,6 +55,15 @@ public class DepartmentTeamsView implements Serializable {
     }
     public String cancel() {
         return "/pages/organizationstructure/OrganizationStructure.xhtml";
+    }
+
+    public void deleteTeam(Team team) {
+        try {
+            teamService.deleteInstance(team);
+            show(this.selectedDepartment);
+        } catch (OperationFailedException e) {
+            UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
+        }
     }
 
 }
