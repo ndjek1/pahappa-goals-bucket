@@ -21,7 +21,14 @@
 
 
                     <!-- Search Input -->
-                    <p:inputText placeholder="Search Goal" styleClass="p-mr-2"/>
+                    <p:inputText id="searchBox"
+                                 placeholder="Search Team Goal"
+                                 value="#{individualGoalsView.searchTerm}"
+                                 styleClass="p-mr-2">
+                        <p:ajax event="keyup"
+                                update="individualGoalsView"
+                                listener="#{individualGoalsView.reloadFilterReset}" />
+                    </p:inputText>
 
                     <!-- Status Filter -->
                     <p:selectOneMenu value="#{individualGoalsView.search}" styleClass="p-mr-2">
@@ -40,7 +47,9 @@
                 <p:commandButton value="Set Goal" icon="pi pi-plus"
                                  styleClass="add-button"
                                  actionListener="#{individualGoalForm.show}">
+                    <p:ajax event="dialogReturn" listener="#{individualGoalsView.showSuccessMessage}" update="individualGoalsView :messages"/>
                     <f:setPropertyActionListener value="#{null}" target="#{individualGoalForm.model}"/>
+
                     <p:ajax event="dialogReturn" listener="#{individualGoalsView.reloadFilterReset}" update="individualGoalsView"/>
                 </p:commandButton>
             </div>
@@ -73,9 +82,38 @@
                         <p:commandButton icon="pi pi-eye" title="View"
                                          styleClass="ui-button-info p-button-sm"
                                          action="#{individualGoalDetails.prepareForIndividualGoal(goal.id)}"/>
+                        <p:commandButton title="Edit"
+                                         icon="pi pi-pencil"
+                                         rendered="#{goal.status.toString() ne 'APPROVED'}"
+                                         styleClass=" ui-button-info p-button-sm p-mx-2"
+                                         actionListener="#{individualGoalForm.show}">
+                            <p:ajax event="dialogReturn" listener="#{individualGoalsView.showSuccessMessage}" update="individualGoalsView :messages"/>
+                            <f:setPropertyActionListener value="#{goal}" target="#{individualGoalForm.model}"/>
+
+                        </p:commandButton>
+
+                        <p:commandButton title="Delete"
+                                         icon="pi pi-trash"
+                                         rendered="#{goal.status.name() ne 'APPROVED'}"
+                                         styleClass="ui-button-danger p-mr-2"
+                                         actionListener="#{individualGoalsView.deleteClient(goal)}"
+                                         update="individualGoalsView :messages">
+                            <p:confirm header="Confirmation"
+                                       message="You are about to delete a goal. Do you wish to continue?"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
                     </p:column>
                 </p:dataTable>
             </div>
+            <p:confirmDialog global="true">
+                <p:commandButton value="Yes" type="button"
+                                 ajax="false"
+                                 styleClass="ui-confirmdialog-yes" icon="fa fa-thumbs-up" />
+                <p:commandButton value="No" type="button"
+                                 ajax="false"
+                                 styleClass="ui-confirmdialog-no" icon="fa fa-thumbs-down" />
+            </p:confirmDialog>
         </h:form>
     </ui:define>
 </ui:composition>

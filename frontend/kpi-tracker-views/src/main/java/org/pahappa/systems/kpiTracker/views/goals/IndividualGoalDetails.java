@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.activities.IndividualActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.activities.IndividualActivity;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
@@ -43,12 +45,14 @@ public class IndividualGoalDetails implements Serializable {
     private IndividualActivityService individualActivityService;
     private KpisService kpiService;
     private List<IndividualActivity> individualActivities;
+    private KpiUpdateHistoryService kpiUpdateHistoryService;
 
     @PostConstruct
     public void init() {
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         this.individualActivityService = ApplicationContextProvider.getBean(IndividualActivityService.class);
         this.kpiService = ApplicationContextProvider.getBean(KpisService.class);
+        this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
     }
 
     public String prepareForIndividualGoal(String id) {
@@ -73,7 +77,7 @@ public class IndividualGoalDetails implements Serializable {
         if (goalKpis == null || goalKpis.isEmpty()) return 0;
         double weightedSum = 0, totalWeight = 0;
         for (KPI kpi : goalKpis) {
-            weightedSum += kpi.getProgress() * kpi.getWeight();
+            weightedSum += this.getKpiProgress(kpi) * kpi.getWeight();
             totalWeight += kpi.getWeight();
         }
         return totalWeight > 0 ? weightedSum / totalWeight : 0;
@@ -87,6 +91,27 @@ public class IndividualGoalDetails implements Serializable {
         );
         this.individualActivities = this.getIndividualActivityService().getInstances(search,0,0);
 
+    }
+
+    public double getKpiProgress(KPI kpi) {
+        if(kpi != null){
+            Search search = new  Search(KpiUpdateHistory.class);
+            search.addFilterEqual("kpi.id",kpi.getId());
+            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
+            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
+                return 0;
+            }
+            if (kpi.getCurrentValue() == null) {
+                return 0;
+            }
+            double currentValue = 0.0;
+            for(KpiUpdateHistory updateHistory : updateHistories){
+                currentValue += updateHistory.getValue();
+            }
+            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
+        }else {
+            return 0;
+        }
     }
 
     public DonutChartModel getProgressDonutModel() {

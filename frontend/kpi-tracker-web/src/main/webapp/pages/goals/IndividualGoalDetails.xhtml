@@ -28,6 +28,7 @@
 
                             <div class="p-d-flex p-flex-column p-gap-2">
                                 <span><b>Weight:</b> #{individualGoalDetails.selectedGoal.contributionWeight}%</span>
+                                <span><b>Parent goal:</b> #{individualGoalDetails.selectedGoal.teamGoal.name}</span>
                                 <span>
                                     <b>Created On:</b>
                                     <h:outputText value="#{individualGoalDetails.selectedGoal.dateCreated}">

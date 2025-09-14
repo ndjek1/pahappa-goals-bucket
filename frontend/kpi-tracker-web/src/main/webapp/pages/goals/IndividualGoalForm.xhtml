@@ -30,28 +30,11 @@
                 <div class="ui-col-12 ui-md-12">
                     <h5>Description</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText id="description"
+                        <p:inputTextarea id="description"
                                      value="#{individualGoalForm.model.description}"
-                                     required="true"
-                                     requiredMessage="Description is required."
+                                         cols="2"
                                      placeholder="Enter goal description"
                                      styleClass="full-width"/>
-                    </div>
-                </div>
-
-                <!-- Contribution Weight -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Weight</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber id="weight"
-                                       value="#{individualGoalForm.model.contributionWeight}"
-                                       required="true"
-                                       requiredMessage="Weight is required."
-                                       minValue="0"
-                                       maxValue="100"
-                                       decimalPlaces="0"
-                                       placeholder="Enter weight percentage"
-                                       styleClass="full-width"/>
                     </div>
                 </div>
 
@@ -61,7 +44,7 @@
                         <h5>Department Parent Goal</h5>
                         <div class="ui-inputgroup">
                             <p:selectOneMenu id="deptParentGoal"
-                                             value="#{individualGoalForm.model.parent}"
+                                             value="#{individualGoalForm.model.departmentGoal}"
                                              converter="departmentGoalConverter"
                                              styleClass="full-width">
                                 <f:selectItem itemLabel="Select department parent goal" itemValue="#{null}" noSelectionOption="true"/>
@@ -89,6 +72,24 @@
                     </div>
                 </h:panelGroup>
 
+                <!-- Contribution Weight -->
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Weight</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="weight"
+                                       value="#{individualGoalForm.model.contributionWeight}"
+                                       required="true"
+                                       requiredMessage="Weight is required."
+                                       minValue="0"
+                                       maxValue="100"
+                                       decimalPlaces="0"
+                                       placeholder="Enter weight percentage"
+                                       styleClass="full-width"/>
+                    </div>
+                </div>
+
+
+
             </div>
 
             <!-- Buttons Row -->
@@ -102,9 +103,23 @@
                 <div class="ui-col-12 ui-md-6">
                     <p:commandButton value="Save"
                                      process="@form"
+                                     rendered="#{individualGoalForm.model.id eq null}"
                                      actionListener="#{individualGoalForm.persist}"
-                                     update="@form messages"
-                                     styleClass="ui-button-primary full-width"/>
+                                     update="@form"
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{true}" target="#{individualGoalsView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{individualGoalsView.updated}"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Update"
+                                     process="@form"
+                                     rendered="#{individualGoalForm.model.id ne null}"
+                                     actionListener="#{individualGoalForm.persist}"
+                                     update="@form"
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{false}" target="#{individualGoalsView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{individualGoalsView.updated}"/>
+                    </p:commandButton>
                 </div>
             </div>
 

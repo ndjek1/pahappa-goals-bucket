@@ -7,6 +7,7 @@ import org.sers.webutils.model.BaseEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "individual_goals")
@@ -15,10 +16,10 @@ public class IndividualGoal extends BaseEntity {
     private String description;
     private double contributionWeight;
     private GoalStatus status;
-    private DepartmentGoal parent;
+    private DepartmentGoal departmentGoal;
     private TeamGoal teamGoal;
     private Staff staff;
-    private List<KPI> kpis = new ArrayList<>();
+    private List<KPI> kpis = new ArrayList<>();// to be removed
 
     public IndividualGoal() {
         this.status = GoalStatus.PENDING;
@@ -63,12 +64,12 @@ public class IndividualGoal extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_goal_id")
-    public DepartmentGoal getParent() {
-        return parent;
+    public DepartmentGoal getDepartmentGoal() {
+        return departmentGoal;
     }
 
-    public void setParent(DepartmentGoal parent) {
-        this.parent = parent;
+    public void setDepartmentGoal(DepartmentGoal departmentGoal) {
+        this.departmentGoal = departmentGoal;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -127,6 +128,6 @@ public class IndividualGoal extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getName(), getDescription(), getContributionWeight(), getStatus(), getDepartmentGoal(), getTeamGoal(), getStaff(), getKpis());
     }
 }
