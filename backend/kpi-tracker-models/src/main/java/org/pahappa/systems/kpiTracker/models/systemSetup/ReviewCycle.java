@@ -6,6 +6,7 @@ import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "review_cycles")
@@ -88,7 +89,6 @@ public class ReviewCycle extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getTitle(), getType(), getStartDate(), getEndDate(), getStatus());
     }
-
 }
