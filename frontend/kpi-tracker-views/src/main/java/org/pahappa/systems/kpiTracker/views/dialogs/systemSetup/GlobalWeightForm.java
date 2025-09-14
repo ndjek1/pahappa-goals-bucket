@@ -1,18 +1,14 @@
 package org.pahappa.systems.kpiTracker.views.dialogs.systemSetup;
 
-import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.GlobalWeightService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
-import org.pahappa.systems.kpiTracker.utils.GeneralSearchUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
-import org.sers.webutils.model.RecordStatus;
-import org.sers.webutils.model.utils.SearchField;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;

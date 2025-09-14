@@ -5,7 +5,7 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.GlobalWeightService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
@@ -16,8 +16,10 @@ import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
     private GlobalWeightService globalWeightService;
     private Search search;
     private boolean createWeight;
+    private String searchTerm;
+    private boolean saved;
+    private boolean updated;
 
     @PostConstruct
     public void init(){
@@ -38,7 +43,7 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
     }
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
-        super.setDataModels(globalWeightService.getInstances(new Search().addFilterEqual("recordStatus", RecordStatus.ACTIVE),i,i1));
+        super.setDataModels(globalWeightService.getInstances(this.search,i,i1));
     }
 
     @Override
@@ -58,6 +63,11 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
 
     @Override
     public void reloadFilterReset(){
+        this.search = new Search(GlobalWeight.class);
+        this.search.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+        if(this.searchTerm != null && !this.searchTerm.isEmpty()){
+            this.search.addFilterILike("title", "%" + searchTerm + "%");
+        }
         super.setTotalRecords(globalWeightService.countInstances(new Search()));
         try{
             super.reloadFilterReset();
@@ -75,6 +85,23 @@ public class GlobalWeightView extends PaginatedTableView<GlobalWeight, GlobalWei
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
         }
     }
+
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
+
 
     public  void canCreateNewWeights(){
         Search search = new Search(GlobalWeight.class);

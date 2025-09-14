@@ -1,6 +1,7 @@
-package org.pahappa.systems.kpiTracker.core.services.impl;
+package org.pahappa.systems.kpiTracker.core.services.systemSetupService.impl;
 
-import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
+import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.GlobalWeightService;
 
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.utils.Validate;

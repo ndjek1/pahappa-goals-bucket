@@ -3,6 +3,7 @@ package org.pahappa.systems.kpiTracker.models.systemSetup;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "global_weights")
@@ -41,5 +42,17 @@ public class GlobalWeight extends BaseEntity {
 
     public void setReviewCycle(ReviewCycle reviewCycle) {
         this.reviewCycle = reviewCycle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        GlobalWeight that = (GlobalWeight) o;
+        return Double.compare(getMboWeight(), that.getMboWeight()) == 0 && Double.compare(getOrgFitWeight(), that.getOrgFitWeight()) == 0 && Objects.equals(getReviewCycle(), that.getReviewCycle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMboWeight(), getOrgFitWeight(), getReviewCycle());
     }
 }
