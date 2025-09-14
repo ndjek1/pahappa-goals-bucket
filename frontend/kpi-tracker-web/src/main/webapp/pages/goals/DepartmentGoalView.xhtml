@@ -40,6 +40,7 @@
                                  styleClass="add-button"
                                  actionListener="#{departmentGoalsForm.show}">
                     <f:setPropertyActionListener value="#{null}" target="#{departmentGoalsForm.model}"/>
+                    <p:ajax event="dialogReturn" listener="#{departmentGoalsView.showSuccessMessage}" update="deptGoalForm :messages"/>
                     <p:ajax event="dialogReturn" listener="#{departmentGoalsView.reloadFilterReset}" update="deptGoalForm"/>
                 </p:commandButton>
 
@@ -84,6 +85,26 @@
                                      icon="pi pi-eye"
                                      styleClass="p-button-sm p-mr-2"
                                      action="#{departmentGoalDetails.prepareForCategory(goal.id)}"/>
+
+                    <p:commandButton title="Edit"
+                                     icon="pi pi-pencil"
+                                     rendered="#{goal.status.toString() ne 'APPROVED'}"
+                                     styleClass="p-button-sm p-mr-2"
+                                     actionListener="#{departmentGoalsForm.show}">
+                        <f:setPropertyActionListener value="#{goal}" target="#{departmentGoalsForm.model}"/>
+                        <p:ajax event="dialogReturn" listener="#{departmentGoalsView.showSuccessMessage}" update="deptGoalForm :messages"/>
+                    </p:commandButton>
+
+                    <p:commandButton title="Delete"
+                                     icon="pi pi-trash"
+                                     rendered="#{goal.status.name() ne 'APPROVED'}"
+                                     styleClass="ui-button-danger p-mr-2"
+                                     actionListener="#{departmentGoalsView.deleteClient(goal)}">
+                        <p:confirm header="Confirmation"
+                                   message="You are about to delete a goal. Do you wish to continue?"
+                                   icon="ui-icon-alert" />
+                        <p:ajax event="dialogReturn" listener="#{departmentGoalsView.reloadFilterReset}" update="deptGoalForm"/>
+                    </p:commandButton>
 
                 </p:column>
             </p:dataTable>

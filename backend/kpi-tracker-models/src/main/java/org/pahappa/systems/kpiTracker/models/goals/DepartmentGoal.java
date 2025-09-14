@@ -4,6 +4,7 @@ import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "department_goals")
@@ -12,10 +13,10 @@ public class DepartmentGoal extends BaseEntity {
     private String description;
     private double contributionWeight;
     private GoalStatus status;
-    private OrganizationGoal parent;
+    private OrganizationGoal organizationGoal;
     private Department department;
 
-    @Column(name = "name",nullable = false,unique = true)
+    @Column(name = "name",nullable = false)
     public String getName() {
         return name;
     }
@@ -52,14 +53,14 @@ public class DepartmentGoal extends BaseEntity {
         this.status = status;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_goal_id", nullable = false)
-    public OrganizationGoal getParent() {
-        return parent;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organization_goal_id", nullable = false)
+    public OrganizationGoal getOrganizationGoal() {
+        return organizationGoal;
     }
 
-    public void setParent(OrganizationGoal parent) {
-        this.parent = parent;
+    public void setOrganizationGoal(OrganizationGoal organizationGoal) {
+        this.organizationGoal = organizationGoal;
     }
 
 
@@ -84,6 +85,6 @@ public class DepartmentGoal extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getName(), getDescription(), getContributionWeight(), getStatus(), getOrganizationGoal(), getDepartment());
     }
 }
