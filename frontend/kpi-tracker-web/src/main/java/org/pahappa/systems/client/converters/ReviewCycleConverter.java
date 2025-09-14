@@ -1,6 +1,6 @@
 package org.pahappa.systems.client.converters;
 
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 

@@ -1,10 +1,9 @@
 package org.pahappa.systems.kpiTracker.views.systemSetup;
 
-import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.UiUtils;

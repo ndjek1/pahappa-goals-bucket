@@ -4,14 +4,12 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
-import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
-import org.sers.webutils.model.Gender;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
@@ -19,7 +17,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,22 +47,22 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
 
     @Override
     public void persist() throws Exception {
-        if (model.getTitle() == null || model.getType() == null) {
+        if (model.getTitle() == null || model.getType() == null || model.getStartDate() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "Missing Information",
-                            "Please provide both review cycle title and type."));
+                            "Please provide review cycle title, type and start date."));
             return;
         }
 
-
+        // Check duplicate title
         Search titleSearch = new Search(ReviewCycle.class);
         titleSearch.addFilterILike("title", model.getTitle().trim());
         titleSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
-
         List<ReviewCycle> existingCycles = reviewCycleService.getInstances(titleSearch, 0, 0);
+
         boolean duplicateTitle = existingCycles.stream()
-                .anyMatch(cycle -> !cycle.getId().equals(model.getId())); // exclude self when editing
+                .anyMatch(cycle -> !cycle.getId().equals(model.getId()));
 
         if (duplicateTitle) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -75,19 +72,40 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
             return;
         }
 
-
+        // Auto-set end date
         model.setEndDate(calculateEndDate(model.getType(), model.getStartDate()));
 
+        // Check for date overlaps
+        Search allCyclesSearch = new Search(ReviewCycle.class);
+        allCyclesSearch.addFilterEqual("recordStatus", RecordStatus.ACTIVE);
+
+        List<ReviewCycle> allCycles = reviewCycleService.getInstances(allCyclesSearch, 0, 0);
+        for (ReviewCycle cycle : allCycles) {
+            if (model.getId() != null && model.getId().equals(cycle.getId())) continue; // skip self when editing
+
+            if (datesOverlap(model.getStartDate(), model.getEndDate(),
+                    cycle.getStartDate(), cycle.getEndDate())) {
+
+                Date suggestedDate = new Date(cycle.getEndDate().getTime() + TimeUnit.DAYS.toMillis(1));
+
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Date Conflict",
+                                "The selected start date overlaps with the cycle '" + cycle.getTitle() +
+                                        "' (" + cycle.getStartDate() + " to " + cycle.getEndDate() + "). " +
+                                        "Please choose a start date on or after " + suggestedDate + "."));
+                return;
+            }
+        }
+
+        // Ensure only one ACTIVE cycle
         if (model.getStatus() == ReviewCycleStatus.ACTIVE) {
-            // Check for another ACTIVE cycle
             Search activeSearch = new Search(ReviewCycle.class);
             activeSearch.addFilterAnd(
                     Filter.equal("status", ReviewCycleStatus.ACTIVE),
                     Filter.equal("recordStatus", RecordStatus.ACTIVE)
             );
-
             List<ReviewCycle> activeCycles = reviewCycleService.getInstances(activeSearch, 0, 0);
-
             if (!activeCycles.isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -97,9 +115,8 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
             }
         }
 
-
+        // Save
         reviewCycleService.saveInstance(model);
-
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Action Successful",
@@ -109,6 +126,10 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
         hide();
     }
 
+    private boolean datesOverlap(Date start1, Date end1, Date start2, Date end2) {
+        return (start1.before(end2) || start1.equals(end2)) &&
+                (end1.after(start2) || end1.equals(start2));
+    }
 
 
 
