@@ -20,7 +20,9 @@ import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
 @ManagedBean(name = "organizationGoalsView")
 @Getter
 @Setter
-@ViewScoped
+@SessionScoped
 public class OrganizationGoalView extends PaginatedTableView<OrganizationGoal, OrganizationGoalView,OrganizationGoalView> {
 
     private OrganizationGoalService organizationGoalService;
@@ -40,6 +42,8 @@ public class OrganizationGoalView extends PaginatedTableView<OrganizationGoal, O
     private TeamGoalService teamGoalService;
     private List<DepartmentGoal> departmentGoals;
     private List<TeamGoal> teamGoals;
+    private boolean saved;
+    private boolean updated;
 
 
     @PostConstruct
@@ -95,6 +99,22 @@ public class OrganizationGoalView extends PaginatedTableView<OrganizationGoal, O
             reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
+        }
+    }
+
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal updated successfully."));
+            this.updated = false; // Reset the flag
         }
     }
 }

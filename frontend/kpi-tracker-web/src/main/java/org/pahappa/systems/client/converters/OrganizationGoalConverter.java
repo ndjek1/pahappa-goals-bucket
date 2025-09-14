@@ -21,7 +21,7 @@ public class OrganizationGoalConverter implements Converter {
         try {
             // Look up the goal by ID using the service
             return ApplicationContextProvider.getBean(OrganizationGoalService.class)
-                    .getObjectById(value);
+                    .getInstanceByID(value);
         } catch (Exception e) {
             return null;
         }

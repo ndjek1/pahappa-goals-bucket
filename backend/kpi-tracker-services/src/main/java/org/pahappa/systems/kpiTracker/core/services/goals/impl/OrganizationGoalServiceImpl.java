@@ -24,8 +24,4 @@ public class OrganizationGoalServiceImpl extends GenericServiceImpl<Organization
         return true;
     }
 
-    @Override
-    public Object getObjectById(String id) {
-        return super.getInstanceByID(id);
-    }
 }

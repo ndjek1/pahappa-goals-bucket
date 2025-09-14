@@ -53,6 +53,7 @@
                                         styleClass="add-button"
                                          actionListener="#{organizationGoalForm.show}">
                             <f:setPropertyActionListener value="#{null}" target="#{organizationGoalForm.model}"/>
+                            <p:ajax event="dialogReturn" listener="#{organizationGoalsView.showSuccessMessage}" update="goalForm :messages"/>
                             <p:ajax event="dialogReturn" listener="#{organizationGoalsView.reloadFilterReset}" update="goalForm"/>
                         </p:commandButton>
 
@@ -87,6 +88,16 @@
                                              styleClass="p-button-sm p-mr-2"
                                              action="#{goalDetailsView.prepareForCategory(model.id)}"
                                               />
+                            <p:commandButton title="Edit"
+                                             rendered="#{model.reviewCycle.status.toString() ne 'ACTIVE'}"
+                                             icon="pi pi-pencil"
+                                             styleClass="p-button-sm p-mr-2"
+                                             actionListener="#{organizationGoalForm.show}"
+                            >
+                                <f:setPropertyActionListener value="#{model}" target="#{organizationGoalForm.model}"/>
+                                <p:ajax event="dialogReturn" listener="#{organizationGoalsView.showSuccessMessage}" update="goalForm :messages"/>
+
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>
