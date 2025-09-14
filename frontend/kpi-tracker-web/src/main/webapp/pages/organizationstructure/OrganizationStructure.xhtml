@@ -35,6 +35,7 @@
                                      style="background-color: #5cb85c; "
                                      actionListener="#{departmentFormDialog.show}">
                         <f:setPropertyActionListener value="#{null}" target="#{departmentFormDialog.model}" />
+                        <p:ajax event="dialogReturn" listener="#{departmentsView.showSuccessMessage()}" update=":messages"/>
                         <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView:departmentsList" />
                     </p:commandButton>
 
@@ -66,7 +67,7 @@
                                         <!-- Department Lead: Bigger space -->
                                         <div class="p-mb-2" style="flex:3;">
                                             <h:outputText value="Department Lead" style="color: #6c757d;" />
-                                            <h5 style="margin:0; color:#0a9dff;">#{department.departmentHead != null ? department.departmentHead : '[dept_head]'}</h5>
+                                            <h5 style="margin:0; color:#0a9dff;">#{department.departmentHead != null ? department.departmentHead : 'Not assigned'}</h5>
                                         </div>
 
                                         <!-- Teams Count -->
@@ -92,8 +93,8 @@
                                                          style="background-color: #0a9dff; border: 1px solid #337ab7; border-radius: 4px;"
                                                          update="departmentsView"
                                                          ajax="false"
-                                                         action="#{departmentMembersView.goToDepartmentMembersView}" >
-                                            <f:setPropertyActionListener value="#{department}" target="#{departmentMembersView.selectedDepartment}" />
+                                                         action="#{departmentMembersView.goToDepartmentMembersView(department.id)}" >
+
                                         </p:commandButton>
 
                                         <p:commandButton value="View Teams" process="@this"
@@ -106,11 +107,12 @@
                                                              update="departmentsView"
                                                              styleClass="p-button-text p-mr-2"
                                                              actionListener="#{departmentFormDialog.show}">
-                                                <f:setPropertyActionListener value="#{department}" target="#{departmentFormDialog.department}" />
+                                                <f:setPropertyActionListener value="#{department}" target="#{departmentFormDialog.model}" />
+                                                <p:ajax event="dialogReturn" listener="#{departmentsView.showSuccessMessage()}" update=":messages"/>
                                             </p:commandButton>
 
                                             <p:commandButton process="@this" title="Delete" icon="pi pi-trash"
-                                                             styleClass="p-button-text p-mr-2"
+                                                             styleClass="ui-button-danger p-mr-2"
                                                              update="departmentsView"
                                                              actionListener="#{departmentsView.deleteSelectedDepartment(department)}">
                                                 <p:ajax event="dialogReturn" listener="#{departmentsView.reloadFilterReset}" update="departmentsView:departmentsList messages" />
@@ -138,12 +140,5 @@
 
         </div>
 
-        <style>
-            .card { box-shadow: 0 2px 4px rgba(0,0,0,0.1); background:white; border-radius:8px; overflow:hidden; }
-            .card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-            .ui-button { border-radius: 4px; font-weight: 500; text-transform:none; }
-            .ui-button-text:hover { background-color: rgba(51, 122, 183, 0.1) !important; }
-            .department-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start; }
-        </style>
     </ui:define>
 </ui:composition>

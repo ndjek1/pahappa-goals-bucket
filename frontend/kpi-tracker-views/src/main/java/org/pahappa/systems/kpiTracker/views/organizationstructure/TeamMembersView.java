@@ -4,9 +4,9 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
+import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
-import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
+import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
@@ -17,75 +17,85 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@ManagedBean(name = "departmentMembersView")
-@SessionScoped
+@ManagedBean(name = "teamMembersView")
 @Getter
 @Setter
-public class DepartmentMembersView implements Serializable {
-
+@SessionScoped
+public class TeamMembersView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private StaffService staffService;
-    private DepartmentService departmentService;
-    private Department selectedDepartment;
-    private List<Staff> departmentMembers;
+    private TeamService teamService;
+    private Team selectedTeam;
+    private List<Staff> teamMembers;
     private List<Staff> availableMembers;
     private  List<Staff> selectedMembers = new ArrayList<>();
 
     private String searchTerm;
-
-
     private boolean membersDialogVisible;
 
 
     @PostConstruct
     public void init() {
         staffService = ApplicationContextProvider.getBean(StaffService.class);
-        this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
-        loadAvailableMembers();
+        this.teamService = ApplicationContextProvider.getBean(TeamService.class);
     }
 
-    public void show(Department department) {
-        this.selectedDepartment = department;
-        if (department != null) {
-            this.departmentMembers = staffService.getMembersByTeam(department);
+    public void show(Team team) {
+        this.selectedTeam = team;
+        if (this.selectedTeam != null) {
+            Search search = new Search(Staff.class);
+            search.addFilterAnd(
+                    Filter.equal("recordStatus",RecordStatus.ACTIVE),
+                    Filter.equal("team.id",selectedTeam.getId())
+            );
+            this.teamMembers = staffService.getInstances(search,0,0);
         } else {
-            this.departmentMembers = null;
+            this.teamMembers = null;
         }
     }
 
-    public String goToDepartmentMembersView(String id) {
-        this.selectedDepartment = this.departmentService.getInstanceByID(id);
-        if (selectedDepartment != null) {
-            this.departmentMembers = staffService.getMembersByTeam(selectedDepartment);
+    public String goToTeamMembersView(String id) {
+        this.selectedTeam = teamService.getInstanceByID(id);
+        if (this.selectedTeam != null) {
+            Search search = new Search(Staff.class);
+            search.addFilterAnd(
+                    Filter.equal("recordStatus",RecordStatus.ACTIVE),
+                    Filter.equal("team.id",selectedTeam.getId())
+            );
+            this.teamMembers = staffService.getInstances(search,0,0);
+            show(this.selectedTeam);
+            loadAvailableMembers();
         } else {
-            this.departmentMembers = null;
+            this.teamMembers = null;
         }
         membersDialogVisible = true;
-        return "ManageMembers?faces-redirect=true";
+        return "TeamMembers?faces-redirect=true";
     }
+
 
 
     public void reloadFilterReset() {
 
-        Search departmentMembersSearch = new Search();
+        Search teamMembersSearch = new Search();
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            departmentMembersSearch.addFilterILike("firstName", "%" + searchTerm + "%");
-            departmentMembersSearch.addFilterILike("lastName", "%" + searchTerm + "%");
+            teamMembersSearch.addFilterILike("firstName", "%" + searchTerm + "%");
+            teamMembersSearch.addFilterILike("lastName", "%" + searchTerm + "%");
         }
 
 
         // Filter and load dataModels based on search/filter criteria
-        this.departmentMembers = staffService.getInstances(departmentMembersSearch, 0, 0);
+        this.teamMembers = staffService.getInstances(teamMembersSearch, 0, 0);
 
     }
 
-    public void deleteSelectedDepartment(Staff staff) {
+    public void deleteSelectedTeam(Staff staff) {
         try {
             staffService.deleteInstance(staff);
             reloadFilterReset();
@@ -95,34 +105,33 @@ public class DepartmentMembersView implements Serializable {
     }
 
     public String cancel() {
-        return "/pages/organizationstructure/OrganizationStructure.xhtml";
+        return "/pages/organizationstructure/TeamsView.xhtml";
     }
 
     public void loadAvailableMembers() {
         if(this.staffService != null){
-            Search departmentMembersSearch = new Search(Staff.class);
-            departmentMembersSearch.addFilterAnd(
+            Search teamMembersSearch = new Search(Staff.class);
+            teamMembersSearch.addFilterAnd(
                     Filter.equal("recordStatus", RecordStatus.ACTIVE),
-                    Filter.isNull("department")
+                    Filter.equal("department.id",this.selectedTeam.getDepartment().getId()),
+                    Filter.isNull("team")
             );
-            this.availableMembers = staffService.getInstances(departmentMembersSearch,0,0);
+            this.availableMembers = staffService.getInstances(teamMembersSearch,0,0);
         }
     }
 
     public void addMembers() throws ValidationFailedException, OperationFailedException {
         if(this.staffService != null && !this.selectedMembers.isEmpty()){
             for(Staff staff : this.selectedMembers){
-                staff.setDepartment(this.selectedDepartment);
+                staff.setTeam(this.selectedTeam);
                 staffService.saveInstance(staff);
+                loadAvailableMembers();
+                show(this.selectedTeam);
             }
-            loadAvailableMembers();
-            show(this.selectedDepartment);
         }
     }
 
     public List<ExcelReport> getExcelReportModels() {
         return Collections.emptyList();
     }
-
-
 }

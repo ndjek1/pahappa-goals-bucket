@@ -44,24 +44,19 @@
                                 <div class="p-grid p-text-center">
 
                                     <!-- Team Head -->
-                                    <div class="p-col-12 p-md-6 p-text-left p-p-2">
+                                    <div class="p-col-12 p-md-9 p-text-left p-p-2">
                                         <span class="p-text-secondary">Team Head</span>
                                         <h4 class="p-mt-1 p-text-primary">
-                                            #{team.teamHead != null ? team.teamHead.fullName : '[Not assigned]'}
+                                            #{team.teamHead != null ? team.teamHead.fullName : 'Not assigned'}
                                         </h4>
                                     </div>
 
                                     <!-- Members Count -->
                                     <div class="p-col-6 p-md-3 p-p-2">
                                         <span class="p-text-secondary">Members</span>
-                                        <h4 class="p-mt-1 p-text-primary">0</h4>
+                                        <h4 class="p-mt-1 p-text-primary">#{team.memberCount != null ? team.memberCount : '0'}</h4>
                                     </div>
 
-                                    <!-- Projects Count -->
-                                    <div class="p-col-6 p-md-3 p-p-2">
-                                        <span class="p-text-secondary">Projects</span>
-                                        <h4 class="p-mt-1 p-text-primary">0</h4>
-                                    </div>
                                 </div>
 
                                 <!-- Divider -->
@@ -69,6 +64,10 @@
 
                                 <!-- Row 3: Actions -->
                                 <div class="p-d-flex p-jc-end p-ai-center p-flex-wrap" style="gap:10px;">
+                                    <p:commandButton icon="pi pi-eye" title="View memebers"
+                                                     styleClass="p-button-rounded p-button-text p-button-info"
+                                                     action="#{teamMembersView.goToTeamMembersView(team.id)}">
+                                    </p:commandButton>
                                     <p:commandButton icon="pi pi-pencil" title="Edit"
                                                      styleClass="p-button-rounded p-button-text p-button-info"
                                                      actionListener="#{teamForm.show}">

@@ -1,4 +1,4 @@
-package org.pahappa.systems.kpiTracker.views.goals;
+package org.pahappa.systems.kpiTracker.views.organizationstructure;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
-import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
+import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
@@ -31,6 +31,7 @@ import java.util.Map;
 public class TeamsView extends PaginatedTableView<Team, TeamsView,TeamsView> {
     private TeamService teamGoalService;
     private DepartmentService departmentService;
+    private StaffService staffService;
     private Search search;
     private Department department;
     private User loggedinUser;
@@ -40,6 +41,7 @@ public class TeamsView extends PaginatedTableView<Team, TeamsView,TeamsView> {
     public void init(){
         this.teamGoalService = ApplicationContextProvider.getBean(TeamService.class);
         this.departmentService = ApplicationContextProvider.getBean(DepartmentService.class);
+        this.staffService = ApplicationContextProvider.getBean(StaffService.class);
         loggedinUser = SharedAppData.getLoggedInUser();
         reloadFilterReset();
         loadDepartment();
@@ -47,6 +49,9 @@ public class TeamsView extends PaginatedTableView<Team, TeamsView,TeamsView> {
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
         super.setDataModels(teamGoalService.getInstances(search,i,i1));
+        for(Team team: this.getDataModels()){
+            team.setMemberCount(staffService.getMembersByTeam(team).size());
+        }
     }
 
     @Override
