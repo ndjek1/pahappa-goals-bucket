@@ -13,11 +13,15 @@
             <p:growl id="growl" showDetail="true" life="4000" />
 
             <div class="field col-12 p-m-4">
+                <h5>Business Cycle</h5>
+
                 <div class="field col-12 " >
-                    <h:outputText
-                            value="#{globalWeightsForm.model.reviewCycle == null
-              ? 'Current review cycle: '
-              : 'Review cycle: '}#{globalWeightsForm.activeReviewCycle.title}" />
+                    <p:selectOneMenu value="#{globalWeightsForm.model.reviewCycle}"
+                                     converter="reviewCycleConverter" filter="true"
+                                     required="true" effect="fold">
+                        <f:selectItem itemLabel="Select review cycle" itemValue="#{null}" />
+                        <f:selectItems value="#{globalWeightsForm.reviewCycleList}" var="reviewCycle" itemLabel="#{reviewCycle.title}  #{reviewCycle.status.toString()} " itemValue="#{reviewCycle}" />
+                    </p:selectOneMenu>
 
 
                 </div>
@@ -26,28 +30,34 @@
 
             <!-- Business Goal Weight -->
             <div class="field col-12 p-mx-4 p-mb-2">
-                <p:outputLabel for="mboWeightInput" value="Business goal weight" />
-                <p:inputText id="mboWeightInput"
+                <h5>Business Goal Weight</h5>
+                <p:inputNumber id="mboWeightInput"
+                               minValue="0"
+                               maxValue="100"
+                               decimalPlaces="1"
                              value="#{globalWeightsForm.model.mboWeight}"
                              required="true">
                     <p:ajax event="keyup"
                             listener="#{globalWeightsForm.updateOrgFitWeight}"
                             process="@this"
                             update="orgFitWeightInput" />
-                </p:inputText>
+                </p:inputNumber>
             </div>
 
             <!-- Organizational Fit Weight -->
             <div class="field col-12 p-mx-4">
-                <p:outputLabel for="orgFitWeightInput" value="Organizational fit weight" />
-                <p:inputText id="orgFitWeightInput"
+                <h5>Professional Attributes Weight</h5>
+                <p:inputNumber id="orgFitWeightInput"
+                               minValue="0"
+                               maxValue="100"
+                               decimalPlaces="1"
                              value="#{globalWeightsForm.model.orgFitWeight}"
                              required="true">
                     <p:ajax event="keyup"
                             listener="#{globalWeightsForm.updateMboWeight}"
                             process="@this"
                             update="mboWeightInput" />
-                </p:inputText>
+                </p:inputNumber>
             </div>
 
             <!-- Buttons -->
@@ -60,13 +70,29 @@
                                  style="flex: 1;" />
 
                 <p:commandButton value="Save"
+                                 rendered="#{globalWeightsForm.model.id eq null}"
                                  process="@form"
                                  actionListener="#{globalWeightsForm.save}"
                                  update="@form growl"
                                  validateClient="true"
                                  style="flex: 1;"
                                  styleClass="ui-button-primary p-mx-5"
-                />
+                >
+                    <f:setPropertyActionListener value="#{true}" target="#{globalWeightView.saved}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{globalWeightView.updated}"/>
+                </p:commandButton>
+                <p:commandButton value="Update"
+                                 rendered="#{globalWeightsForm.model.id ne null}"
+                                 process="@form"
+                                 actionListener="#{globalWeightsForm.save}"
+                                 update="@form growl"
+                                 validateClient="true"
+                                 style="flex: 1;"
+                                 styleClass="ui-button-primary p-mx-5"
+                >
+                    <f:setPropertyActionListener value="#{false}" target="#{globalWeightView.saved}"/>
+                    <f:setPropertyActionListener value="#{true}" target="#{globalWeightView.updated}"/>
+                </p:commandButton>
             </div>
 
         </h:form>

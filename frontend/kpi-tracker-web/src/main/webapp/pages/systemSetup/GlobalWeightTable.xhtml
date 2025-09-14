@@ -31,7 +31,8 @@
                                              actionListener="#{globalWeightsForm.show}">
                                 <f:setPropertyActionListener value="#{null}"
                                                              target="#{globalWeightsForm.model}" />
-                                <p:ajax event="dialogReturn" listener="#{globalWeightView.reloadFilterReset}" update="globalWeightTable" />
+                                <p:ajax event="dialogReturn" listener="#{globalWeightView.showSuccessMessage}" update="globalWeightTable :messages" />
+                                <p:ajax event="dialogReturn" listener="#{globalWeightView.reloadFilterReset}" update="globalWeightTable :messages" />
                             </p:commandButton>
 
                         </div>
@@ -70,7 +71,7 @@
                            <f:setPropertyActionListener value="#{model}"
                                                         target="#{globalWeightsForm.model}" />
 
-                           <p:ajax event="dialogReturn" update="globalWeightTable" />
+                            <p:ajax event="dialogReturn" listener="#{globalWeightView.showSuccessMessage}" update="globalWeightTable :messages" />
                         </p:commandButton>
 
                         <p:commandButton icon="fa fa-trash" title="Delete"
