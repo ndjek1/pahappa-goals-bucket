@@ -6,11 +6,10 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryItemService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryItemService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
-import org.pahappa.systems.kpiTracker.utils.GeneralSearchUtils;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.exception.OperationFailedException;
@@ -19,9 +18,10 @@ import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.util.Arrays;
+import javax.faces.context.FacesContext;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +39,8 @@ public class OrgFitCategoryItemView extends PaginatedTableView<OrgFitCategoryIte
     private OrgFitCategory selectedOrgFitCategory;
     private List<SearchField> searchFields, selectedSearchFields;
     private Date createdFrom, createdTo;
+    private boolean saved;
+    private boolean updated;
 
 
     @PostConstruct
@@ -97,11 +99,27 @@ public class OrgFitCategoryItemView extends PaginatedTableView<OrgFitCategoryIte
         // Count total records for pagination
         super.setTotalRecords(orgFitCategoryItemServiceService.countInstances(this.search));
     }
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
 
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Item  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Item updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
 
     public void deleteClient(OrgFitCategoryItem orgFitCategoryItem) {
         try {
             orgFitCategoryItemServiceService.deleteInstance(orgFitCategoryItem);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Item deleted successfully."));
             reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
@@ -111,7 +129,7 @@ public class OrgFitCategoryItemView extends PaginatedTableView<OrgFitCategoryIte
     public String prepareForCategory(OrgFitCategory category) {
         this.selectedOrgFitCategory = category;
         reloadFilterReset();
-        return "/pages/systemSetup/OrgFitCategoryItemTable.xhtml?faces-redirect=true";
+        return "/pages/systemSetup/OrgFitCategoryItemTable.xhtml";
     }
 
     public String backToCategories(){

@@ -3,6 +3,7 @@ package org.pahappa.systems.kpiTracker.models.systemSetup;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "organization_fit_category_items")
@@ -40,5 +41,17 @@ public class OrgFitCategoryItem extends BaseEntity {
 
     public void setOrgFitCategory(OrgFitCategory orgFitCategory) {
         this.orgFitCategory = orgFitCategory;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrgFitCategoryItem that = (OrgFitCategoryItem) o;
+        return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getOrgFitCategory(), that.getOrgFitCategory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getDescription(), getOrgFitCategory());
     }
 }

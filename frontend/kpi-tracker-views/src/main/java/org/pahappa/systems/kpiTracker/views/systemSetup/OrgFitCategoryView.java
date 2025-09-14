@@ -4,9 +4,9 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.GlobalWeightService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 
@@ -20,22 +20,26 @@ import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
 
 @ManagedBean(name = "orgFitCategoryView")
 @Setter
 @Getter
-@ViewScoped
+@SessionScoped
 public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFitCategoryService,OrgFitCategoryService> {
     private OrgFitCategoryService orgFitService;
     private Search search;
     private double totalWeight;
     private GlobalWeightService globalWeightService;
     private ReviewCycleService reviewCycleService;
+    private boolean saved;
+    private boolean updated;
 
 
     @PostConstruct
@@ -85,9 +89,27 @@ public class OrgFitCategoryView extends PaginatedTableView<OrgFitCategory, OrgFi
         totalWeight = (categories.stream().mapToDouble(OrgFitCategory::getWeight).sum()*100)/globalWeight.getOrgFitWeight();
     }
 
+
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Category  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Category updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
     public void deleteClient(OrgFitCategory orgFitCategory) {
         try {
             orgFitService.deleteInstance(orgFitCategory);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Category deleted successfully."));
             reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());

@@ -53,11 +53,25 @@
                                 action="#{orgFitCategoryItemForm.hide}"
                                 styleClass="ui-button-danger p-mx-5" />
 
-                <p:commandButton value="#{orgFitCategoryItemForm.edit ? 'Update' : 'Save'}"
+                <p:commandButton value="Save"
                                  process="@form"
+                                 rendered="#{orgFitCategoryItemForm.model.id eq null}"
                                  actionListener="#{orgFitCategoryItemForm.save}"
                                  update="@form growl"
-                                 styleClass="ui-button-primary p-mx-5" />
+                                 styleClass="ui-button-primary p-mx-5" >
+                    <f:setPropertyActionListener value="#{true}" target="#{orgFitCategoryItemView.saved}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{orgFitCategoryItemView.updated}"/>
+                </p:commandButton>
+
+                <p:commandButton value="Update"
+                                 process="@form"
+                                 rendered="#{orgFitCategoryItemForm.model.id ne null}"
+                                 actionListener="#{orgFitCategoryItemForm.save}"
+                                 update="@form growl"
+                                 styleClass="ui-button-primary p-mx-5" >
+                    <f:setPropertyActionListener value="#{false}" target="#{orgFitCategoryItemView.saved}"/>
+                    <f:setPropertyActionListener value="#{true}" target="#{orgFitCategoryItemView.updated}"/>
+                </p:commandButton>
 
             </div>
 

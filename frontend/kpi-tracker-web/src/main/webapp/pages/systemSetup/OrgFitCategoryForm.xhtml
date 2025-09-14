@@ -40,6 +40,21 @@
                                  styleClass="p-inputtext-sm w-full"/>
                     </div>
                 </div>
+                <div class="field col-12 p-m-4">
+                    <h5>Category</h5>
+
+                    <div class="field col-12 " >
+                        <p:selectOneMenu value="#{orgFitCategoryForm.model.ratingCategory}"
+                                         converter="ratingCategoryConverter" filter="true"
+                                         required="true" effect="fold">
+                            <f:selectItem itemLabel="Select category" itemValue="#{null}" />
+                            <f:selectItems value="#{orgFitCategoryForm.ratingCategories}" var="ratingCategory" itemLabel="#{ratingCategory.name()}" itemValue="#{ratingCategory}" />
+                        </p:selectOneMenu>
+
+
+                    </div>
+
+                </div>
                 <div class="field col-12 md:col-6 p-m-4">
                     <h5>Weight(%)</h5>
                     <div class="ui-inputgroup">
@@ -62,9 +77,23 @@
 
                     <p:commandButton value="Save"
                                      process="@form"
+                                     rendered="#{orgFitCategoryForm.model.id eq null}"
                                      actionListener="#{orgFitCategoryForm.persist}"
                                      update="@form growl"
-                                     styleClass="ui-button-primary p-mx-5" />
+                                     styleClass="ui-button-primary p-mx-5" >
+                        <f:setPropertyActionListener value="#{true}" target="#{orgFitCategoryView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{orgFitCategoryView.updated}"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Update"
+                                     process="@form"
+                                     rendered="#{orgFitCategoryForm.model.id ne null}"
+                                     actionListener="#{orgFitCategoryForm.persist}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" >
+                        <f:setPropertyActionListener value="#{false}" target="#{orgFitCategoryView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{orgFitCategoryView.updated}"/>
+                    </p:commandButton>
                 </div>
 
             </div>

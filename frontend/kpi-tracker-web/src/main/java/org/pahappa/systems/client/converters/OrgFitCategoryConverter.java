@@ -1,9 +1,7 @@
 package org.pahappa.systems.client.converters;
 
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
-import org.sers.webutils.model.security.Role;
-import org.sers.webutils.server.core.service.RoleService;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.faces.component.UIComponent;

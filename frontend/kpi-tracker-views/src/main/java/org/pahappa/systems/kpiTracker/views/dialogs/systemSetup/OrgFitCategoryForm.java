@@ -3,9 +3,9 @@ package org.pahappa.systems.kpiTracker.views.dialogs.systemSetup;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.GlobalWeightService;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.GlobalWeightService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.GlobalWeight;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
@@ -14,13 +14,11 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
-import org.sers.webutils.model.Gender;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

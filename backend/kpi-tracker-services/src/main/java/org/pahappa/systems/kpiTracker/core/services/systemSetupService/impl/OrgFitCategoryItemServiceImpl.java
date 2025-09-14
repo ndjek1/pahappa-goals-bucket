@@ -1,7 +1,8 @@
-package org.pahappa.systems.kpiTracker.core.services.impl;
+package org.pahappa.systems.kpiTracker.core.services.systemSetupService.impl;
 
 
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryItemService;
+import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryItemService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem;
 import org.pahappa.systems.kpiTracker.utils.Validate;
 import org.sers.webutils.model.exception.OperationFailedException;
