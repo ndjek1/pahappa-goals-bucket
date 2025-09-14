@@ -47,7 +47,7 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
     private Staff loggedinStaff;
 
     public IndividualGoalForm() {
-        super(HyperLinks.INDIVIDUAL_GOAL_DIALOG, 700, 430);
+        super(HyperLinks.INDIVIDUAL_GOAL_DIALOG, 700, 400);
     }
 
     @PostConstruct
@@ -84,7 +84,7 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
         }
 
         if(this.selectedDepartmentGoal != null) {
-            double percent = calculateDeptRemainingPercentage(model.getParent());
+            double percent = calculateDeptRemainingPercentage(model.getDepartmentGoal());
             if(percent < model.getContributionWeight()){
                 if(percent<=0){
                     UiUtils.showMessageBox("Contribution weight is reached", "Can no longer  contribute to that parent goal");
@@ -107,6 +107,9 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
         double total = 0.0;
         Search search = new Search(IndividualGoal.class);
         search.addFilterEqual("teamGoal.id", teamGoal.getId());
+        if(this.model.getId() != null) {
+            search.addFilterNotEqual("id", this.model.getId());
+        }
         List<IndividualGoal> goals = this.individualGoalService.getInstances(search,0,0);
 
         if(goals != null && !goals.isEmpty()){
@@ -127,6 +130,9 @@ public class IndividualGoalForm extends DialogForm<IndividualGoal> {
         // Individual goals attached to department
         Search search = new Search(IndividualGoal.class);
         search.addFilterEqual("departmentGoal.id", departmentGoal.getId());
+        if(this.model.getId() != null) {
+            search.addFilterNotEqual("id", this.model.getId());
+        }
         List<IndividualGoal> goals = this.individualGoalService.getInstances(search,0,0);
         if(goals != null){
             for(IndividualGoal goal: goals){

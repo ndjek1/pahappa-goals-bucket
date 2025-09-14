@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
+import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.sers.webutils.client.views.presenters.PaginatedTableView;
@@ -19,8 +20,10 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,9 @@ import java.util.Map;
 @SessionScoped
 public class IndividualGoalsView extends PaginatedTableView<IndividualGoal,IndividualGoalsView,IndividualGoalsView> {
     private Search search;
+    String searchTerm;
+    private boolean saved;
+    private boolean updated;
     private IndividualGoalService individualGoalService;
     private StaffService staffService;
     private User loggedinUser;
@@ -79,6 +85,9 @@ public class IndividualGoalsView extends PaginatedTableView<IndividualGoal,Indiv
             UiUtils.ComposeFailure("Error", "Staff not found for the logged in user.");
             return;
         }
+        if(this.searchTerm != null && !this.searchTerm.isEmpty()){
+            search.addFilterILike("name", "%" + searchTerm + "%");
+        }
 
         super.setTotalRecords(this.individualGoalService.countInstances(search));
         try {
@@ -99,11 +108,27 @@ public class IndividualGoalsView extends PaginatedTableView<IndividualGoal,Indiv
         }
     }
 
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
 
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
 
     public void deleteClient(IndividualGoal individualGoal) {
         try {
             individualGoalService.deleteInstance(individualGoal);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal deleted successfully."));
             reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());
