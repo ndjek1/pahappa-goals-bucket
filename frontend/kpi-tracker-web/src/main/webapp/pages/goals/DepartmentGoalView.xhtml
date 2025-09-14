@@ -24,7 +24,15 @@
             <!-- Search / Filter bar -->
             <div class="p-d-flex p-ai-center p-jc-between p-mb-3 card p-p-3">
                 <div class="p-d-flex p-ai-center">
-                    <p:inputText placeholder="Search Department Goal" style="flex:1" styleClass="p-mr-2"/>
+                    <!-- Search Input -->
+                    <p:inputText id="searchBox"
+                                 placeholder="Search Team Goal"
+                                 value="#{departmentGoalsView.searchTerm}"
+                                 styleClass="p-mr-2">
+                        <p:ajax event="keyup"
+                                update="deptGoalForm"
+                                listener="#{departmentGoalsView.reloadFilterReset}" />
+                    </p:inputText>
                     <p:selectOneMenu value="#{departmentGoalsView.search}" styleClass="p-mr-2">
                         <f:selectItem itemLabel="Status" itemValue=""/>
                         <f:selectItem itemLabel="Active" itemValue="ACTIVE"/>

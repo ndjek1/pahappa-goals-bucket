@@ -33,6 +33,7 @@ import java.util.Map;
 public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, DepartmentGoalsView,DepartmentGoalsView> {
     private DepartmentGoalService departmentGoalservice;
     private Search search;
+    String searchTerm;
     private DepartmentService departmentService;
     private Department department;
     private User loggedinUser;
@@ -50,17 +51,8 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
     }
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
-        Search search1 = new Search();
 
-        // Create AND filter for department and recordStatus
-        Filter filter = Filter.and(
-                Filter.equal("department", department),
-                Filter.equal("recordStatus", RecordStatus.ACTIVE)
-        );
-
-        search1.addFilter(filter);
-
-        super.setDataModels(departmentGoalservice.getInstances(search1, i, i1));
+        super.setDataModels(departmentGoalservice.getInstances(this.search, i, i1));
     }
 
 
@@ -82,7 +74,11 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
 
     @Override
     public void reloadFilterReset(){
-        super.setTotalRecords(departmentGoalservice.countInstances(new Search()));
+        this.search = new Search(DepartmentGoal.class);
+        if(searchTerm != null && !searchTerm.isEmpty()){
+            search.addFilterILike("name", "%" + searchTerm + "%");
+        }
+        super.setTotalRecords(departmentGoalservice.countInstances(this.search));
         try{
             super.reloadFilterReset();
         }catch(Exception e){

@@ -7,7 +7,6 @@ import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.models.goals.*;
-import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Team;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
@@ -32,6 +31,7 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
     private List<DepartmentGoal> departmentGoals;
     private TeamService teamService;
     private Team team;
+    private DepartmentGoal selectedDepartmentGoal;
     private User loggedinUser;
 
     public TeamGoalForm() {
@@ -57,12 +57,13 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
         }
         super.model.setTeam(team);
         super.model.setStatus(GoalStatus.PENDING);
-        double percent = calculateRemainingPercentage(model.getParent());
+        super.model.setDepartmentGoal(this.selectedDepartmentGoal);
+        double percent = calculateRemainingPercentage(this.selectedDepartmentGoal);
         if( percent<model.getContributionWeight()){
             if(percent<=0){
                 UiUtils.showMessageBox("Contribution weight is reached", "Can no longer  contribute to that parent goal");
             }else {
-                UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + calculateRemainingPercentage(this.model.getParent()) + " to this selected goal");
+                UiUtils.showMessageBox("Contribution weight to high", "Can only contribute " + calculateRemainingPercentage(this.model.getDepartmentGoal()) + " to this selected goal");
                 return;
             }
         }
@@ -93,7 +94,11 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
 
         if(departmentGoal != null){
             Search search = new Search(TeamGoal.class);
-            search.addFilterEqual("parent.id", departmentGoal.getId());
+            search.addFilterEqual("departmentGoal.id", departmentGoal.getId());
+
+            if(this.model.getId() != null){
+                search.addFilterNotEqual("id", this.model.getId());
+            }
             List<TeamGoal> goals = this.teamGoalService.getInstances(search,0,0);
             for(TeamGoal goal: goals){
                 total += goal.getContributionWeight();
@@ -106,8 +111,28 @@ public class TeamGoalForm extends DialogForm<TeamGoal> {
     }
 
     @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        if (super.model != null && super.model.getId() != null) {
+            isEditing = true;
+
+            // Ensure department is set
+            this.team = super.model.getTeam();
+
+            // Preselect the linked org goal for UI
+            if (super.model.getId()!= null) {
+                this.selectedDepartmentGoal = departmentGoalService.getInstanceByID(super.model.getDepartmentGoal().getId());
+            }
+        } else {
+            isEditing = false;
+            loadDepartment(); // set department for new goal
+        }
+    }
+
+    @Override
     public void resetModal() {
         super.resetModal();
+        this.selectedDepartmentGoal = new DepartmentGoal();
         super.model = new TeamGoal();
     }
 }
