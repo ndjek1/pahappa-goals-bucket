@@ -7,12 +7,14 @@ import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
@@ -42,11 +44,13 @@ public class TeamGoalDetails implements Serializable {
     private KpisService kpiService;
 
     private List<IndividualGoal> individualGoalsList;
+    private KpiUpdateHistoryService kpiUpdateHistoryService;
 
     @PostConstruct
     public void init() {
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
+        this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
         this.kpiService = ApplicationContextProvider.getBean(KpisService.class);
     }
 
@@ -88,7 +92,7 @@ public class TeamGoalDetails implements Serializable {
             double kpiWeightedSum = 0, kpiTotalWeight = 0;
 
             for (KPI kpi : kpis) {
-                kpiWeightedSum += kpi.getProgress() * kpi.getWeight();
+                kpiWeightedSum += this.getKpiProgress(kpi) * kpi.getWeight();
                 kpiTotalWeight += kpi.getWeight();
             }
 
@@ -111,6 +115,27 @@ public class TeamGoalDetails implements Serializable {
                 Filter.equal("individualGoal.id",goal.getId())
         );
         return kpiService.getInstances(search,0,0);
+    }
+
+    public double getKpiProgress(KPI kpi) {
+        if(kpi != null){
+            Search search = new  Search(KpiUpdateHistory.class);
+            search.addFilterEqual("kpi.id",kpi.getId());
+            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
+            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
+                return 0;
+            }
+            if (kpi.getCurrentValue() == null) {
+                return 0;
+            }
+            double currentValue = 0.0;
+            for(KpiUpdateHistory updateHistory : updateHistories){
+                currentValue += updateHistory.getValue();
+            }
+            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
+        }else {
+            return 0;
+        }
     }
 
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
@@ -14,6 +14,7 @@ import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
 import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.Validate;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.model.security.User;
@@ -58,15 +59,15 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
 
     @Override
     public void persist() throws Exception {
-        if (model.getName() == null) {
-            UiUtils.showMessageBox("Missing goal name","Goal must have a type.");
-            return;
-        }
-        Search search = new Search();
+        Validate.notNull(this.model,"Missing required goal details");
+        Search search = new Search(DepartmentGoal.class);
         search.addFilterAnd(
-                Filter.equal("parent.id", this.selectedOrganizationGoal.getId()),
+                Filter.equal("organizationGoal.id", this.selectedOrganizationGoal.getId()),
                 Filter.equal("recordStatus", RecordStatus.ACTIVE)
         );
+        if(this.model.getId() != null) {
+            search.addFilterNotEqual("id", this.model.getId());
+        }
         double totalWeight = this.departmentGoalService.getInstances(search,0,0).stream()
                 .mapToDouble(DepartmentGoal::getContributionWeight)
                 .sum();
@@ -77,12 +78,12 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
         loadDepartment();
 
         model.setDepartment(department);
-        model.setParent(this.selectedOrganizationGoal);
+        model.setOrganizationGoal(this.selectedOrganizationGoal);
         model.setStatus(GoalStatus.PENDING);
         departmentGoalService.saveInstance(super.model);
         resetModal();
         hide();
-        UiUtils.showMessageBox("Action successful","Department goal saved successfully");
+
     }
 
     public void loadDepartment() {
@@ -104,6 +105,28 @@ public class DepartmentGoalsForm extends DialogForm<DepartmentGoal> {
     @Override
     public void resetModal() {
         super.resetModal();
+        this.selectedOrganizationGoal = new OrganizationGoal();
         super.model = new DepartmentGoal();
     }
+
+    @Override
+    public void setFormProperties() {
+        super.setFormProperties();
+        if (super.model != null && super.model.getId() != null) {
+            isEditing = true;
+
+            // Ensure department is set
+            this.department = super.model.getDepartment();
+
+            // Preselect the linked org goal for UI
+            if (super.model.getOrganizationGoal() != null) {
+                this.selectedOrganizationGoal = super.model.getOrganizationGoal();
+            }
+        } else {
+            isEditing = false;
+            loadDepartment(); // set department for new goal
+        }
+    }
+
+
 }

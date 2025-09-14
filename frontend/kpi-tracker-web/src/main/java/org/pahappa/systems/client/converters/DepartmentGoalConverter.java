@@ -19,7 +19,7 @@ public class DepartmentGoalConverter implements Converter {
         if (arg2 == null || arg2.isEmpty())
             return null;
         return ApplicationContextProvider.getBean(DepartmentGoalService.class)
-                .getObjectById(arg2);
+                .getInstanceByID(arg2);
     }
 
     @Override

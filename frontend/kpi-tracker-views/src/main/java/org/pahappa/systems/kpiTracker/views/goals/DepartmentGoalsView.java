@@ -18,21 +18,27 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
 
 @ManagedBean(name = "departmentGoalsView")
 @Getter
 @Setter
-@ViewScoped
+@SessionScoped
 public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, DepartmentGoalsView,DepartmentGoalsView> {
     private DepartmentGoalService departmentGoalservice;
     private Search search;
+    String searchTerm;
     private DepartmentService departmentService;
     private Department department;
     private User loggedinUser;
+    private boolean saved;
+    private boolean updated;
 
 
     @PostConstruct
@@ -45,17 +51,8 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
     }
     @Override
     public void reloadFromDB(int i, int i1, Map<String, Object> map) throws Exception {
-        Search search1 = new Search();
 
-        // Create AND filter for department and recordStatus
-        Filter filter = Filter.and(
-                Filter.equal("department", department),
-                Filter.equal("recordStatus", RecordStatus.ACTIVE)
-        );
-
-        search1.addFilter(filter);
-
-        super.setDataModels(departmentGoalservice.getInstances(search1, i, i1));
+        super.setDataModels(departmentGoalservice.getInstances(this.search, i, i1));
     }
 
 
@@ -77,7 +74,11 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
 
     @Override
     public void reloadFilterReset(){
-        super.setTotalRecords(departmentGoalservice.countInstances(new Search()));
+        this.search = new Search(DepartmentGoal.class);
+        if(searchTerm != null && !searchTerm.isEmpty()){
+            search.addFilterILike("name", "%" + searchTerm + "%");
+        }
+        super.setTotalRecords(departmentGoalservice.countInstances(this.search));
         try{
             super.reloadFilterReset();
         }catch(Exception e){
@@ -96,9 +97,27 @@ public class DepartmentGoalsView extends PaginatedTableView<DepartmentGoal, Depa
                     .orElse(null);
         }
     }
+
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
     public void deleteClient(DepartmentGoal departmentGoal) {
         try {
             departmentGoalservice.deleteInstance(departmentGoal);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Goal deleted successfully."));
             reloadFilterReset();
         } catch (OperationFailedException e) {
             UiUtils.ComposeFailure("Delete Failed", e.getLocalizedMessage());

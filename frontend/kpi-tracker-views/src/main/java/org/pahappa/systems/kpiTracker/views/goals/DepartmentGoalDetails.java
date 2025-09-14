@@ -9,10 +9,12 @@ import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.activities.DepartmentActivity;
 import org.pahappa.systems.kpiTracker.models.goals.*;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
@@ -48,6 +50,7 @@ public class DepartmentGoalDetails implements Serializable {
     List<TeamGoal> teamGoalGoalList;
     private List<KPI> kpisList;
     private List<DepartmentActivity> departmentActivityList;
+    private KpiUpdateHistoryService kpiUpdateHistoryService;
 
     @PostConstruct
     public void init() {
@@ -56,6 +59,7 @@ public class DepartmentGoalDetails implements Serializable {
         this.departmentActivityService = ApplicationContextProvider.getBean(DepartmentActivityService.class);
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
+        this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
 
     }
 
@@ -76,7 +80,7 @@ public class DepartmentGoalDetails implements Serializable {
 
     public void loadTeamGoals(){
         Search search = new Search();
-        search.addFilterEqual("parent.id",this.selectedGoal.getId());
+        search.addFilterEqual("departmentGoal.id",this.selectedGoal.getId());
         this.teamGoalGoalList = this.teamGoalService.getInstances(search,0,0);
     }
 
@@ -167,7 +171,7 @@ public class DepartmentGoalDetails implements Serializable {
             if (kpis != null && !kpis.isEmpty()) {
                 double kpiWeightedSum = 0, kpiTotalWeight = 0;
                 for (KPI kpi : kpis) {
-                    kpiWeightedSum += kpi.getProgress() * (kpi.getWeight() != null ? kpi.getWeight() : 1);
+                    kpiWeightedSum += this.getKpiProgress(kpi) * (kpi.getWeight() != null ? kpi.getWeight() : 1);
                     kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
                 }
                 goalProgress = kpiTotalWeight > 0 ? kpiWeightedSum / kpiTotalWeight : 0;
@@ -201,6 +205,27 @@ public class DepartmentGoalDetails implements Serializable {
 
         model.setData(data);
         return model;
+    }
+
+    public double getKpiProgress(KPI kpi) {
+        if(kpi != null){
+            Search search = new  Search(KpiUpdateHistory.class);
+            search.addFilterEqual("kpi.id",kpi.getId());
+            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
+            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
+                return 0;
+            }
+            if (kpi.getCurrentValue() == null) {
+                return 0;
+            }
+            double currentValue = 0.0;
+            for(KpiUpdateHistory updateHistory : updateHistories){
+                currentValue += updateHistory.getValue();
+            }
+            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
+        }else {
+            return 0;
+        }
     }
 
 }

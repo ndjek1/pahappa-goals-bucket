@@ -6,6 +6,7 @@ import org.sers.webutils.model.BaseEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "team_goals")
@@ -14,7 +15,7 @@ public class TeamGoal extends BaseEntity {
     private String description;
     private double contributionWeight;
     private GoalStatus status;
-    private DepartmentGoal parent;
+    private DepartmentGoal departmentGoal;
     private Team team;
 
     private List<IndividualGoal> individualGoals = new ArrayList<>();
@@ -37,9 +38,9 @@ public class TeamGoal extends BaseEntity {
     public void setStatus(GoalStatus status) { this.status = status; }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_goal_id", nullable = false)
-    public DepartmentGoal getParent() { return parent; }
-    public void setParent(DepartmentGoal parent) { this.parent = parent; }
+    @JoinColumn(name = "department_goal_goal_id", nullable = false)
+    public DepartmentGoal getDepartmentGoal() { return departmentGoal; }
+    public void setDepartmentGoal(DepartmentGoal departmentGoal) { this.departmentGoal = departmentGoal; }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
@@ -49,7 +50,7 @@ public class TeamGoal extends BaseEntity {
     @OneToMany(mappedBy = "teamGoal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<IndividualGoal> getIndividualGoals() { return individualGoals; }
     public void setIndividualGoals(List<IndividualGoal> individualGoals) { this.individualGoals = individualGoals; }
-    
+
 
     @Override
     public boolean equals(Object o) {
@@ -60,5 +61,7 @@ public class TeamGoal extends BaseEntity {
     }
 
     @Override
-    public int hashCode() { return 31; }
+    public int hashCode() {
+        return Objects.hash(getName(), getDescription(), getContributionWeight(), getStatus(), getDepartmentGoal(), getTeam(), getIndividualGoals());
+    }
 }

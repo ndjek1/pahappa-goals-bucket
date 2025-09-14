@@ -36,27 +36,9 @@
                     <div class="ui-inputgroup">
                         <p:inputTextarea id="goalDesc"
                                      value="#{departmentGoalsForm.model.description}"
-                                     required="true"
-                                     requiredMessage="Description is required."
                                      placeholder="Enter description"
                                      styleClass="full-width"/>
                     </div>
-            </div>
-
-            <!-- Contribution Weight -->
-            <div class="ui-col-12 ui-md-6">
-                <h5>Weight (%)</h5>
-                <div class="ui-inputgroup">
-                    <p:inputNumber id="weight"
-                                   value="#{departmentGoalsForm.model.contributionWeight}"
-                                   required="true"
-                                   requiredMessage="Weight is required."
-                                   minValue="0"
-                                   maxValue="100"
-                                   decimalPlaces="0"
-                                   placeholder="Enter weight"
-                                   styleClass="full-width"/>
-                </div>
             </div>
 
             <!-- Parent Department Goal -->
@@ -76,6 +58,21 @@
                 </div>
             </div>
 
+            <!-- Contribution Weight -->
+            <div class="ui-col-12 ui-md-6">
+                <h5>Weight (%)</h5>
+                <div class="ui-inputgroup">
+                    <p:inputNumber id="weight"
+                                   value="#{departmentGoalsForm.model.contributionWeight}"
+                                   required="true"
+                                   requiredMessage="Weight is required."
+                                   minValue="0"
+                                   maxValue="100"
+                                   decimalPlaces="0"
+                                   placeholder="Enter weight"
+                                   styleClass="full-width"/>
+                </div>
+            </div>
 
         </div>
 
@@ -90,9 +87,23 @@
             <div class="ui-col-12 ui-md-6">
                 <p:commandButton value="Save"
                                  process="@form"
+                                 rendered="#{departmentGoalsForm.model.id eq null}"
                                  actionListener="#{departmentGoalsForm.persist}"
-                                 update="@form messages"
-                                 styleClass="ui-button-primary full-width"/>
+                                 update="@form"
+                                 styleClass="ui-button-primary full-width">
+                    <f:setPropertyActionListener value="#{true}" target="#{departmentGoalsView.saved}"/>
+                    <f:setPropertyActionListener value="#{false}" target="#{departmentGoalsView.updated}"/>
+                </p:commandButton>
+
+                <p:commandButton value="Update"
+                                 process="@form"
+                                 rendered="#{departmentGoalsForm.model.id ne null}"
+                                 actionListener="#{departmentGoalsForm.persist}"
+                                 update="@form"
+                                 styleClass="ui-button-primary full-width">
+                    <f:setPropertyActionListener value="#{false}" target="#{departmentGoalsView.saved}"/>
+                    <f:setPropertyActionListener value="#{true}" target="#{departmentGoalsView.updated}"/>
+                </p:commandButton>
             </div>
         </div>
 
