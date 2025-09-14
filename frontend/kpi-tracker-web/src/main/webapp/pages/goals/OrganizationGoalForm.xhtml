@@ -26,7 +26,7 @@
                     <h5>Name</h5>
                     <div class="ui-inputgroup">
                         <p:inputText id="goalName"
-                                     value="#{departmentGoalsForm.model.name}"
+                                     value="#{organizationGoalForm.model.name}"
                                      required="true"
                                      requiredMessage="Goal name is required."
                                      placeholder="Enter goal name"
@@ -39,11 +39,25 @@
                     <h5>Description</h5>
                     <div class="ui-inputgroup">
                         <p:inputTextarea id="goalDesc"
-                                         value="#{departmentGoalsForm.model.description}"
+                                         value="#{organizationGoalForm.model.description}"
                                          required="true"
                                          requiredMessage="Description is required."
                                          placeholder="Enter description"
                                          styleClass="full-width"/>
+                    </div>
+                </div>
+
+                <div class="field col-12 p-m-4">
+                    <h5>Review Cycle</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu id="reviewCycle"
+                                         value="#{organizationGoalForm.model.reviewCycle}"
+                                         converter="reviewCycleConverter"
+                                         styleClass="full-width">
+                            <f:selectItem itemLabel="Select review cycle" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{organizationGoalForm.reviewCycles}" var="reviewCycle"
+                                           itemLabel="#{reviewCycle.title}" itemValue="#{reviewCycle}"/>
+                        </p:selectOneMenu>
                     </div>
                 </div>
                 
@@ -56,10 +70,26 @@
                                      styleClass="ui-button-danger p-mx-5" />
 
                     <p:commandButton value="Save"
+                                     rendered="#{organizationGoalForm.model.id eq null}"
                                      process="@form"
-                                     actionListener="#{organizationGoalForm.save}"
+                                     actionListener="#{organizationGoalForm.persist}"
                                      update="@form growl"
-                                     styleClass="ui-button-primary p-mx-5" />
+                                     styleClass="ui-button-primary p-mx-5" >
+                        <f:setPropertyActionListener value="#{true}" target="#{organizationGoalsView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{organizationGoalsView.updated}"/>
+
+                    </p:commandButton>
+                    <p:commandButton value="Update"
+                                     rendered="#{organizationGoalForm.model.id ne null}"
+                                     process="@form"
+                                     actionListener="#{organizationGoalForm.persist}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-mx-5" >
+                        <f:setPropertyActionListener value="#{false}" target="#{organizationGoalsView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{organizationGoalsView.updated}"/>
+
+                    </p:commandButton>
+
                 </div>
 
             </div>

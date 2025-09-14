@@ -5,14 +5,13 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.goals.OrganizationGoal;
-import org.pahappa.systems.kpiTracker.models.organization_structure.Department;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
-import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.Validate;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
 import org.sers.webutils.model.RecordStatus;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -37,7 +36,7 @@ public class OrganizationGoalForm extends DialogForm<OrganizationGoal> {
 
 
     public OrganizationGoalForm() {
-        super(HyperLinks.ORGANIZATION_GOAL_DIALOG, 500, 330);
+        super(HyperLinks.ORGANIZATION_GOAL_DIALOG, 500, 380);
     }
 
     @PostConstruct
@@ -49,29 +48,16 @@ public class OrganizationGoalForm extends DialogForm<OrganizationGoal> {
 
     @Override
     public void persist() throws Exception {
-        if (model.getName() == null) {
-            UiUtils.showMessageBox("Missing goal name","Goal must have a type.");
-            return;
-        }
-
-        if(this.reviewCycle == null){
-            UiUtils.showMessageBox("No active review cycle","There is no running review cycle!");
-            return;
-        }
-        Search search = new Search();
-        search.addFilterAnd(
-                Filter.equal("reviewCycle.id", this.reviewCycle.getId()),
-                Filter.equal("recordStatus", RecordStatus.ACTIVE)
-        );
-
-        model.setReviewCycle(this.reviewCycle);
+       Validate.notNull(this.model,"Missing goal details");
         organizationGoalService.saveInstance(super.model);
+        resetModal();
+        hide();
     }
 
     public void loadReviewCycle(){
         Search search = new Search();
         search.addFilterAnd(
-                Filter.equal("status", ReviewCycleStatus.ACTIVE),
+                Filter.notEqual("status", ReviewCycleStatus.ENDED),
                 Filter.equal("recordStatus", RecordStatus.ACTIVE)
         );
         this.reviewCycles = this.reviewCycleService.getInstances(search,0,0);

@@ -4,6 +4,7 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "organization_goals")
@@ -32,8 +33,7 @@ public class OrganizationGoal extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(
-            name = "review_cycle_Id",
-            nullable = true
+            name = "review_cycle_Id"
     )
     public ReviewCycle getReviewCycle() {
         return reviewCycle;
@@ -45,16 +45,13 @@ public class OrganizationGoal extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrganizationGoal)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         OrganizationGoal that = (OrganizationGoal) o;
-        return id != null && id.equals(that.id);
+        return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getReviewCycle(), that.getReviewCycle());
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getName(), getDescription(), getReviewCycle());
     }
-
-
 }
