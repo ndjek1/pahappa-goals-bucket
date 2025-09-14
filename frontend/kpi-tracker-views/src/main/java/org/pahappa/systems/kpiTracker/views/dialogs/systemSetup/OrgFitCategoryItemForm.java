@@ -1,11 +1,9 @@
 package org.pahappa.systems.kpiTracker.views.dialogs.systemSetup;
 
-import com.google.common.collect.Sets;
-import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryItemService;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryItemService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategoryItem;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
@@ -15,9 +13,7 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @ManagedBean(name = "orgFitCategoryItemForm")
 @Getter

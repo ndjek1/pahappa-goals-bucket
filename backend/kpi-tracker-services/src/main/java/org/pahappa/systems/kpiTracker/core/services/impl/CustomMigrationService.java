@@ -1,7 +1,6 @@
 package org.pahappa.systems.kpiTracker.core.services.impl;
 
 import org.hibernate.SessionFactory;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
 import org.sers.webutils.server.core.dao.MigrationDao;
 import org.sers.webutils.server.core.service.migrations.MigrationTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -36,6 +36,7 @@
 
                         <f:setPropertyActionListener value="#{null}"
                                                      target="#{orgFitCategoryItemForm.model}" />
+                        <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.showSuccessMessage}" update="orgFitItemView :messages"/>
 
                         <p:ajax event="dialogReturn"
                                 listener="#{orgFitCategoryItemView.reloadFilterReset}"
@@ -65,6 +66,7 @@
                                                          actionListener="#{orgFitCategoryItemForm.show}"
                                                          process="@this">
                                             <f:setPropertyActionListener value="#{item}" target="#{orgFitCategoryItemForm.model}" />
+                                            <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.showSuccessMessage}" update="orgFitItemView :messages"/>
                                             <p:ajax event="dialogReturn" listener="#{orgFitCategoryItemView.reloadFilterReset}" update="orgFitItemView" />
                                         </p:commandButton>
 

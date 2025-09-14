@@ -33,6 +33,7 @@
                                          styleClass="add-button"
                                          actionListener="#{orgFitCategoryForm.show}">
                             <f:setPropertyActionListener value="#{null}" target="#{orgFitCategoryForm.model}" />
+                            <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.showSuccessMessage}" update="orgFitForm :messages"/>
                             <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
                         </p:commandButton>
                     </div>
@@ -72,9 +73,18 @@
                                                              styleClass="p-button-text p-mr-2"
                                                              actionListener="#{orgFitCategoryForm.show}">
                                                 <f:setPropertyActionListener value="#{category}" target="#{orgFitCategoryForm.model}" />
+                                                <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.showSuccessMessage}" update="orgFitForm :messages"/>
                                                 <p:ajax event="dialogReturn" listener="#{orgFitCategoryView.reloadFilterReset}" update="orgFitForm" />
                                             </p:commandButton>
-                                            
+                                            <p:commandButton title="Delete"
+                                                             icon="pi pi-trash"
+                                                             update="orgFitForm :messages"
+                                                             styleClass="ui-button-danger"
+                                                             action="#{orgFitCategoryView.deleteClient(category)}" >
+                                                <p:confirm header="Confirmation"
+                                                           message="You are about to delete a category. Do you wish to continue?"
+                                                           icon="ui-icon-alert" />
+                                            </p:commandButton>
                                         </div>
                                     </div>
                                 </div>

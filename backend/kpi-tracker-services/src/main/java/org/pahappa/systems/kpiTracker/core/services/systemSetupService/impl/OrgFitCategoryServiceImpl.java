@@ -1,6 +1,7 @@
-package org.pahappa.systems.kpiTracker.core.services.impl;
+package org.pahappa.systems.kpiTracker.core.services.systemSetupService.impl;
 
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
+import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.OrgFitCategoryService;
 
 import org.pahappa.systems.kpiTracker.models.systemSetup.OrgFitCategory;
 import org.pahappa.systems.kpiTracker.utils.Validate;
