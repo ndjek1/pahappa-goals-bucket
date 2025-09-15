@@ -7,34 +7,44 @@
 
     <ui:define name="head">
         <style type="text/css">
-            /* --- Existing Styles --- */
             .threshold-card {
                 background-color: #fcfcfc;
                 border: 1px solid #e9ecef;
-                border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-                /* NEW: Ensure card stretches to fill column height */
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.04);
                 height: 100%;
                 display: flex;
                 flex-direction: column;
-            }
-            .threshold-card-content {
-                flex-grow: 1; /* Allow content to grow */
+                padding: 1.5rem;
             }
             .threshold-card-header {
-                font-size: 1.2rem;
-                font-weight: 500;
+                font-size: 1.1rem;
+                font-weight: 600;
                 color: #495057;
+                margin-bottom: 1rem;
             }
-            .score-container { height: 100%; }
-            .score-indicator { width: 0.8rem; height: 0.8rem; border-radius: 3px; flex-shrink: 0; }
-            .green-indicator { background-color: #5cb85c; }
-            .red-indicator { background-color: #d9534f; }
-            .score-label { display: block; font-size: 0.8rem; color: #6c757d; margin-bottom: 0.25rem; }
-            .score-value { font-size: 1.1rem; font-weight: 500; color: #343a40; }
-            .date-value { font-size: 0.95rem; font-weight: 500; color: #337ab7; }
-            @media (min-width: 768px) {
-                .column-divider { border-left: 1px solid #e9ecef; padding-left: 1.5rem !important; }
+            .score-label {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-bottom: 0.25rem;
+                display: block;
+            }
+            .score-value {
+                font-size: 1rem;
+                font-weight: 500;
+                color: #343a40;
+            }
+            .date-value {
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: #337ab7;
+            }
+            .score-box {
+                background: #fff;
+                border: 1px solid #e9ecef;
+                border-radius: 6px;
+                padding: 0.8rem;
+                height: 100%;
             }
         </style>
     </ui:define>
@@ -46,6 +56,7 @@
                 <p:commandButton value="Add Threshold" icon="pi pi-plus" styleClass="add-button"
                                  update="thresholdsForm" actionListener="#{thresholdForm.show}" process="@this">
                     <f:setPropertyActionListener value="#{null}" target="#{thresholdForm.model}" />
+                    <p:ajax event="dialogReturn" listener="#{thresholdsView.showSuccessMessage}" update="thresholdsForm :messages"/>
                     <p:ajax event="dialogReturn" listener="#{thresholdsView.reloadFilterReset}" update="thresholdsForm" />
                 </p:commandButton>
             </div>
@@ -59,52 +70,52 @@
 
                         <!-- START: Responsive Column Wrapper -->
                         <div class="p-col-12 p-md-6 p-lg-4">
+                            <div class="threshold-card">
+                                <!-- Header -->
+                                <h:outputText value="#{threshold.level.displayName}" styleClass="threshold-card-header"/>
 
-                            <!-- Your existing card code goes here, with a minor tweak for flexbox height -->
-                            <div class="threshold-card p-p-4">
-                                <div class="threshold-card-content">
-                                    <h:outputText value="#{threshold.level.displayName}" styleClass="threshold-card-header p-d-block p-mb-3"/>
-                                    <div class="p-grid p-ai-center">
-                                        <!-- Column 1: Minimum Score -->
-                                        <div class="p-col-12 p-md-4">
-                                            <div class="score-container p-d-flex p-ai-center">
-                                                <div class="score-indicator green-indicator p-mr-3"></div>
-                                                <div>
-                                                    <h:outputText value="Minimum Score" styleClass="score-label"/>
-                                                    <h:outputText value="#{threshold.minScore}" styleClass="score-value"/>
-                                                </div>
-                                            </div>
+                                <!-- Score Grid -->
+                                <div class="p-grid">
+                                    <!-- Need Improvement -->
+                                    <div class="p-col-6">
+                                        <div class="score-box">
+                                            <h:outputText value="Need Improvement" styleClass="score-label"/>
+                                            <h:outputText value="#{threshold.needImprovementScore}" styleClass="score-value"/>
                                         </div>
-                                        <!-- Column 2: Redflag Score -->
-                                        <div class="p-col-12 p-md-4">
-                                            <div class="score-container column-divider p-d-flex p-ai-center">
-                                                <div class="score-indicator red-indicator p-mr-3"></div>
-                                                <div>
-                                                    <h:outputText value="Redflag Score" styleClass="score-label"/>
-                                                    <h:outputText value="#{threshold.redFlagScore}" styleClass="score-value"/>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <!-- Below Expectation -->
+                                    <div class="p-col-6">
+                                        <div class="score-box">
+                                            <h:outputText value="Below Expectation" styleClass="score-label"/>
+                                            <h:outputText value="#{threshold.belowExpectationScore}" styleClass="score-value"/>
                                         </div>
-                                        <!-- Column 3: Date Updated -->
-                                        <div class="p-col-12 p-md-4">
-                                            <div class="score-container column-divider p-d-flex p-ai-center">
-                                                <div>
-                                                    <h:outputText value="Date Updated" styleClass="score-label"/>
-                                                    <h:outputText value="#{threshold.dateChanged}" styleClass="date-value">
-                                                        <f:convertDateTime pattern="dd MMM, yyyy" />
-                                                    </h:outputText>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <!-- Meet Expectation -->
+                                    <div class="p-col-6">
+                                        <div class="score-box">
+                                            <h:outputText value="Meet Expectation" styleClass="score-label"/>
+                                            <h:outputText value="#{threshold.meetExpectationScore}" styleClass="score-value"/>
+                                        </div>
+                                    </div>
+                                    <!-- Exceeds Expectation -->
+                                    <div class="p-col-6">
+                                        <div class="score-box">
+                                            <h:outputText value="Exceeds Expectation" styleClass="score-label"/>
+                                            <h:outputText value="#{threshold.exceedsExpectationScore}" styleClass="score-value"/>
                                         </div>
                                     </div>
                                 </div>
 
-                                <hr class="p-my-3" style="border-top: 1px solid #e9ecef;"/>
-
-                                <div class="p-d-flex p-jc-end">
-                                    <p:commandButton value="Edit" icon="pi pi-pencil" styleClass="p-button-text"
+                                <!-- Footer -->
+                                <hr class="p-my-2"/>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    <h:outputText value="#{threshold.dateChanged}" styleClass="date-value">
+                                        <f:convertDateTime pattern="dd MMM, yyyy" />
+                                    </h:outputText>
+                                    <p:commandButton title="Edit" icon="pi pi-pencil" styleClass="p-button-text"
                                                      actionListener="#{thresholdForm.show}" process="@this" immediate="true">
                                         <f:setPropertyActionListener value="#{threshold}" target="#{thresholdForm.model}" />
+                                        <p:ajax event="dialogReturn" listener="#{thresholdsView.showSuccessMessage}" update="thresholdsForm :messages"/>
                                         <p:ajax event="dialogReturn" listener="#{thresholdsView.reloadFilterReset}" update="thresholdsForm" />
                                     </p:commandButton>
                                 </div>
