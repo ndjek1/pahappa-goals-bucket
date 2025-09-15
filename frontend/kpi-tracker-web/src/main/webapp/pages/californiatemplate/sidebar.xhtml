@@ -39,26 +39,7 @@
                                     styleClass="#{facesContext.viewRoot.viewId eq '/pages/kpis/KPIView.xhtml' ? 'active-menuitem' : ''}"
                                     outcome="/pages/kpis/KPIView" />
                     </p:submenu>
-
-<!--                    <p:submenu id="apprisal" label="Apprisal"-->
-<!--                               styleClass="p-my-3 #{fn:contains(facesContext.viewRoot.viewId, 'ratings') ? 'active-menuitem' : ''}"-->
-<!--                               expanded="#{fn:contains(facesContext.viewRoot.viewId, 'ratings')}"-->
-<!--                               icon="pi pi-fw pi-chart-line">-->
-<!--                        <p:menuitem id="supervisorAssess" value="Supervisor Assessment"-->
-<!--                                    rendered="#{dashboard.loggedinUser.hasRole('Department Lead') or dashboard.loggedinUser.hasRole('Team Lead') }"-->
-<!--                                    icon="pi pi-chart-line"-->
-<!--                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/SupervisorAssessment.xhtml' ? 'active-menuitem' : ''}"-->
-<!--                                    outcome="/pages/ratings/SupervisorAssessment" />-->
-<!--                        <p:menuitem id="scores" value="View scores"-->
-<!--                                    rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"-->
-<!--                                    icon="pi pi-chart-line"-->
-<!--                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/ScoresView.xhtml' ? 'active-menuitem' : ''}"-->
-<!--                                    outcome="/pages/ratings/ScoresView" />-->
-<!--                        <p:menuitem id="peerRating" value="Rate peers"-->
-<!--                                    icon="pi pi-chart-line"-->
-<!--                                    styleClass="#{facesContext.viewRoot.viewId eq '/pages/ratings/PeerRatingsView.xhtml' ? 'active-menuitem' : ''}"-->
-<!--                                    outcome="/pages/ratings/PeerRatingsView" />-->
-<!--                    </p:submenu>-->
+                    
 
                     <p:submenu id="activities" label="Manage Activities"
                                rendered="#{dashboard.loggedinUser.hasRole('ROLE_ADMINISTRATOR')}"

@@ -45,7 +45,8 @@
 
         </style>
 
-        <div id="kpiDetailView" class="content-card">
+
+        <h:panelGroup id="kpiDetailView" layout="block" styleClass="content-card">
             <!-- HEADER: Back Arrow, Title, and Update Button -->
             <div class="ui-g ui-fluid" style="margin-bottom: 1.5rem;">
                 <div class="ui-g-8 ui-md-9" style="display: flex; align-items: center;">
@@ -133,7 +134,7 @@
                     </p:column>
                 </p:dataTable>
             </div>
-        </div>
+        </h:panelGroup>
 
         <!-- Update Value Dialog -->
         <p:dialog header="Update KPI Value" widgetVar="updateValueDialog"
@@ -181,7 +182,7 @@
                                          process="@form"
                                          action="#{kpiDetailView.updateKpiValue()}"
                                          oncomplete="PF('updateValueDialog').hide()"
-                                         update="@form kpiDetailView :messages"
+                                         update="@form :kpiDetailView :messages"
                                          styleClass="ui-button-primary full-width"/>
                     </div>
                 </div>

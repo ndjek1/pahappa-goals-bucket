@@ -4,8 +4,6 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryItemService;
-import org.pahappa.systems.kpiTracker.core.services.OrgFitCategoryService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.DepartmentService;
 import org.pahappa.systems.kpiTracker.core.services.organization_structure_services.TeamService;
 import org.pahappa.systems.kpiTracker.core.services.ratings.SupervisorAssessmentService;
