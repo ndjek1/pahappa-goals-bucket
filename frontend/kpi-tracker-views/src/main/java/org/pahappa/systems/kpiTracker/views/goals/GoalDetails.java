@@ -7,9 +7,11 @@ import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.OrganizationGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
+import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.models.goals.*;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
+import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.primefaces.model.charts.ChartData;
@@ -46,6 +48,7 @@ public class GoalDetails implements Serializable {
     private KpisService kpisService;
     private String goalLevel;
     List<DepartmentGoal> departmentGoalList;
+    private KpiUpdateHistoryService kpiUpdateHistoryService;
 
     @PostConstruct
     public void init() {
@@ -54,7 +57,7 @@ public class GoalDetails implements Serializable {
         this.teamGoalService = ApplicationContextProvider.getBean(TeamGoalService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
-
+        this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
         this.goalLevel = selectedGoal != null ? selectedGoal.getClass().getSimpleName() : "";
     }
 
@@ -72,7 +75,7 @@ public class GoalDetails implements Serializable {
 
     public void loadDepartmentGoals(){
         Search search = new Search();
-        search.addFilterEqual("parent.id",this.selectedGoal.getId());
+        search.addFilterEqual("organizationGoal.id",this.selectedGoal.getId());
         this.departmentGoalList = this.departmentGoalService.getInstances(search,0,0);
     }
 
@@ -108,25 +111,25 @@ public class GoalDetails implements Serializable {
         double weightedSum = 0;
         double totalWeight = 0;
 
-        // 1. KPIs directly under department
-        Search kpiSearch = new Search(KPI.class);
-        kpiSearch.addFilterEqual("departmentGoal.id", departmentGoal.getId());
-        List<KPI> deptKPIs = kpisService.getInstances(kpiSearch,0,0);
-        if (deptKPIs != null && !deptKPIs.isEmpty()) {
-            double kpiWeightedSum = 0, kpiTotalWeight = 0;
-            for (KPI kpi : deptKPIs) {
-                double w = kpi.getWeight() != null ? kpi.getWeight() : 1;
-                kpiWeightedSum += kpi.getProgress() * w;
-                kpiTotalWeight += w;
-            }
-            if (kpiTotalWeight > 0) {
-                weightedSum += kpiWeightedSum / kpiTotalWeight; // treat as one bucket
-                totalWeight += 1;
-            }
-        }
+//        // 1. KPIs directly under department
+//        Search kpiSearch = new Search(KPI.class);
+//        kpiSearch.addFilterEqual("departmentGoal.id", departmentGoal.getId());
+//        List<KPI> deptKPIs = kpisService.getInstances(kpiSearch,0,0);
+//        if (deptKPIs != null && !deptKPIs.isEmpty()) {
+//            double kpiWeightedSum = 0, kpiTotalWeight = 0;
+//            for (KPI kpi : deptKPIs) {
+//                double w = kpi.getWeight() != null ? kpi.getWeight() : 1;
+//                kpiWeightedSum += getKpiProgress(kpi) * w;
+//                kpiTotalWeight += w;
+//            }
+//            if (kpiTotalWeight > 0) {
+//                weightedSum += kpiWeightedSum / kpiTotalWeight; // treat as one bucket
+//                totalWeight += 1;
+//            }
+//        }
 
         Search search = new Search(TeamGoal.class);
-        search.addFilterEqual("parent.id", departmentGoal.getId());
+        search.addFilterEqual("departmentGoal.id", departmentGoal.getId());
         List<TeamGoal> teamGoals = teamGoalService.getInstances(search,0,0);
         if (teamGoals != null && !teamGoals.isEmpty()) {
             for (TeamGoal teamGoal : teamGoals) {
@@ -162,7 +165,7 @@ public class GoalDetails implements Serializable {
             if (kpis != null && !kpis.isEmpty()) {
                 double kpiWeightedSum = 0, kpiTotalWeight = 0;
                 for (KPI kpi : kpis) {
-                    kpiWeightedSum += kpi.getProgress() * (kpi.getWeight() != null ? kpi.getWeight() : 1);
+                    kpiWeightedSum += getKpiProgress(kpi) * (kpi.getWeight() != null ? kpi.getWeight() : 1);
                     kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
                 }
                 goalProgress = kpiTotalWeight > 0 ? kpiWeightedSum / kpiTotalWeight : 0;
@@ -199,5 +202,25 @@ public class GoalDetails implements Serializable {
         return model;
     }
 
+    public double getKpiProgress(KPI kpi) {
+        if(kpi != null){
+            Search search = new  Search(KpiUpdateHistory.class);
+            search.addFilterEqual("kpi.id",kpi.getId());
+            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
+            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
+                return 0;
+            }
+            if (kpi.getCurrentValue() == null) {
+                return 0;
+            }
+            double currentValue = 0.0;
+            for(KpiUpdateHistory updateHistory : updateHistories){
+                currentValue += updateHistory.getValue();
+            }
+            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
+        }else {
+            return 0;
+        }
+    }
 
 }
