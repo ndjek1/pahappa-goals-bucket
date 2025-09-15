@@ -5,71 +5,107 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/dialog-template.xhtml">
 
-   <ui:define name="content">
-      <h:form id="thresholdDialog">
-          <title>Add Threshold</title>
+    <ui:define name="content">
+        <h:form id="thresholdDialog">
+            <title>Add Threshold</title>
 
-         <p:growl id="growl" showDetail="true" globalOnly="true" life="4000" />
+            <p:growl id="growl" showDetail="true" globalOnly="true" life="4000" />
 
+            <div class="ui-fluid grid p-m-4">
 
-         <div class="ui-fluid  grid p-m-4">
+                <!-- Type -->
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Type</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu id="type" value="#{thresholdForm.model.level}" required="true"
+                                         requiredMessage="Threshold type is required">
+                            <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{thresholdForm.thresholdLevels}" />
+                        </p:selectOneMenu>
+                    </div>
+                </div>
 
-          <div class="ui-col-12 ui-md-6">
-              <h5>Type</h5>
-              <div class="ui-inputgroup">
+                <!-- Need Improvement -->
+                <div class="ui-col-12 ui-md-6 p-my-3">
+                    <h5>Need Improvement Score</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="needImprovementScore"
+                                       value="#{thresholdForm.model.needImprovementScore}"
+                                       required="true"
+                                       requiredMessage="Need improvement score is required"
+                                       minValue="0" maxValue="100" decimalPlaces="0"
+                                       styleClass="p-inputtext-sm w-full"/>
+                    </div>
+                </div>
 
-               <p:selectOneMenu id="type" value="#{thresholdForm.model.level}">
-                  <f:selectItem itemLabel="Select Type" itemValue="#{null}" noSelectionOption="true"/>
-                  <f:selectItems value="#{thresholdForm.thresholdLevels}" />
-               </p:selectOneMenu>
+                <!-- Below Expectation -->
+                <div class="ui-col-12 ui-md-6 p-my-3">
+                    <h5>Below Expectation Score</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="belowExpectationScore"
+                                       value="#{thresholdForm.model.belowExpectationScore}"
+                                       required="true"
+                                       requiredMessage="Below expectation score is required"
+                                       minValue="0" maxValue="100" decimalPlaces="0"
+                                       styleClass="p-inputtext-sm w-full"/>
+                    </div>
+                </div>
+
+                <!-- Meet Expectation -->
+                <div class="ui-col-12 ui-md-6 p-my-3">
+                    <h5>Meet Expectation Score</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="meetExpectationScore"
+                                       value="#{thresholdForm.model.meetExpectationScore}"
+                                       required="true"
+                                       requiredMessage="Meet expectation score is required"
+                                       minValue="0" maxValue="100" decimalPlaces="0"
+                                       styleClass="p-inputtext-sm w-full"/>
+                    </div>
+                </div>
+
+                <!-- Exceeds Expectation -->
+                <div class="ui-col-12 ui-md-6 p-my-3">
+                    <h5>Exceeds Expectation Score</h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="exceedsExpectationScore"
+                                       value="#{thresholdForm.model.exceedsExpectationScore}"
+                                       required="true"
+                                       requiredMessage="Exceeds expectation score is required"
+                                       minValue="0" maxValue="100" decimalPlaces="0"
+                                       styleClass="p-inputtext-sm w-full"/>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="ui-col-12 p-d-flex p-jc-between p-mt-4">
+                    <p:commandButton value="Cancel"
+                                     immediate="true"
+                                     action="#{thresholdForm.hide}"
+                                     styleClass="ui-button-danger p-m-3"/>
+
+                    <p:commandButton value="Save"
+                                     process="@form"
+                                     rendered="#{thresholdForm.model.id eq null}"
+                                     actionListener="#{thresholdForm.persist}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-m-3">
+                        <f:setPropertyActionListener value="#{true}" target="#{thresholdsView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{thresholdsView.updated}"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Update"
+                                     process="@form"
+                                     rendered="#{thresholdForm.model.id ne null}"
+                                     actionListener="#{thresholdForm.persist}"
+                                     update="@form growl"
+                                     styleClass="ui-button-primary p-m-3">
+                        <f:setPropertyActionListener value="#{false}" target="#{thresholdsView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{thresholdsView.updated}"/>
+                    </p:commandButton>
+                </div>
+
             </div>
-          </div>
-
-          <div class="ui-col-12 ui-md-6 p-my-4">
-              <h5>Minimum Score</h5>
-              <div class="ui-inputgroup">
-               <p:inputNumber
-                       id="minScore"
-                       value="#{thresholdForm.model.minScore}"
-                            required="true"
-                            styleClass="p-inputtext-sm w-full"
-                            minValue="0"
-                       maxValue="100"
-                       decimalPlaces="0"
-               />
-            </div>
-          </div>
-
-
-          <div class="ui-col-12 ui-md-6">
-              <h5>Red flag score</h5>
-              <div class="ui-inputgroup">
-
-               <p:inputNumber value="#{thresholdForm.model.redFlagScore}"
-                            id="redFlagScore"
-                            required="true"
-                              minValue="0"
-                              maxValue="100"
-                              decimalPlaces="0"
-                            styleClass="p-inputtext-sm w-full"/>
-            </div>
-          </div>
-
-            <!-- Buttons -->
-            <div class=" col-12 p-d-flex p-jc-between ">
-               <p:commandButton value="Cancel"
-                                immediate="true"
-                                action="#{thresholdForm.hide}"
-                                styleClass="ui-button-danger p-m-3 " />
-
-               <p:commandButton value="Save"
-                                process="@form"
-                                actionListener="#{thresholdForm.persist}"
-                                update="@form growl"
-                                styleClass="ui-button-primary p-m-3" />
-            </div>
-
-         </div>
-      </h:form>
-   </ui:define>
+        </h:form>
+    </ui:define>
 </ui:composition>

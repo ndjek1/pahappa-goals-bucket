@@ -1,6 +1,7 @@
-package org.pahappa.systems.kpiTracker.core.services.impl;
+package org.pahappa.systems.kpiTracker.core.services.systemSetupService.impl;
 
-import org.pahappa.systems.kpiTracker.core.services.ThresholdService;
+import org.pahappa.systems.kpiTracker.core.services.impl.GenericServiceImpl;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ThresholdService;
 import org.pahappa.systems.kpiTracker.models.systemSetup.Threshold;
 import org.pahappa.systems.kpiTracker.utils.Validate;
 import org.sers.webutils.model.exception.OperationFailedException;
