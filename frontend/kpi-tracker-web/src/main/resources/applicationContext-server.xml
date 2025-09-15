@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/util 
 			http://www.springframework.org/schema/util/spring-util-3.0.xsd 
@@ -17,7 +18,7 @@
 			http://www.springframework.org/schema/aop 
 			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 			http://www.springframework.org/schema/security 
-          	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+          	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
 	<aop:aspectj-autoproxy />
 	<context:annotation-config />
@@ -35,13 +36,7 @@
 		base-package="org.sers.webutils.server.core.service.migrations" />
 
 	<!-- Project specific beans -->
-	<context:component-scan
-		base-package="org.pahappa.systems.kpiTracker.core.services.*" />
-	<context:component-scan
-		base-package="org.pahappa.systems.kpiTracker.core.services.organization_structure_services.*" />
-	<context:component-scan
-		base-package="org.pahappa.systems.kpiTracker.core.dao.impl" />
-
+    <context:component-scan base-package="org.pahappa.systems.kpiTracker.core" />
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
