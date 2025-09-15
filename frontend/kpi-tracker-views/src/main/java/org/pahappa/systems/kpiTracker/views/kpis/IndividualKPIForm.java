@@ -5,14 +5,16 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
-import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
+import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
+import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ReviewCycleStatus;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
@@ -46,6 +48,8 @@ public class IndividualKPIForm extends DialogForm<KPI> {
     private List<IndividualGoal> individualGoals;
     private List<MeasurementUnit> measurementUnits;
     private List<Frequency> frequencies;
+    private ReviewCycle reviewCycle;
+    private ReviewCycleService reviewCycleService;
     
     private IndividualGoal selectedIndividualGoal;
     private Staff staff;
@@ -63,7 +67,9 @@ public class IndividualKPIForm extends DialogForm<KPI> {
         this.kpisService = ApplicationContextProvider.getBean(KpisService.class);
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         this.staffService = ApplicationContextProvider.getBean(StaffService.class);
+        this.reviewCycleService = ApplicationContextProvider.getBean(ReviewCycleService.class);
         this.loggedinUser = SharedAppData.getLoggedInUser();
+        this.reviewCycle = reviewCycleService.searchUniqueByPropertyEqual("status", ReviewCycleStatus.ACTIVE);
         loadStaff();
         loadData();
         resetModal();
@@ -127,6 +133,9 @@ public class IndividualKPIForm extends DialogForm<KPI> {
                 }
                 return;
             }
+            if(this.reviewCycle != null) {
+                this.model.setReviewCycle(reviewCycle);
+            }
             kpisService.saveInstance(super.model);
             resetModal();
             hide();
@@ -162,14 +171,7 @@ public class IndividualKPIForm extends DialogForm<KPI> {
         if (model.getTargetValue() == null) {
             throw new ValidationFailedException("Target value is required.");
         }
-        
-        if (model.getStartDate() == null) {
-            throw new ValidationFailedException("Start date is required.");
-        }
-        
-        if (model.getEndDate() != null && model.getEndDate().before(model.getStartDate())) {
-            throw new ValidationFailedException("End date cannot be before start date.");
-        }
+
     }
 
     @Override
@@ -201,6 +203,9 @@ public class IndividualKPIForm extends DialogForm<KPI> {
                     Filter.equal("recordStatus" , RecordStatus.ACTIVE),
                     Filter.equal("individualGoal.id", goal.getId())
             );
+            if(this.model.getId() != null){
+                search.addFilterNotEqual("id", this.model.getId());
+            }
 
             List<KPI> kpis = this.kpisService.getInstances(search,0,0);
             if(kpis.size() > 0){

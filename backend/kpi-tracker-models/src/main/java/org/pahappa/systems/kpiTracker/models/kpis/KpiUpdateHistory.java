@@ -3,6 +3,7 @@ package org.pahappa.systems.kpiTracker.models.kpis;
 import org.sers.webutils.model.BaseEntity;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Entity to track KPI update history with value changes
@@ -62,9 +63,10 @@ public class KpiUpdateHistory extends BaseEntity {
         return id != null && id.equals(that.id);
     }
 
+
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(getKpi(), getValue(), getUpdateDate(), getComment());
     }
 
     @Override

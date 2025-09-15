@@ -13,33 +13,14 @@
 
             <div class="p-grid ui-fluid" style="display: flex;">
 
-                <!-- KPI Name -->
+                <!-- KPI Name (full width) -->
                 <div class="ui-col-12 ui-md-6">
                     <h5>KPI Name</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText id="kpiName"
-                                     value="#{individualKPIForm.model.name}"
-                                     required="true"
+                        <p:inputText id="kpiName" value="#{individualKPIForm.model.name}" required="true"
                                      requiredMessage="KPI Name is required."
                                      placeholder="Enter KPI name"
                                      styleClass="full-width"/>
-                    </div>
-                </div>
-
-                <!-- Individual Goal -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Individual Goal</h5>
-                    <div class="ui-inputgroup">
-                        <p:selectOneMenu id="individualGoal"
-                                         value="#{individualKPIForm.selectedIndividualGoal}"
-                                         converter="individualGoalConverter"
-                                         filter="true"
-                                         required="true"
-                                         styleClass="full-width">
-                            <f:selectItem itemLabel="Select individual goal" itemValue=""/>
-                            <f:selectItems value="#{individualKPIForm.individualGoals}"
-                                           var="indGoal" itemLabel="#{indGoal.name}" itemValue="#{indGoal}"/>
-                        </p:selectOneMenu>
                     </div>
                 </div>
 
@@ -58,6 +39,36 @@
                         </p:selectOneMenu>
                     </div>
                 </div>
+
+                <!-- Department Goal -->
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Goal</h5>
+                    <div class="ui-inputgroup">
+                        <p:selectOneMenu id="departmentGoal"
+                                         value="#{individualKPIForm.selectedIndividualGoal}"
+                                         converter="individualGoalConverter"
+                                         filter="true" required="true"
+                                         styleClass="full-width">
+                            <f:selectItem itemLabel="Select goal" itemValue=""/>
+                            <f:selectItems value="#{individualKPIForm.individualGoals}"
+                                           var="goal" itemLabel="#{goal.name}" itemValue="#{goal}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <!-- Current Value -->
+                <div class="ui-col-12 ui-md-6">
+                    <h5>Weight(%) </h5>
+                    <div class="ui-inputgroup">
+                        <p:inputNumber id="currentValue"
+                                       value="#{individualKPIForm.model.weight}"
+                                       minValue="0" decimalPlaces="0"
+                                       required="true"
+                                       requiredMessage="Weight must be filled"
+                                       styleClass="full-width"/>
+                    </div>
+                </div>
+
+
 
                 <!-- Frequency -->
                 <div class="ui-col-12 ui-md-6">
@@ -81,46 +92,11 @@
                     <div class="ui-inputgroup">
                         <p:inputNumber id="targetValue"
                                        value="#{individualKPIForm.model.targetValue}"
-                                       required="true"
-                                       minValue="0" decimalPlaces="2"
+                                       required="true" minValue="0" decimalPlaces="2"
                                        styleClass="full-width"/>
                     </div>
                 </div>
 
-                <!-- Current Value -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Weight(%) </h5>
-                    <div class="ui-inputgroup">
-                        <p:inputNumber id="currentValue"
-                                       value="#{individualKPIForm.model.weight}"
-                                       minValue="0" decimalPlaces="0"
-                                       required="true"
-                                       requiredMessage="Weight must be filled"
-                                       styleClass="full-width"/>
-                    </div>
-                </div>
-
-                <!-- Start Date -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>Start Date</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar id="startDate"
-                                    value="#{individualKPIForm.model.startDate}"
-                                    showTime="false" pattern="MM/dd/yyyy" required="true"
-                                    styleClass="full-width"/>
-                    </div>
-                </div>
-
-                <!-- End Date -->
-                <div class="ui-col-12 ui-md-6">
-                    <h5>End Date (Optional)</h5>
-                    <div class="ui-inputgroup">
-                        <p:calendar id="endDate"
-                                    value="#{individualKPIForm.model.endDate}"
-                                    showTime="false" pattern="MM/dd/yyyy"
-                                    styleClass="full-width"/>
-                    </div>
-                </div>
 
             </div>
 
@@ -135,9 +111,23 @@
                 <div class="ui-col-12 ui-md-6">
                     <p:commandButton value="Save"
                                      process="@form"
+                                     rendered="#{individualKPIForm.model.id eq null}"
                                      actionListener="#{individualKPIForm.persist}"
                                      update="@form messages"
-                                     styleClass="ui-button-primary full-width"/>
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{true}" target="#{individualKPIView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{individualKPIView.updated}"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Update"
+                                     process="@form"
+                                     rendered="#{individualKPIForm.model.id ne null}"
+                                     actionListener="#{individualKPIForm.persist}"
+                                     update="@form messages"
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{false}" target="#{individualKPIView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{individualKPIView.updated}"/>
+                    </p:commandButton>
                 </div>
             </div>
 

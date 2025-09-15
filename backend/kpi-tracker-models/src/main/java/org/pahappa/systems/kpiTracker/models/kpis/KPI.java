@@ -22,9 +22,6 @@ public class KPI extends BaseEntity {
     private Double targetValue;
     private Double currentValue;
     private Frequency frequency;
-    private Date startDate;
-    private Date endDate;
-    private Date lastUpdated;
     private Double weight;
 
     // References to different goal types
@@ -100,36 +97,6 @@ public class KPI extends BaseEntity {
 
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
-    }
-
-    @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    @Column(name = "last_updated")
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -215,7 +182,7 @@ public class KPI extends BaseEntity {
     @Override
     public int hashCode() {
         return 31;
-    }
+    } // regenerate
 
 
 

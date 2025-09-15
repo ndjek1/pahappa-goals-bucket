@@ -1,10 +1,11 @@
 package org.pahappa.systems.kpiTracker.views.kpis;
 
+import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
@@ -22,8 +23,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.*;
-
-import static org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency.ANNUALLY;
 
 @ManagedBean(name = "kpiDetailView")
 @Getter
@@ -137,7 +136,7 @@ public class KpiDetailView implements Serializable {
 
         if (kpiUpdateHistory != null && !kpiUpdateHistory.isEmpty()) {
             List<KpiUpdateHistory> sortedHistory = new ArrayList<>(kpiUpdateHistory);
-            sortedHistory.sort(Comparator.comparing(KpiUpdateHistory::getUpdateDate));
+            sortedHistory.sort(Comparator.comparing(KpiUpdateHistory::getDateCreated));
 
             ChartData data = new ChartData();
             LineChartDataSet dataSet = new LineChartDataSet();
@@ -146,13 +145,13 @@ public class KpiDetailView implements Serializable {
             List<String> labels = new ArrayList<>();
 
             for (KpiUpdateHistory history : sortedHistory) {
-                labels.add(getFrequencyLabel(history.getUpdateDate(), selectedKpi.getFrequency()));
+                labels.add(getFrequencyLabel(history.getDateCreated(), selectedKpi.getFrequency()));
                 values.add(history.getValue());
             }
 
             dataSet.setLabel("Progress");
             dataSet.setData(values);
-            dataSet.setFill(false);
+            dataSet.setFill(true);
             dataSet.setBorderColor("rgb(75, 192, 192)");
 
 
@@ -204,8 +203,13 @@ public class KpiDetailView implements Serializable {
                 history.setUpdateDate(new Date());
                 history.setComment(updateComment);
                 history.setChangedBy(loggedInUser);
-                kpiUpdateHistoryService.saveInstance(history);
-
+                KpiUpdateHistory history1 = kpiUpdateHistoryService.saveInstance(history);
+                if(history1 != null) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new javax.faces.application.FacesMessage(javax.faces.application.FacesMessage.SEVERITY_WARN,
+                                    "Success",
+                                    "KPI Value updated successfully "));
+                }
                 loadKpiHistory();
                 createChartDataFromHistory();
 
@@ -225,7 +229,7 @@ public class KpiDetailView implements Serializable {
 
         // get most recent history
         KpiUpdateHistory lastUpdate = Collections.max(kpiUpdateHistory,
-                Comparator.comparing(KpiUpdateHistory::getUpdateDate));
+                Comparator.comparing(KpiUpdateHistory::getDateCreated));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(lastUpdate.getUpdateDate());
@@ -255,6 +259,26 @@ public class KpiDetailView implements Serializable {
         }
     }
 
+    public double getKpiProgress(KPI kpi) {
+        if(kpi != null){
+            Search search = new  Search(KpiUpdateHistory.class);
+            search.addFilterEqual("kpi.id",kpi.getId());
+            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
+            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
+                return 0;
+            }
+            if (kpi.getCurrentValue() == null) {
+                return 0;
+            }
+            double currentValue = 0.0;
+            for(KpiUpdateHistory updateHistory : updateHistories){
+                currentValue += updateHistory.getValue();
+            }
+            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
+        }else {
+            return 0;
+        }
+    }
 
     public String goBack() {
         if (returnPage != null && !returnPage.isEmpty()) {
