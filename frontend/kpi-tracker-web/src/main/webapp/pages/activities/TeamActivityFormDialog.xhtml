@@ -151,7 +151,10 @@
                                      process="@form"
                                      actionListener="#{teamActivityFormDialog.persist}"
                                      update="@form messages"
-                                     styleClass="ui-button-primary full-width"/>
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{true}" target="#{teamActivitiesView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{teamActivitiesView.updated}"/>
+                    </p:commandButton>
                 </div>
             </div>
 

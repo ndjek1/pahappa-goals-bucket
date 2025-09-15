@@ -151,7 +151,10 @@
                                      process="@form"
                                      actionListener="#{individualActivityFormDialog.persist}"
                                      update="@form messages"
-                                     styleClass="ui-button-primary full-width"/>
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{true}" target="#{individualActivitiesView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{individualActivitiesView.updated}"/>
+                    </p:commandButton>
                 </div>
             </div>
 

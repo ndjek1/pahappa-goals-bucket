@@ -58,6 +58,7 @@ public class IndividualGoalDetails implements Serializable {
     public String prepareForIndividualGoal(String id) {
         this.selectedGoal = this.individualGoalService.getInstanceByID(id);
         loadKPIs();
+        loadActivities();
         return "/pages/goals/IndividualGoalDetails.xhtml?faces-redirect=true";
     }
 

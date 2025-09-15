@@ -9,6 +9,7 @@ import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "individual_activities")
@@ -120,5 +121,17 @@ public class IndividualActivity extends BaseEntity {
 
     public void setStaff(Staff staff) {
         this.staff = staff;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        IndividualActivity that = (IndividualActivity) o;
+        return Double.compare(getTargetValue(), that.getTargetValue()) == 0 && Double.compare(getActualValue(), that.getActualValue()) == 0 && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && getStatus() == that.getStatus() && getPriority() == that.getPriority() && getActivityType() == that.getActivityType() && Objects.equals(getPlannedStartDate(), that.getPlannedStartDate()) && Objects.equals(getPlannedEndDate(), that.getPlannedEndDate()) && Objects.equals(getIndividualGoal(), that.getIndividualGoal()) && Objects.equals(getStaff(), that.getStaff());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getDescription(), getStatus(), getPriority(), getActivityType(), getPlannedStartDate(), getPlannedEndDate(), getTargetValue(), getActualValue(), getIndividualGoal(), getStaff());
     }
 }

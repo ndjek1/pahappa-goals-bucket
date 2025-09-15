@@ -64,8 +64,8 @@
                     </p:tab>
 
                     <!-- Child Goals Tab -->
-                    <p:tab title="Child Goals (#{teamGoalDetails.individualGoalsList.size()})">
-                        <p:dataTable id="childGoals" var="model" value="#{teamGoalDetails.individualGoalsList}"
+                    <p:tab title="Child Goals (#{teamGoalDetails.allIndividualGoals.size()})">
+                        <p:dataTable id="childGoals" var="model" value="#{teamGoalDetails.allIndividualGoals}"
                                      widgetVar="deptGoalsTable"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                      paginator="true" rows="20"
@@ -92,7 +92,7 @@
                                 <p:commandButton icon="fa fa-check" styleClass="ui-button-primary"
                                                  ajax="false"
                                                  title="Approve"
-                                                 rendered="#{model.status eq 'PENDING'}"
+                                                 rendered="#{model.status.toString() eq 'PENDING'}"
                                                  actionListener="#{teamGoalDetails.approveIndividualGoal(model)}">
                                     <p:ajax event="dialogReturn" update="childGoals" />
                                 </p:commandButton>
