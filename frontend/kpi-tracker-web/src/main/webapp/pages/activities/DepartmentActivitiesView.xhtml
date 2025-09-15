@@ -48,6 +48,7 @@
                 <p:commandButton value="Add Activity" icon="pi pi-plus" styleClass="add-button"
                                  actionListener="#{departmentActivityFormDialog.show}">
                     <f:setPropertyActionListener value="#{null}" target="#{departmentActivityFormDialog.model}" />
+                    <p:ajax event="dialogReturn" listener="#{departmentActivitiesView.showSuccessMessage}" update="departmentActivitiesForm :messages"/>
                     <p:ajax event="dialogReturn" listener="#{departmentActivitiesView.reloadFilterReset}" update="departmentActivitiesTable"/>
                 </p:commandButton>
 
@@ -84,15 +85,14 @@
                     </p:column>
 
                     <p:column headerText="Action" width="120" style="text-align:center"
-
-                              exportable="false">
-                        <p:commandButton title="Update" icon="pi pi-pencil"
-                                         rendered="#{activity.status.toString() ne 'COMPLETED'}"
-                                         styleClass="ui-button-primary"
+                    >
+                        <p:commandButton title="Update" icon="pi pi-check" styleClass="add-button"
                                          actionListener="#{updateDepartmentActivity.show}">
                             <f:setPropertyActionListener value="#{activity}" target="#{updateDepartmentActivity.model}" />
-                            <p:ajax event="dialogReturn" update="departmentActivitiesTable" />
+                            <p:ajax event="dialogReturn" listener="#{departmentActivitiesView.showSuccessMessage}" update="departmentActivitiesForm :messages"/>
+                            <p:ajax event="dialogReturn" listener="#{departmentActivitiesView.reloadFilterReset}" update="departmentActivitiesTable"/>
                         </p:commandButton>
+
 
                     </p:column>
 

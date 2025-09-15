@@ -43,7 +43,7 @@ public class TeamGoalDetails implements Serializable {
     private IndividualGoalService individualGoalService;
     private KpisService kpiService;
 
-    private List<IndividualGoal> individualGoalsList;
+    private List<IndividualGoal> individualGoalsList, allIndividualGoals;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
 
     @PostConstruct
@@ -57,6 +57,7 @@ public class TeamGoalDetails implements Serializable {
     public String prepareForTeamGoal(String id) {
         this.selectedGoal = this.teamGoalService.getInstanceByID(id);
         loadIndividualGoals();
+        loadAllIndividualGoals();
         return "/pages/goals/TeamGoalDetails.xhtml?faces-redirect=true";
     }
 
@@ -69,6 +70,13 @@ public class TeamGoalDetails implements Serializable {
         search.addFilterEqual("teamGoal.id", this.selectedGoal.getId());
         search.addFilterEqual("status",GoalStatus.APPROVED);
         this.individualGoalsList = individualGoalService.getInstances(search,0,0);
+    }
+
+    public void loadAllIndividualGoals(){
+        Search search = new Search(IndividualGoal.class);
+        search.addFilterEqual("teamGoal.id", this.selectedGoal.getId());
+        search.addFilterEqual("recordStatus",RecordStatus.ACTIVE);
+        this.allIndividualGoals = individualGoalService.getInstances(search,0,0);
     }
 
     /**
@@ -145,6 +153,7 @@ public class TeamGoalDetails implements Serializable {
             individualGoal.setStatus(GoalStatus.APPROVED);
             this.individualGoalService.saveInstance(individualGoal);
             UiUtils.showMessageBox("Goal Approved", individualGoal.getName());
+            loadAllIndividualGoals();
             loadIndividualGoals(); // refresh
         } else {
             UiUtils.showMessageBox("Empty Goal", "No goal selected.");

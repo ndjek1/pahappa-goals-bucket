@@ -10,6 +10,7 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
@@ -64,6 +65,11 @@ public class UpdateTeamActivityDialog extends DialogForm<TeamActivity> {
         }
     }
 
+    @Override
+    public void hide(){
+        resetModal();
+        PrimeFaces.current().dialog().closeDynamic(super.getName());
+    }
 
     @Override
     public void setFormProperties() {

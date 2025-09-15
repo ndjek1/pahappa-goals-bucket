@@ -151,8 +151,11 @@
                     <p:commandButton value="Save"
                                      process="@form"
                                      actionListener="#{departmentActivityFormDialog.persist}"
-                                     update="@form messages"
-                                     styleClass="ui-button-primary full-width"/>
+                                     update="@form "
+                                     styleClass="ui-button-primary full-width">
+                        <f:setPropertyActionListener value="#{true}" target="#{departmentActivitiesView.saved}"/>
+                        <f:setPropertyActionListener value="#{false}" target="#{departmentActivitiesView.updated}"/>
+                    </p:commandButton>
                 </div>
             </div>
 

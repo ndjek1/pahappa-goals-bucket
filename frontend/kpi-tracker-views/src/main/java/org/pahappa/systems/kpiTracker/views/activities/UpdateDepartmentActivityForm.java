@@ -13,6 +13,7 @@ import org.pahappa.systems.kpiTracker.models.systemSetup.enums.ActivityType;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
 import org.pahappa.systems.kpiTracker.views.dialogs.DialogForm;
+import org.primefaces.PrimeFaces;
 import org.sers.webutils.model.Gender;
 import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.exception.ValidationFailedException;
@@ -77,6 +78,12 @@ public class UpdateDepartmentActivityForm extends DialogForm<DepartmentActivity>
         if (super.model == null) {
             super.model = new DepartmentActivity();
         }
+    }
+
+    @Override
+    public void hide(){
+        resetModal();
+        PrimeFaces.current().dialog().closeDynamic(super.getName());
     }
 
     @Override

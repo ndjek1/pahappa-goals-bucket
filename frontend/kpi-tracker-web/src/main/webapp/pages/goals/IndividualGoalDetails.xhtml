@@ -46,7 +46,6 @@
                         </div>
                     </div>
 
-                    <!-- Right Column: Activities -->
                     <div class="p-col-12 p-md-4 p-pl-2">
                         <div class="card p-p-4" style="border-radius:12px;">
                             <div class="p-col-12 p-md-4">
@@ -73,24 +72,40 @@
 
 
                 <!-- KPI Progress List -->
-                <div class="card p-p-4" style="border-radius:12px;">
-                    <h3 style="margin-bottom:1rem;">Key Performance Indicators</h3>
+                <p:tabView>
+                    <p:tab title="KPIs" titleStyle="font-size: medium">
+                        <div class="card p-p-4" style="border-radius:12px;">
+                            <h3 style="margin-bottom:1rem;">Key Performance Indicators</h3>
 
-                    <ui:repeat value="#{individualGoalDetails.goalKpis}" var="kpi">
-                        <div class="p-d-flex p-ai-center p-jc-between p-mb-3">
-                            <h:outputText value="#{kpi.name}"
-                                          style="font-weight:500; flex:0 0 50px;"/>
-                            <p:progressBar value="#{kpi.progress}" style="flex:1; height:14px; margin:0 1rem;"/>
-                            <h:outputText value="#{kpi.progress}%" style="font-weight:bold; width:50px; text-align:right;">
-                                <f:convertNumber maxFractionDigits="1" />
-                            </h:outputText>
+                            <ui:repeat value="#{individualGoalDetails.goalKpis}" var="kpi">
+                                <div class="p-d-flex p-ai-center p-jc-between p-mb-3">
+                                    <h:outputText value="#{kpi.name}"
+                                                  style="font-weight:500; flex:0 0 50px;"/>
+                                    <p:progressBar value="#{kpi.progress}" style="flex:1; height:14px; margin:0 1rem;"/>
+                                    <h:outputText value="#{kpi.progress}%" style="font-weight:bold; width:50px; text-align:right;">
+                                        <f:convertNumber maxFractionDigits="1" />
+                                    </h:outputText>
+                                </div>
+                            </ui:repeat>
+
+                            <h:panelGroup rendered="#{empty individualGoalDetails.goalKpis}">
+                                <i>No KPIs linked yet.</i>
+                            </h:panelGroup>
                         </div>
-                    </ui:repeat>
+                    </p:tab>
+                    <p:tab title="Activities" titleStyle="font-size: medium">
+                        <ui:repeat value="#{individualGoalDetails.individualActivities}" var="activity">
+                            <div class="p-d-flex p-ai-center p-jc-between p-mb-3">
+                                <h:outputText value="#{activity.title}"
+                                              style="font-weight:500; flex:0 0 50px;"/>
+                            </div>
+                        </ui:repeat>
+                        <h:panelGroup rendered="#{empty individualGoalDetails.individualActivities}">
+                            <i>No Activities linked yet.</i>
+                        </h:panelGroup>
+                    </p:tab>
+                </p:tabView>
 
-                    <h:panelGroup rendered="#{empty individualGoalDetails.goalKpis}">
-                        <i>No KPIs linked yet.</i>
-                    </h:panelGroup>
-                </div>
 
             </h:panelGroup>
 

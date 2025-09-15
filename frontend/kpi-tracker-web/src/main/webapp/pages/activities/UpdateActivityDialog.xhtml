@@ -51,9 +51,13 @@
             <!-- ===== Action Buttons ===== -->
             <p:toolbar styleClass="p-mt-3">
                 <p:toolbarGroup align="right">
-                    <p:commandButton value="Save"
+                    <p:commandButton value="Update"
+                                     process="@form"
                                      actionListener="#{updateDepartmentActivity.persist}"
-                                     styleClass="ui-button-primary p-mr-2"/>
+                                     styleClass="ui-button-primary p-mr-2">
+                        <f:setPropertyActionListener value="#{false}" target="#{departmentActivitiesView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{departmentActivitiesView.updated}"/>
+                    </p:commandButton>
                     <p:commandButton value="Cancel"
                                      actionListener="#{updateDepartmentActivity.hide}"
                                      styleClass="ui-button-outlined ui-button-secondary"/>

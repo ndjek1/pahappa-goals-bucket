@@ -52,8 +52,12 @@
             <p:toolbar styleClass="p-mt-3">
                 <p:toolbarGroup align="right">
                     <p:commandButton value="Save"
+                                     process="@form"
                                      actionListener="#{updateTeamActivity.persist}"
-                                     styleClass="ui-button-primary p-mr-2"/>
+                                     styleClass="ui-button-primary p-mr-2">
+                        <f:setPropertyActionListener value="#{false}" target="#{teamActivitiesView.saved}"/>
+                        <f:setPropertyActionListener value="#{true}" target="#{teamActivitiesView.updated}"/>
+                    </p:commandButton>
                     <p:commandButton value="Cancel"
                                      actionListener="#{updateTeamActivity.hide}"
                                      styleClass="ui-button-outlined ui-button-secondary"/>

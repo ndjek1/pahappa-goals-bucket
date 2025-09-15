@@ -19,8 +19,10 @@ import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +49,9 @@ public class DepartmentActivitiesView extends PaginatedTableView<DepartmentActiv
     // Restriction
     private User loggedInUser;
     private Department currentDepartment;
+
+    private boolean saved;
+    private boolean updated;
 
     @PostConstruct
     public void init() {
@@ -101,6 +106,21 @@ public class DepartmentActivitiesView extends PaginatedTableView<DepartmentActiv
         this.createdFrom = null;
         this.createdTo = null;
         reloadFilterReset();
+    }
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Activity  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Activity updated successfully."));
+            this.updated = false; // Reset the flag
+        }
     }
 
 
