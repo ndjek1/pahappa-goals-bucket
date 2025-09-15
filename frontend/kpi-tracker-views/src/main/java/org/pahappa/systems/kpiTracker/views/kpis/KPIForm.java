@@ -95,16 +95,6 @@ public class KPIForm extends DialogForm<KPI> {
         if (model.getFrequency() == null) {
             throw new ValidationFailedException("KPI must have a frequency.");
         }
-        if (model.getStartDate() == null) {
-            throw new ValidationFailedException("KPI must have a start date.");
-        }
-        
-        // Validate date range if end date is provided
-        if (model.getEndDate() != null && model.getStartDate() != null) {
-            if (model.getEndDate().before(model.getStartDate())) {
-                throw new ValidationFailedException("End date cannot be before start date.");
-            }
-        }
     }
 
     @Override
