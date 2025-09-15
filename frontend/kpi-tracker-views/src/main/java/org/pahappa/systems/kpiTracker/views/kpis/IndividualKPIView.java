@@ -5,25 +5,25 @@ import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
-import org.pahappa.systems.kpiTracker.core.services.impl.ReviewCycleService;
+import org.pahappa.systems.kpiTracker.core.services.systemSetupService.ReviewCycleService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
 import org.pahappa.systems.kpiTracker.core.services.systemUsers.StaffService;
-import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.staff.Staff;
 import org.pahappa.systems.kpiTracker.models.systemSetup.ReviewCycle;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.Frequency;
 import org.pahappa.systems.kpiTracker.models.systemSetup.enums.MeasurementUnit;
 import org.sers.webutils.model.RecordStatus;
-import org.sers.webutils.model.exception.OperationFailedException;
 import org.sers.webutils.model.security.User;
 import org.sers.webutils.server.core.service.excel.reports.ExcelReport;
 import org.sers.webutils.server.core.utils.ApplicationContextProvider;
 import org.sers.webutils.server.shared.SharedAppData;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +53,9 @@ public class IndividualKPIView implements Serializable {
     private Date createdFrom, createdTo;
     private String dataEmptyMessage = "No individual KPIs found.";
     private KPI selectedKPI;
+
+    private boolean saved;
+    private boolean updated;
     
     // Filter properties
     private List<MeasurementUnit> measurementUnits;
@@ -200,7 +203,23 @@ public class IndividualKPIView implements Serializable {
         this.createdTo = null;
         reloadFilterReset();
     }
-    
+
+    public void showSuccessMessage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (this.saved) {
+            // Message for creating a new department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "KPI  created successfully."));
+            this.saved = false; // Reset the flag
+        }
+
+        if (this.updated) {
+            // Message for updating an existing department
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "KPI updated successfully."));
+            this.updated = false; // Reset the flag
+        }
+    }
+
     public void deleteSelectedKPI(KPI kpi) {
         try {
             if (kpi != null) {

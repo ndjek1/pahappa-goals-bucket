@@ -153,18 +153,7 @@ public class DepartmentKPIForm extends DialogForm<KPI> {
         if (model.getTargetValue() == null) {
             throw new ValidationFailedException("Target value is required.");
         }
-        
-        if (model.getStartDate() == null) {
-            throw new ValidationFailedException("Start date is required.");
-        }
-        
-        if (model.getEndDate() == null) {
-            throw new ValidationFailedException("End date is required.");
-        }
-        
-        if (model.getEndDate().before(model.getStartDate())) {
-            throw new ValidationFailedException("End date cannot be before start date.");
-        }
+
     }
 
     @Override

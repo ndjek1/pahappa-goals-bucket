@@ -5,247 +5,184 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/pages/californiatemplate/template.xhtml">
 
-    <ui:define name="head">
-        <title>KPI Details</title>
-        <style>
-            .kpi-detail-container {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .kpi-header {
-                background: #f8f9fa;
-                padding: 20px;
-                border-radius: 8px;
-                margin-bottom: 20px;
-                border-left: 4px solid #3b82f6;
-            }
-            .kpi-title {
-                font-size: 1.5rem;
-                font-weight: 600;
-                color: #1f2937;
-                margin: 0 0 10px 0;
-            }
-            .kpi-info-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-                margin-bottom: 30px;
-            }
-            .kpi-info-item {
-                background: white;
-                padding: 15px;
-                border-radius: 6px;
-                border: 1px solid #e5e7eb;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            }
-            .kpi-info-label {
-                font-size: 0.875rem;
-                color: #6b7280;
-                margin-bottom: 5px;
-                font-weight: 500;
-            }
-            .kpi-info-value {
-                font-size: 1rem;
-                color: #1f2937;
-                font-weight: 600;
-            }
-            .progress-bar-container {
-                position: relative;
-                background: #e5e7eb;
-                height: 25px;
-                border-radius: 12px;
-                overflow: hidden;
-            }
-            .progress-bar {
-                height: 100%;
-                transition: width 0.3s ease;
-                border-radius: 12px;
-            }
-            .progress-text {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: white;
-                text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-            }
-            .progress-table .ui-datatable-data tr td {
-                vertical-align: middle !important;
-            }
-            .progress-section {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                margin-bottom: 30px;
-            }
-            .progress-header {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #1f2937;
-                margin-bottom: 15px;
-            }
-            .progress-bar-container {
-                background: #f3f4f6;
-                border-radius: 10px;
-                height: 20px;
-                overflow: hidden;
-                margin-bottom: 10px;
-            }
-            .progress-bar {
-                height: 100%;
-                background: linear-gradient(90deg, #10b981, #059669);
-                border-radius: 10px;
-                transition: width 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                padding-right: 10px;
-            }
-            .progress-text {
-                color: white;
-                font-size: 0.875rem;
-                font-weight: 600;
-            }
-            .chart-section {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                margin-bottom: 30px;
-            }
-            .chart-header {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #1f2937;
-                margin-bottom: 15px;
-            }
-            .updates-table {
-                margin-top: 30px;
-            }
-            .back-button {
-                margin-bottom: 20px;
-            }
-            .update-value-btn {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-            }
-            .breadcrumb-card {
-                padding: 3px 6px;
-                margin-bottom: 8px;
-            }
-            .breadcrumb-card .ui-breadcrumb {
-                font-size: .8rem;
-                padding: 0;
-                margin: 0;
-            }
-            .breadcrumb-card .ui-breadcrumb .ui-menuitem-link {
-                padding: 1px 6px;
-            }
-        </style>
-    </ui:define>
-
     <ui:define name="content">
-        <div class="kpi-detail-container">
-            <h:form id="kpiDetailForm">
-                
-                <!-- Back Button and Update Value Button -->
-                <div style="position: relative; margin-bottom: 20px;">
-                    <p:commandButton value="← Back" icon="pi pi-arrow-left" 
-                                     styleClass="ui-button-secondary back-button"
-                                     action="#{kpiDetailView.goBack()}" />
-                    
-                    <p:commandButton value="Update value" icon="pi pi-pencil" 
-                                     styleClass="ui-button-success update-value-btn"
-                                     onclick="PF('updateValueDialog').show()" />
-                </div>
+        <style type="text/css">
+            /* Custom style to make the progress bar green */
+            .custom-progress .ui-progressbar-value {
+                background: #4CAF50; /* A pleasant green color */
+            }
 
-                <!-- KPI Header -->
-                <div class="kpi-header">
-                    <h2 class="kpi-title">#{kpiDetailView.selectedKpi.name}</h2>
-                </div>
+            /* Style for the main content card */
+            .content-card {
+                background-color: #ffffff;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
 
-                <!-- KPI Information Grid -->
-                <div class="kpi-info-grid">
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Goal:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.goalName}</div>
-                    </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Target Value:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.targetValue}</div>
-                    </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Current Value:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.currentValue}</div>
-                    </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Measurement Unit:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.measurementUnit != null ? kpiDetailView.selectedKpi.measurementUnit.displayName : 'N/A'}</div>
-                    </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Frequency:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.frequency != null ? kpiDetailView.selectedKpi.frequency.displayName : 'N/A'}</div>
-                    </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Start Date:</div>
-                        <div class="kpi-info-value">
-                            <h:outputText value="#{kpiDetailView.selectedKpi.startDate}">
-                                <f:convertDateTime pattern="dd MMM, yyyy" />
-                            </h:outputText>
+            /* Style for the empty data table to show row lines */
+            .empty-table .ui-datatable-data tr {
+                height: 45px;
+            }
+            .empty-table .ui-datatable-data tr td {
+                border-bottom: 1px solid #e9ecef;
+            }
+            .empty-table .ui-datatable-emptymessage {
+                display: none; /* Hide the default "No records found" message */
+            }
+
+            .progress-red .ui-progressbar-value {
+                background: #e74c3c !important; /* Red */
+            }
+            .progress-orange .ui-progressbar-value {
+                background: #f39c12 !important; /* Orange */
+            }
+            .progress-green .ui-progressbar-value {
+                background: #2ecc71 !important; /* Green */
+            }
+
+
+
+        </style>
+
+        <div id="kpiDetailView" class="content-card">
+            <!-- HEADER: Back Arrow, Title, and Update Button -->
+            <div class="ui-g ui-fluid" style="margin-bottom: 1.5rem;">
+                <div class="ui-g-8 ui-md-9" style="display: flex; align-items: center;">
+                    <p:commandButton icon="pi pi-arrow-left"
+                                   action="#{kpiDetailView.goBack()}"
+                                   />
+                    <h2 style="margin: 0;">#{kpiDetailView.selectedKpi.name}</h2>
+                </div>
+                <div class="ui-g-4 ui-md-3" style="text-align: right;">
+                    <p:commandButton value="Update value"
+                                     onclick="PF('updateValueDialog').show()"
+                                     styleClass="ui-button-success"/>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT: 2-Column Layout -->
+            <div class="ui-fluid p-grid">
+
+                <!-- LEFT COLUMN -->
+                <div class="p-col-12 p-md-7">
+                    <p:panelGrid columns="2" layout="grid"
+                                 styleClass="ui-noborder ui-panelgrid-blank"
+                                 columnClasses="ui-grid-col-4, ui-grid-col-8">
+
+                        <h:outputText value="Goal:" style="font-weight:bold;" />
+                        <h:outputText value="#{kpiDetailView.selectedKpi.teamGoal.name}" />
+
+                        <h:outputText value="Target Value:" style="font-weight:bold;" />
+                        <h:outputText value="#{kpiDetailView.selectedKpi.targetValue}" />
+
+                        <h:outputText value="Measurement Unit:" style="font-weight:bold;" />
+                        <h:outputText value="#{kpiDetailView.selectedKpi.measurementUnit}" />
+
+                        <h:outputText value="Frequency:" style="font-weight:bold;" />
+                        <h:outputText value="#{kpiDetailView.selectedKpi.frequency.name()}" />
+
+                        <h:outputText value="Start Date:" style="font-weight:bold;" />
+                        <h:outputText value="#{kpiDetailView.selectedKpi.reviewCycle.startDate}">
+                            <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                        </h:outputText>
+                    </p:panelGrid>
+
+                    <!-- Progress Bar Section -->
+                    <div style="margin-top: 2rem;">
+                        <h:outputText value="Progress"
+                                      style="font-weight:bold; display:block; margin-bottom: 0.5rem;" />
+                        <div style="display: flex; align-items: center;">
+                            <p:progressBar id="kpiProgress"
+                                           value="#{kpiDetailView.getKpiProgress(kpiDetailView.selectedKpi)}"
+                                           style="width: 100%; height: 20px;"
+                                           labelTemplate="{value}%"
+                                           styleClass="#{kpiDetailView.getKpiProgress(kpiDetailView.selectedKpi) lt 40 ? 'progress-red'
+                            : (kpiDetailView.getKpiProgress(kpiDetailView.selectedKpi) lt 70 ? 'progress-orange'
+                            : 'progress-green')}"
+                                           displayOnly="true"/>
+                            
                         </div>
                     </div>
-                    <div class="kpi-info-item">
-                        <div class="kpi-info-label">Review Cycle:</div>
-                        <div class="kpi-info-value">#{kpiDetailView.selectedKpi.reviewCycle != null ? kpiDetailView.selectedKpi.reviewCycle.title : 'Not Assigned'}</div>
-                    </div>
-                </div>
-                
-
-                <!-- Progress Section -->
-                <div class="chart-section">
-                    <div class="chart-header">KPI Progress Over Time</div>
-
-                    <p:lineChart type="line" model="#{kpiDetailView.lineModel}"
-                             style="width:100%;height:350px;" responsive="true" />
                 </div>
 
+                <!-- RIGHT COLUMN -->
+                <div class="p-col-12 p-md-5">
+                    <p:panel header="Updates Over Time" style="border: 1px solid #dee2e6;">
+                        <p:lineChart type="line" model="#{kpiDetailView.lineModel}"
+                                     style="height:250px; width:100%;"/>
+                    </p:panel>
+                </div>
+
+            </div>
 
 
-            </h:form>
+
+            <!-- BOTTOM SECTION: Updates Table -->
+            <div style="margin-top: 2rem;">
+                <!-- To achieve the empty rows look, bind this to a list of 4-5 empty objects -->
+                <p:dataTable var="update" value="#{kpiDetailView.kpiUpdateHistory}" styleClass="empty-table" rows="4">
+                    <p:column headerText="Value">
+                        <h:outputText value="#{update.value}" />
+                    </p:column>
+                    <p:column headerText="Updated by">
+                        <h:outputText value="#{update.updateDate}" />
+                    </p:column>
+                    <p:column headerText="Comment">
+                        <h:outputText value="#{update.comment}" />
+                    </p:column>
+                </p:dataTable>
+            </div>
         </div>
 
         <!-- Update Value Dialog -->
-        <p:dialog header="Update KPI Value" widgetVar="updateValueDialog" 
-                  modal="true" resizable="false" width="400" height="300">
+        <p:dialog header="Update KPI Value" widgetVar="updateValueDialog"
+                  modal="true" resizable="false" width="400" height="200">
             <h:form id="updateValueForm">
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12">
-                        <p:outputLabel for="newValue" value="New KPI Value:" />
-                        <p:inputNumber id="newValue" value="#{kpiDetailView.newValue}" 
-                                      decimalPlaces="2" required="true" 
-                                      placeholder="Enter the new value for this KPI"/>
-                    </div>
-                    <div class="ui-g-12">
-                        <p:outputLabel for="comment" value="Update Comment (Optional):" />
-                        <p:inputTextarea id="comment" value="#{kpiDetailView.updateComment}" 
-                                         rows="3" cols="30" 
-                                         placeholder="Add a comment about this update (optional)"/>
-                    </div>
-                    <div class="ui-g-12" style="text-align: right; margin-top: 20px;">
-                        <p:commandButton value="Cancel" icon="pi pi-times" 
-                                         styleClass="ui-button-secondary"
-                                         onclick="PF('updateValueDialog').hide()" 
-                                         type="button" />
-                        <p:commandButton value="Update" icon="pi pi-check" 
-                                         styleClass="ui-button-success"
-                                         action="#{kpiDetailView.updateKpiValue()}"
+                <div class="p-grid ui-fluid" style="display: flex;">
 
-                                         oncomplete="PF('updateValueDialog').hide()" />
+                    <!-- Name -->
+                    <div class="ui-col-12 ui-md-12">
+                        <div class="ui-inputgroup">
+                            <p:inputNumber id="newValue" value="#{kpiDetailView.newValue}"
+                                           decimalPlaces="2" required="true"
+                                           placeholder="Value"/>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="ui-col-12 ui-md-12">
+                        <div class="ui-inputgroup">
+                            <p:inputTextarea id="description"
+                                             value="#{kpiDetailView.updateComment}"
+                                             required="true"
+                                             cols="2"
+                                             requiredMessage="Description is required."
+                                             placeholder="Comment"
+                                             styleClass="full-width"/>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <!-- Buttons Row -->
+                <div class="ui-col-12 p-grid ui-fluid" style="display: flex; margin-top: 1em;">
+                    <div class="ui-col-12 ui-md-6">
+                        <p:commandButton value="Cancel"
+                                         immediate="true"
+                                         update=":messages"
+                                         onclick="PF('updateValueDialog').hide()"
+                                         styleClass="ui-button-danger full-width"/>
+                    </div>
+                    <div class="ui-col-12 ui-md-6">
+                        <p:commandButton value="Update"
+                                         process="@form"
+                                         action="#{kpiDetailView.updateKpiValue()}"
+                                         oncomplete="PF('updateValueDialog').hide()"
+                                         update="@form kpiDetailView :messages"
+                                         styleClass="ui-button-primary full-width"/>
                     </div>
                 </div>
             </h:form>
