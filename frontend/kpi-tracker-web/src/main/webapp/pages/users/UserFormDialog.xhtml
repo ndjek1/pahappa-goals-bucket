@@ -17,6 +17,7 @@
         </title>
 
         <h:form id="userFormDialog" style="height: 450px" styleClass="card">
+            <p:growl id="messages" globalOnly="true" showDetail="true"/>
             <div class="p-grid ui-fluid" style="display:flex">
                 <div class="ui-col-12 ui-md-6">
                     <h5>First name</h5>
@@ -33,18 +34,14 @@
                 </div>
 
                 <div class="ui-col-12 ui-md-6">
-                    <h5>Username</h5>
-                    <div class="ui-inputgroup">
-                        <p:inputText value="#{userFormDialog.model.username}" disabled="#{userFormDialog.edit}" required="true" />
-                    </div>
-                </div>
-
-
-                <div class="ui-col-12 ui-md-6">
                     <h5>Email</h5>
                     <div class="ui-inputgroup">
-                        <p:inputText value="#{userFormDialog.model.emailAddress}" />
+                        <p:inputText id="email" value="#{userFormDialog.model.emailAddress}" required="true"
+                        requiredMessage="Email must be provided"
+                        >
+                        </p:inputText>
                     </div>
+                    <p:message for="email" />
                 </div>
                 <div class="ui-col-12 ui-md-6">
                     <h5>Department</h5>
@@ -117,8 +114,8 @@
                         <div class="p-col-2" >
                             <p:commandButton value="Save" 
                                              process="@form"
-                                             actionListener="#{userFormDialog.save}"
-                                             update="@form" validateClient="true" />
+                                             actionListener="#{userFormDialog.persist}"
+                                             update="@form messages" validateClient="true" />
                         </div>
                     </div>
                 </div>

@@ -5,9 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,26 +73,38 @@ public class UserFormDialog extends DialogForm<User> {
     public void persist() throws ValidationFailedException, OperationFailedException {
         // 1. Attach roles
         super.model.setRoles(userRoles);
+        if(!validateEmail()){
+            return;
+        }
+        super.model.setUsername(super.model.getEmailAddress());
 
         // 2. Save and get managed User
+
         User savedUser = this.userService.saveUser(super.model);
 
         // 3. Create Staff linked to managed User
-        Staff staff = new Staff();
-        staff.setUser(savedUser);
-        staff.setDepartment(selectedDepartment);
+        Staff staff;
+        if(super.model.getId() == null) {
+            staff = new Staff();
+            staff.setUser(savedUser);
+            staff.setDepartment(selectedDepartment);
 
-        // 4. If user has Department Lead role, set them as lead of department
-        boolean isDepartmentLead = userRoles.stream()
-                .anyMatch(r -> r.getName().equals(RoleConstants.ROLE_DEPARTMENT_LEAD));
+            // 4. If user has Department Lead role, set them as lead of department
+            boolean isDepartmentLead = userRoles.stream()
+                    .anyMatch(r -> r.getName().equals(RoleConstants.ROLE_DEPARTMENT_LEAD));
 
-        if (isDepartmentLead && selectedDepartment != null) {
-            selectedDepartment.setDepartmentHead(savedUser);
-            departmentService.saveInstance(selectedDepartment);  // persist change
+            if (isDepartmentLead && selectedDepartment != null) {
+                selectedDepartment.setDepartmentHead(savedUser);
+                departmentService.saveInstance(selectedDepartment);  // persist change
+            }
+
+            // 5. Save Staff
+            this.staffService.saveInstance(staff);
+
+            resetModal();
+            hide();
         }
 
-        // 5. Save Staff
-        this.staffService.saveInstance(staff);
     }
 public void loadGender(){
         for(Gender g : Arrays.asList(Gender.values())){
@@ -113,6 +129,25 @@ public void loadGender(){
             setEdit(true);
         this.userRoles = new HashSet<>(userService.getRoles(super.model, 0, 0));
         loadDepartments();
+    }
+
+    public boolean validateEmail() {
+        String email = super.model.getEmailAddress();
+
+        if (email == null || email.trim().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email is required", null));
+            return false;
+        }
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter a valid email address", null));
+            return false;
+        }
+
+
+        return true;
     }
 
     public void activateSelectedUser(User user) throws ValidationFailedException {
