@@ -75,14 +75,23 @@ public class IndividualGoalDetails implements Serializable {
     }
 
     public double getProgress() {
-        if (goalKpis == null || goalKpis.isEmpty()) return 0;
-        double weightedSum = 0, totalWeight = 0;
+        if (goalKpis == null || goalKpis.isEmpty()) return 0.0;
+
+        double contributionFraction = 0.0; // fraction of the entire goal (0..1)
+
         for (KPI kpi : goalKpis) {
-            weightedSum += this.getKpiProgress(kpi) * kpi.getWeight();
-            totalWeight += kpi.getWeight();
+            double kpiFrac = kpiService.getKpiProgress(kpi); // 0..1
+            double weight = (kpi.getWeight() == null) ? 0.0 : kpi.getWeight(); // e.g. 50.0
+            contributionFraction += kpiFrac * (weight / 100.0); // e.g. 0.5 * 0.5 = 0.25
         }
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+
+        // Optionally: if total assigned weight > 100, you might want to normalize or cap.
+        // For now we assume weights are percent-of-goal and can be <, =, or > 100.
+        double percent = contributionFraction * 100.0;
+        // round to 2 decimals
+        return Math.round(percent * 100.0) / 100.0;
     }
+
 
     public void loadActivities(){
         Search search = new Search(IndividualActivity.class);
@@ -92,27 +101,6 @@ public class IndividualGoalDetails implements Serializable {
         );
         this.individualActivities = this.getIndividualActivityService().getInstances(search,0,0);
 
-    }
-
-    public double getKpiProgress(KPI kpi) {
-        if(kpi != null){
-            Search search = new  Search(KpiUpdateHistory.class);
-            search.addFilterEqual("kpi.id",kpi.getId());
-            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
-            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
-                return 0;
-            }
-            if (kpi.getCurrentValue() == null) {
-                return 0;
-            }
-            double currentValue = 0.0;
-            for(KpiUpdateHistory updateHistory : updateHistories){
-                currentValue += updateHistory.getValue();
-            }
-            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
-        }else {
-            return 0;
-        }
     }
 
     public DonutChartModel getProgressDonutModel() {
