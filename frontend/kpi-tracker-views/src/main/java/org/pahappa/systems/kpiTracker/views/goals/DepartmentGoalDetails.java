@@ -116,73 +116,80 @@ public class DepartmentGoalDetails implements Serializable {
 
     }
 
+    /**
+     * Calculates the overall progress of the selected department goal.
+     * It sums the direct percentage contributions from its underlying team goals.
+     * @return The progress of the department goal as a fraction (e.g., 0.25 for 25%).
+     */
     public double calculateProgress() {
-        double weightedSum = 0, totalWeight = 0;
+        double departmentProgress = 0.0;
 
-//        // 1. KPIs directly under Department Goal
-//        if (kpisList != null && !kpisList.isEmpty()) {
-//            double kpiWeightedSum = 0, kpiTotalWeight = 0;
-//            for (KPI kpi : kpisList) {
-//                kpiWeightedSum += kpi.getProgress() * (kpi.getWeight() != null ? kpi.getWeight() : 1);
-//                kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
-//            }
-//            if (kpiTotalWeight > 0) {
-//                double kpiProgress = kpiWeightedSum / kpiTotalWeight;
-//                // Treat all KPIs as one "bucket" with weight 1
-//                weightedSum += kpiProgress;
-//                totalWeight += 1;
-//            }
-//        }
+        if (this.teamGoalGoalList != null && !this.teamGoalGoalList.isEmpty()) {
+            for (TeamGoal teamGoal : this.teamGoalGoalList) {
+                // Step 1: Calculate the progress of this specific team goal.
+                double teamProgress = calculateTeamGoalProgress(teamGoal); // This will be a fraction e.g., 0.50
 
-        // 2. Progress from Team Goals
-        if (teamGoalGoalList != null && !teamGoalGoalList.isEmpty()) {
-            for (TeamGoal teamGoal : teamGoalGoalList) {
-                // Get progress via TeamGoalDetails-style calculation
-                double teamProgress = calculateTeamGoalProgress(teamGoal);
-                double weight = teamGoal.getContributionWeight() > 0 ? teamGoal.getContributionWeight() : 1;
+                // Step 2: Get this team goal's contribution weight to the department goal as a fraction.
+                // Assumes getContributionWeight() returns a percentage value like 70.0 for 70%.
+                double teamContributionAsFraction = teamGoal.getContributionWeight() / 100.0; // e.g., 70.0 -> 0.70
 
-                weightedSum += teamProgress * weight;
-                totalWeight += weight;
+                // Step 3: Add its weighted contribution to the department's total progress.
+                departmentProgress += teamProgress * teamContributionAsFraction;
             }
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        // Note: We are not dividing by the sum of weights here.
+        return departmentProgress;
     }
 
     /**
-     * Helper: calculate a team goal’s progress based on its Individual Goals & KPIs
+     * Helper method to calculate a single team goal’s progress based on the
+     * direct percentage contribution of its Individual Goals.
+     * This follows the exact same logic as the previous solution.
+     * @param teamGoal The TeamGoal to calculate progress for.
+     * @return The progress of the team goal as a fraction (e.g., 0.5 for 50%).
      */
     private double calculateTeamGoalProgress(TeamGoal teamGoal) {
-        // Reload individual goals for this team goal
-        Search search = new Search(IndividualGoal.class);
-        search.addFilterEqual("teamGoal.id", teamGoal.getId());
-        List<IndividualGoal> individualGoals = this.individualGoalService.getInstances(search, 0, 0);
+        // Load the approved individual goals for this specific team goal
+        Search individualSearch = new Search(IndividualGoal.class);
+        individualSearch.addFilterEqual("teamGoal.id", teamGoal.getId());
+        individualSearch.addFilterEqual("status", GoalStatus.APPROVED); // Ensure we only count approved goals
+        List<IndividualGoal> individualGoals = this.individualGoalService.getInstances(individualSearch, 0, 0);
 
-        if (individualGoals == null || individualGoals.isEmpty()) return 0;
-
-        double weightedSum = 0, totalWeight = 0;
-        for (IndividualGoal goal : individualGoals) {
-            // Explicitly load KPIs for this goal (avoid lazy init error)
-            Search kpiSearch = new Search(KPI.class);
-            kpiSearch.addFilterEqual("individualGoal.id", goal.getId());
-            List<KPI> kpis = this.kpisService.getInstances(kpiSearch, 0, 0);
-
-            double goalProgress = 0;
-            if (kpis != null && !kpis.isEmpty()) {
-                double kpiWeightedSum = 0, kpiTotalWeight = 0;
-                for (KPI kpi : kpis) {
-                    kpiWeightedSum += this.getKpiProgress(kpi) * (kpi.getWeight() != null ? kpi.getWeight() : 1);
-                    kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
-                }
-                goalProgress = kpiTotalWeight > 0 ? kpiWeightedSum / kpiTotalWeight : 0;
-            }
-
-            double weight = goal.getContributionWeight() > 0 ? goal.getContributionWeight() : 1;
-            weightedSum += goalProgress * weight;
-            totalWeight += weight;
+        if (individualGoals == null || individualGoals.isEmpty()) {
+            return 0.0;
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        double teamProgress = 0.0;
+
+        // Loop through each individual goal that contributes to the team goal
+        for (IndividualGoal individualGoal : individualGoals) {
+
+            // --- Part 1: Calculate the progress of the individual goal ---
+            Search kpiSearch = new Search(KPI.class);
+            kpiSearch.addFilterEqual("individualGoal.id", individualGoal.getId());
+            List<KPI> kpis = this.kpisService.getInstances(kpiSearch, 0, 0);
+
+            double individualGoalProgress = 0.0;
+            if (!kpis.isEmpty()) {
+                for (KPI kpi : kpis) {
+                    // We need to use your getKpiProgress method, but it returns a percentage (0-100).
+                    // We must convert it to a fraction for our calculation.
+                    double kpiProgressAsFraction = getKpiProgress(kpi) / 100.0; // e.g., 50.0 -> 0.5
+
+                    // Get KPI weight as a fraction (e.g., 50 for 50% becomes 0.5)
+                    double kpiWeightAsFraction = kpi.getWeight() / 100.0;
+
+                    individualGoalProgress += kpiProgressAsFraction * kpiWeightAsFraction;
+                }
+            }
+
+            // --- Part 2: Add this individual goal's contribution to the team goal ---
+            double goalContributionAsFraction = individualGoal.getContributionWeight() / 100.0;
+            teamProgress += individualGoalProgress * goalContributionAsFraction;
+        }
+
+        return teamProgress;
     }
 
     public DonutChartModel getProgressDonutModel() {

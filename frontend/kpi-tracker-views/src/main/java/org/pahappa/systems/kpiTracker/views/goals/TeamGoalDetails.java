@@ -88,33 +88,47 @@ public class TeamGoalDetails implements Serializable {
 
 
     public double calculateProgress(TeamGoal teamGoal, List<IndividualGoal> goals) {
-        if (goals == null || goals.isEmpty()) return 0;
-
-        double weightedSum = 0, totalWeight = 0;
-
-        for (IndividualGoal goal : goals) {
-            // Explicitly load KPIs using service
-            List<KPI> kpis = loadKPIs(goal);
-
-            double goalProgress = 0;
-            double kpiWeightedSum = 0, kpiTotalWeight = 0;
-
-            for (KPI kpi : kpis) {
-                kpiWeightedSum += this.getKpiProgress(kpi) * kpi.getWeight();
-                kpiTotalWeight += kpi.getWeight();
-            }
-
-            if (kpiTotalWeight > 0) {
-                goalProgress = kpiWeightedSum / kpiTotalWeight;
-            }
-
-            double weight = goal.getContributionWeight() > 0 ? goal.getContributionWeight() : 1;
-            weightedSum += goalProgress * weight;
-            totalWeight += weight;
+        if (goals == null || goals.isEmpty()) {
+            return 0.0;
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        double teamGoalProgress = 0.0;
+
+        // Loop through each individual goal that contributes to the team goal
+        for (IndividualGoal individualGoal : goals) {
+
+            // --- Part 1: Calculate the progress of the individual goal ---
+            List<KPI> kpis = loadKPIs(individualGoal);
+            double individualGoalProgress = 0.0;
+
+            if (!kpis.isEmpty()) {
+                for (KPI kpi : kpis) {
+                    // Get KPI progress as a fraction (e.g., 0.5 for 50%)
+                    double kpiProgress = kpiService.getKpiProgress(kpi);
+
+                    // Get KPI weight as a fraction (e.g., 50 for 50% becomes 0.5)
+                    // Assumes getWeight() returns a percentage value like 50.0
+                    double kpiWeightAsFraction = kpi.getWeight() / 100.0;
+
+                    // Add the KPI's weighted contribution to the individual goal's progress
+                    individualGoalProgress += kpiProgress * kpiWeightAsFraction;
+                }
+            }
+            // For your example, at this point: individualGoalProgress = 0.50 * (50/100) = 0.25
+
+            // --- Part 2: Calculate this individual goal's contribution to the team goal ---
+
+            // Get the individual goal's contribution weight as a fraction (e.g., 80 for 80% becomes 0.8)
+            // Assumes getContributionWeight() returns a percentage value like 80.0
+            double goalContributionAsFraction = individualGoal.getContributionWeight() / 100.0;
+
+            // Add the individual goal's weighted contribution to the overall team goal progress
+            teamGoalProgress += individualGoalProgress * goalContributionAsFraction;
+        }
+        // For your example, the final result is: 0.25 * (80/100) = 0.20
+        return teamGoalProgress;
     }
+
 
     public List<KPI> loadKPIs(IndividualGoal goal){
         Search search = new  Search(KPI.class);
@@ -124,29 +138,6 @@ public class TeamGoalDetails implements Serializable {
         );
         return kpiService.getInstances(search,0,0);
     }
-
-    public double getKpiProgress(KPI kpi) {
-        if(kpi != null){
-            Search search = new  Search(KpiUpdateHistory.class);
-            search.addFilterEqual("kpi.id",kpi.getId());
-            List<KpiUpdateHistory> updateHistories = kpiUpdateHistoryService.getUpdateHistoryByKpi(kpi);
-            if (kpi.getTargetValue() == null || kpi.getTargetValue() <= 0) {
-                return 0;
-            }
-            if (kpi.getCurrentValue() == null) {
-                return 0;
-            }
-            double currentValue = 0.0;
-            for(KpiUpdateHistory updateHistory : updateHistories){
-                currentValue += updateHistory.getValue();
-            }
-            return Math.round(((currentValue / kpi.getTargetValue()) * 100) * 100.0) / 100.0;
-        }else {
-            return 0;
-        }
-    }
-
-
 
     public void approveIndividualGoal(IndividualGoal individualGoal) throws ValidationFailedException, OperationFailedException {
         if(individualGoal != null){
@@ -163,12 +154,11 @@ public class TeamGoalDetails implements Serializable {
     public DonutChartModel getProgressDonutModel() {
         DonutChartModel model = new DonutChartModel();
         ChartData data = new ChartData();
-
         DonutChartDataSet dataSet = new DonutChartDataSet();
 
-        double preciseProgress = getProgress();
+        double preciseProgress = getProgress() * 100; // fraction → percent
         BigDecimal bd = new BigDecimal(Double.toString(preciseProgress));
-        bd = bd.setScale(1, RoundingMode.HALF_UP); // Set scale to 1 for one decimal place
+        bd = bd.setScale(1, RoundingMode.HALF_UP);
         double progress = bd.doubleValue();
         double remaining = 100 - progress;
 
@@ -181,5 +171,7 @@ public class TeamGoalDetails implements Serializable {
         model.setData(data);
         return model;
     }
+
+
 }
 
