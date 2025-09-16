@@ -115,9 +115,9 @@
                                         <p:ajax event="dialogReturn" update="usersTable" />
                                     </p:commandButton>
                                     <p:commandButton icon="fa fa-trash" title="Delete"
-                                                     styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
+                                                     styleClass="ui-button-danger" style="margin-left:5px"
                                                      actionListener="#{usersView.deleteSelectedUser(model)}"
-                                                     update="usersTable">
+                                                     update="usersView">
                                         <p:confirm header="Confirmation"
                                                    message="You are about to delete a user. Do you wish to continue?"
                                                    icon="ui-icon-alert" />
