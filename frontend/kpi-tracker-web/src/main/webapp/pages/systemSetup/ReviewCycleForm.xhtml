@@ -52,7 +52,7 @@
                 <div class="field col-12 p-m-4">
 
                     <p:selectOneMenu id="status" value="#{reviewCycleForm.model.status}"
-                                        rendered="#{reviewCycleForm.model.title ne null}"
+                                        rendered="#{reviewCycleForm.model.id ne null}"
                     >
                         <f:selectItem itemLabel="Select Status" itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{reviewCycleForm.reviewCycleStatusList}" />

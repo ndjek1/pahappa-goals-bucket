@@ -18,14 +18,14 @@ public class ReviewCycleScheduler {
     private ReviewCycleService reviewCycleService;
 
     // Run every minute for testing
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void autoUpdateCycles() {
-        System.out.println("⏰ ReviewCycleScheduler triggered...");
+        System.out.println("ReviewCycleScheduler triggered...");
         try {
             reviewCycleService.updateReviewCycleStatuses();
-            System.out.println("✅ Review cycle statuses updated successfully.");
+            System.out.println(" Review cycle statuses updated successfully.");
         } catch (Exception e) {
-            System.out.println("❌ Error while updating review cycles: "+ e);
+            System.out.println(" Error while updating review cycles: "+ e);
         }
     }
 }
