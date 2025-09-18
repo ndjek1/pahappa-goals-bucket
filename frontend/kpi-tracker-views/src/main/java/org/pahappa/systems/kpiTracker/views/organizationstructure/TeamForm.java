@@ -113,9 +113,11 @@ public class TeamForm extends DialogForm<Team> {
             Search search = new Search(Staff.class);
             search.addFilterAnd(
                     Filter.equal("recordStatus", RecordStatus.ACTIVE),
-                    Filter.equal("department.id", selectedDepartment.getId()),
-                    Filter.notEqual("user.id", selectedDepartment.getDepartmentHead().getId())
+                    Filter.equal("department.id", selectedDepartment.getId())
             );
+            if(this.selectedDepartment.getDepartmentHead() != null){
+                search.addFilterEqual("user.id", selectedDepartment.getDepartmentHead().getId());
+            }
 
             if (isEditing && super.model != null && super.model.getId() != null) {
                 search.addFilterOr(
