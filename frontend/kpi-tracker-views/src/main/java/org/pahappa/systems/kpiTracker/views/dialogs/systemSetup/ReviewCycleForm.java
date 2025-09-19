@@ -115,6 +115,7 @@ public class ReviewCycleForm extends DialogForm<ReviewCycle> {
             }
         }
 
+        model.setStatus(ReviewCycleStatus.DRAFT);
         // Save
         reviewCycleService.saveInstance(model);
         FacesContext.getCurrentInstance().addMessage(null,

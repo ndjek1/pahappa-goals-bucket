@@ -91,92 +91,94 @@ public class GoalDetails implements Serializable {
     }
 
     public double calculateOrganizationGoalProgress() {
-        if (departmentGoalList == null || departmentGoalList.isEmpty()) return 0;
-
-        double weightedSum = 0;
-        double totalWeight = 0;
-
-        for (DepartmentGoal deptGoal : departmentGoalList) {
-            double deptProgress = calculateDepartmentGoalProgress(deptGoal);
-            double weight = deptGoal.getContributionWeight() > 0 ? deptGoal.getContributionWeight() : 1;
-
-            weightedSum += deptProgress * weight;
-            totalWeight += weight;
+        if (departmentGoalList == null || departmentGoalList.isEmpty()) {
+            return 0.0;
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        double organizationProgress = 0.0;
+
+        for (DepartmentGoal deptGoal : departmentGoalList) {
+            // Step 1: Calculate the progress of this specific department goal.
+            double departmentProgress = calculateDepartmentGoalProgress(deptGoal); // This will be a fraction e.g., 0.50
+
+            // Step 2: Get this department goal's contribution weight to the organization goal as a fraction.
+            // Assumes getContributionWeight() returns a percentage value like 60.0 for 60%.
+            double departmentContributionAsFraction = deptGoal.getContributionWeight() / 100.0; // e.g., 60.0 -> 0.60
+
+            // Step 3: Add its weighted contribution to the organization's total progress.
+            organizationProgress += departmentProgress * departmentContributionAsFraction;
+        }
+
+        // The final progress is the sum of the direct contributions.
+        return organizationProgress;
     }
 
     public double calculateDepartmentGoalProgress(DepartmentGoal departmentGoal) {
-        double weightedSum = 0;
-        double totalWeight = 0;
+        // Load the team goals for this specific department goal
+        Search teamSearch = new Search(TeamGoal.class);
+        teamSearch.addFilterEqual("departmentGoal.id", departmentGoal.getId());
+        teamSearch.addFilterEqual("status", GoalStatus.APPROVED); // Ensure we only count approved goals
+        List<TeamGoal> teamGoals = teamGoalService.getInstances(teamSearch, 0, 0);
 
-//        // 1. KPIs directly under department
-//        Search kpiSearch = new Search(KPI.class);
-//        kpiSearch.addFilterEqual("departmentGoal.id", departmentGoal.getId());
-//        List<KPI> deptKPIs = kpisService.getInstances(kpiSearch,0,0);
-//        if (deptKPIs != null && !deptKPIs.isEmpty()) {
-//            double kpiWeightedSum = 0, kpiTotalWeight = 0;
-//            for (KPI kpi : deptKPIs) {
-//                double w = kpi.getWeight() != null ? kpi.getWeight() : 1;
-//                kpiWeightedSum += getKpiProgress(kpi) * w;
-//                kpiTotalWeight += w;
-//            }
-//            if (kpiTotalWeight > 0) {
-//                weightedSum += kpiWeightedSum / kpiTotalWeight; // treat as one bucket
-//                totalWeight += 1;
-//            }
-//        }
-
-        Search search = new Search(TeamGoal.class);
-        search.addFilterEqual("departmentGoal.id", departmentGoal.getId());
-        List<TeamGoal> teamGoals = teamGoalService.getInstances(search,0,0);
-        if (teamGoals != null && !teamGoals.isEmpty()) {
-            for (TeamGoal teamGoal : teamGoals) {
-                double teamProgress = calculateTeamGoalProgress(teamGoal);
-                double weight = teamGoal.getContributionWeight() > 0 ? teamGoal.getContributionWeight() : 1;
-                weightedSum += teamProgress * weight;
-                totalWeight += weight;
-            }
+        if (teamGoals == null || teamGoals.isEmpty()) {
+            return 0.0;
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        double departmentProgress = 0.0;
+
+        for (TeamGoal teamGoal : teamGoals) {
+            // Get the progress of the team goal first
+            double teamProgress = calculateTeamGoalProgress(teamGoal);
+
+            // Get the team goal's contribution weight as a fraction
+            double teamContributionAsFraction = teamGoal.getContributionWeight() / 100.0;
+
+            // Add its weighted contribution to the department's total progress
+            departmentProgress += teamProgress * teamContributionAsFraction;
+        }
+
+        return departmentProgress;
     }
 
-    /**
-     * Helper: calculate a team goal’s progress based on its Individual Goals & KPIs
-     */
     private double calculateTeamGoalProgress(TeamGoal teamGoal) {
-        // Reload individual goals for this team goal
-        Search search = new Search(IndividualGoal.class);
-        search.addFilterEqual("teamGoal.id", teamGoal.getId());
-        List<IndividualGoal> individualGoals = this.individualGoalService.getInstances(search, 0, 0);
+        // Load the approved individual goals for this specific team goal
+        Search individualSearch = new Search(IndividualGoal.class);
+        individualSearch.addFilterEqual("teamGoal.id", teamGoal.getId());
+        individualSearch.addFilterEqual("status", GoalStatus.APPROVED);
+        List<IndividualGoal> individualGoals = this.individualGoalService.getInstances(individualSearch, 0, 0);
 
-        if (individualGoals == null || individualGoals.isEmpty()) return 0;
-
-        double weightedSum = 0, totalWeight = 0;
-        for (IndividualGoal goal : individualGoals) {
-            // Explicitly load KPIs for this goal (avoid lazy init error)
-            Search kpiSearch = new Search(KPI.class);
-            kpiSearch.addFilterEqual("individualGoal.id", goal.getId());
-            List<KPI> kpis = this.kpisService.getInstances(kpiSearch, 0, 0);
-
-            double goalProgress = 0;
-            if (kpis != null && !kpis.isEmpty()) {
-                double kpiWeightedSum = 0, kpiTotalWeight = 0;
-                for (KPI kpi : kpis) {
-                    kpiWeightedSum += getKpiProgress(kpi) * (kpi.getWeight() != null ? kpi.getWeight() : 1);
-                    kpiTotalWeight += (kpi.getWeight() != null ? kpi.getWeight() : 1);
-                }
-                goalProgress = kpiTotalWeight > 0 ? kpiWeightedSum / kpiTotalWeight : 0;
-            }
-
-            double weight = goal.getContributionWeight() > 0 ? goal.getContributionWeight() : 1;
-            weightedSum += goalProgress * weight;
-            totalWeight += weight;
+        if (individualGoals == null || individualGoals.isEmpty()) {
+            return 0.0;
         }
 
-        return totalWeight > 0 ? weightedSum / totalWeight : 0;
+        double teamProgress = 0.0;
+
+        for (IndividualGoal individualGoal : individualGoals) {
+
+            // --- Part 1: Calculate the progress of the individual goal from its KPIs ---
+            Search kpiSearch = new Search(KPI.class);
+            kpiSearch.addFilterEqual("individualGoal.id", individualGoal.getId());
+            List<KPI> kpis = this.kpisService.getInstances(kpiSearch, 0, 0);
+
+            double individualGoalProgress = 0.0;
+            if (!kpis.isEmpty()) {
+                for (KPI kpi : kpis) {
+                    // Convert the KPI's progress (which is 0-100) to a fraction
+                    double kpiProgressAsFraction = getKpiProgress(kpi) / 100.0;
+
+                    // Convert the KPI's weight (e.g., 50 for 50%) to a fraction
+                    double kpiWeightAsFraction = kpi.getWeight() / 100.0;
+
+                    individualGoalProgress += kpiProgressAsFraction * kpiWeightAsFraction;
+                }
+            }
+
+            // --- Part 2: Add this individual goal's contribution to the team goal ---
+            double goalContributionAsFraction = individualGoal.getContributionWeight() / 100.0;
+            teamProgress += individualGoalProgress * goalContributionAsFraction;
+        }
+
+        return teamProgress;
     }
 
 
