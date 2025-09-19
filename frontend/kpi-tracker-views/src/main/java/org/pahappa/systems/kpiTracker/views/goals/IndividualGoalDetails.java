@@ -14,6 +14,7 @@ import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.GoalProgressUtil;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
 import org.primefaces.model.charts.donut.DonutChartModel;
@@ -46,7 +47,9 @@ public class IndividualGoalDetails implements Serializable {
     private KpisService kpiService;
     private List<IndividualActivity> individualActivities;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
-
+    private IndividualActivity selectedActivity;
+    private int progress;
+    private String foregroundColor;
     @PostConstruct
     public void init() {
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
@@ -72,25 +75,34 @@ public class IndividualGoalDetails implements Serializable {
                 Filter.equal("individualGoal.id",this.selectedGoal.getId())
         );
         this.goalKpis = kpiService.getInstances(search,0,0);
+        if(!this.goalKpis.isEmpty()){
+            for(KPI kpi:goalKpis){
+                kpi.setProgress(kpiService.getKpiProgress(kpi)*100);
+            }
+        }
+        calculateProgress();
     }
 
-    public double getProgress() {
-        if (goalKpis == null || goalKpis.isEmpty()) return 0.0;
-
-        double contributionFraction = 0.0; // fraction of the entire goal (0..1)
-
-        for (KPI kpi : goalKpis) {
-            double kpiFrac = kpiService.getKpiProgress(kpi); // 0..1
-            double weight = (kpi.getWeight() == null) ? 0.0 : kpi.getWeight(); // e.g. 50.0
-            contributionFraction += kpiFrac * (weight / 100.0); // e.g. 0.5 * 0.5 = 0.25
+    public void calculateProgress() {
+        if (goalKpis == null || goalKpis.isEmpty()) {
+            this.progress = 0;
+            return;
         }
 
-        // Optionally: if total assigned weight > 100, you might want to normalize or cap.
-        // For now we assume weights are percent-of-goal and can be <, =, or > 100.
+        double contributionFraction = 0.0;
+        for (KPI kpi : goalKpis) {
+            double kpiFrac = kpiService.getKpiProgress(kpi);
+            double weight = (kpi.getWeight() == null) ? 0.0 : kpi.getWeight();
+            contributionFraction += kpiFrac * (weight / 100.0);
+        }
+
         double percent = contributionFraction * 100.0;
-        // round to 2 decimals
-        return Math.round(percent * 100.0) / 100.0;
+        this.progress = (int) Math.round(percent); // Round to nearest int
+
+        // Update color
+        this.foregroundColor = new GoalProgressUtil().getProgressColor(this.progress);
     }
+
 
 
     public void loadActivities(){

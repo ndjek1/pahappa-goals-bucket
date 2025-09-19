@@ -4,11 +4,13 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import lombok.Getter;
 import lombok.Setter;
+import org.pahappa.systems.kpiTracker.core.services.activities.TeamActivityService;
 import org.pahappa.systems.kpiTracker.core.services.goals.DepartmentGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.IndividualGoalService;
 import org.pahappa.systems.kpiTracker.core.services.goals.TeamGoalService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpiUpdateHistoryService;
 import org.pahappa.systems.kpiTracker.core.services.kpis.KpisService;
+import org.pahappa.systems.kpiTracker.models.activities.TeamActivity;
 import org.pahappa.systems.kpiTracker.models.goals.DepartmentGoal;
 import org.pahappa.systems.kpiTracker.models.goals.GoalStatus;
 import org.pahappa.systems.kpiTracker.models.goals.IndividualGoal;
@@ -16,6 +18,7 @@ import org.pahappa.systems.kpiTracker.models.goals.TeamGoal;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.GoalProgressUtil;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
 import org.primefaces.model.charts.donut.DonutChartModel;
@@ -30,6 +33,7 @@ import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,6 +49,11 @@ public class TeamGoalDetails implements Serializable {
 
     private List<IndividualGoal> individualGoalsList, allIndividualGoals;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
+    private TeamActivityService teamActivityService;
+    private List<TeamActivity> activities;
+    private TeamActivity selectedActivity;
+    private String foregroundColor;
+    private int progress;
 
     @PostConstruct
     public void init() {
@@ -52,12 +61,15 @@ public class TeamGoalDetails implements Serializable {
         this.individualGoalService = ApplicationContextProvider.getBean(IndividualGoalService.class);
         this.kpiUpdateHistoryService = ApplicationContextProvider.getBean(KpiUpdateHistoryService.class);
         this.kpiService = ApplicationContextProvider.getBean(KpisService.class);
+        this.teamActivityService = ApplicationContextProvider.getBean(TeamActivityService.class);
     }
 
     public String prepareForTeamGoal(String id) {
         this.selectedGoal = this.teamGoalService.getInstanceByID(id);
         loadIndividualGoals();
         loadAllIndividualGoals();
+        loadActivities();
+        calculateProgress(this.selectedGoal,this.individualGoalsList);
         return "/pages/goals/TeamGoalDetails.xhtml?faces-redirect=true";
     }
 
@@ -79,17 +91,11 @@ public class TeamGoalDetails implements Serializable {
         this.allIndividualGoals = individualGoalService.getInstances(search,0,0);
     }
 
-    /**
-     * Calculate team goal progress based on its individual goals
-     */
-    public double getProgress() {
-        return calculateProgress(selectedGoal, individualGoalsList);
-    }
 
 
-    public double calculateProgress(TeamGoal teamGoal, List<IndividualGoal> goals) {
+    public void calculateProgress(TeamGoal teamGoal, List<IndividualGoal> goals) {
         if (goals == null || goals.isEmpty()) {
-            return 0.0;
+            return;
         }
 
         double teamGoalProgress = 0.0;
@@ -114,19 +120,14 @@ public class TeamGoalDetails implements Serializable {
                     individualGoalProgress += kpiProgress * kpiWeightAsFraction;
                 }
             }
-            // For your example, at this point: individualGoalProgress = 0.50 * (50/100) = 0.25
-
-            // --- Part 2: Calculate this individual goal's contribution to the team goal ---
-
-            // Get the individual goal's contribution weight as a fraction (e.g., 80 for 80% becomes 0.8)
-            // Assumes getContributionWeight() returns a percentage value like 80.0
             double goalContributionAsFraction = individualGoal.getContributionWeight() / 100.0;
 
-            // Add the individual goal's weighted contribution to the overall team goal progress
             teamGoalProgress += individualGoalProgress * goalContributionAsFraction;
         }
-        // For your example, the final result is: 0.25 * (80/100) = 0.20
-        return teamGoalProgress;
+        this.progress = (int) Math.round(teamGoalProgress*100); // Round to nearest int
+
+        // Update color
+        this.foregroundColor = new GoalProgressUtil().getProgressColor(this.progress);
     }
 
 
@@ -172,6 +173,13 @@ public class TeamGoalDetails implements Serializable {
         return model;
     }
 
+    public void loadActivities(){
+        if(this.selectedGoal != null){
+            this.activities = teamActivityService.searchByPropertyEqual("teamGoal.id",this.selectedGoal.getId(),RecordStatus.ACTIVE);
+        }else {
+            this.activities = new ArrayList<>();
+        }
+    }
 
 }
 

@@ -37,7 +37,7 @@ public class TeamGoal extends BaseEntity {
     public GoalStatus getStatus() { return status; }
     public void setStatus(GoalStatus status) { this.status = status; }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_goal_goal_id", nullable = false)
     public DepartmentGoal getDepartmentGoal() { return departmentGoal; }
     public void setDepartmentGoal(DepartmentGoal departmentGoal) { this.departmentGoal = departmentGoal; }

@@ -67,6 +67,10 @@
                         <h:outputText value="#{goal.name}"/>
                     </p:column>
 
+                    <p:column headerText="#{empty goal.departmentGoal.id ? 'Team gGoal' : 'Department goal'}" >
+                        <h:outputText value="#{empty goal.departmentGoal.id ? goal.teamGoal.name : goal.departmentGoal.name}"/>
+                    </p:column>
+
                     <p:column headerText="Weight" >
                         <h:outputText value="#{goal.contributionWeight}"/>
                         <h:outputText value="%" />

@@ -14,6 +14,7 @@ import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.HyperLinks;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.GoalProgressUtil;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartModel;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
@@ -49,7 +50,8 @@ public class GoalDetails implements Serializable {
     private String goalLevel;
     List<DepartmentGoal> departmentGoalList;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
-
+    private String foregroundColor;
+    private int progress;
     @PostConstruct
     public void init() {
         organizationGoalService = ApplicationContextProvider.getBean(OrganizationGoalService.class);
@@ -77,6 +79,7 @@ public class GoalDetails implements Serializable {
         Search search = new Search();
         search.addFilterEqual("organizationGoal.id",this.selectedGoal.getId());
         this.departmentGoalList = this.departmentGoalService.getInstances(search,0,0);
+        calculateOrganizationGoalProgress();
     }
 
     public void approveDepartmentGoal(DepartmentGoal departmentGoal) throws ValidationFailedException, OperationFailedException {
@@ -90,9 +93,9 @@ public class GoalDetails implements Serializable {
 
     }
 
-    public double calculateOrganizationGoalProgress() {
+    public void calculateOrganizationGoalProgress() {
         if (departmentGoalList == null || departmentGoalList.isEmpty()) {
-            return 0.0;
+            this.progress = 0;
         }
 
         double organizationProgress = 0.0;
@@ -108,9 +111,10 @@ public class GoalDetails implements Serializable {
             // Step 3: Add its weighted contribution to the organization's total progress.
             organizationProgress += departmentProgress * departmentContributionAsFraction;
         }
+        this.progress = (int) Math.round(organizationProgress*100); // Round to nearest int
 
-        // The final progress is the sum of the direct contributions.
-        return organizationProgress;
+        // Update color
+        this.foregroundColor = new GoalProgressUtil().getProgressColor(this.progress);
     }
 
     public double calculateDepartmentGoalProgress(DepartmentGoal departmentGoal) {
@@ -181,28 +185,6 @@ public class GoalDetails implements Serializable {
         return teamProgress;
     }
 
-
-    public DonutChartModel getProgressDonutModel() {
-        DonutChartModel model = new DonutChartModel();
-        ChartData data = new ChartData();
-
-        DonutChartDataSet dataSet = new DonutChartDataSet();
-
-        double preciseProgress = calculateOrganizationGoalProgress();
-        BigDecimal bd = new BigDecimal(Double.toString(preciseProgress));
-        bd = bd.setScale(1, RoundingMode.HALF_UP); // Set scale to 1 for one decimal place
-        double progress = bd.doubleValue();
-        double remaining = 100 - progress;
-
-        dataSet.setData(Arrays.asList(progress, remaining));
-        dataSet.setBackgroundColor(Arrays.asList("#58a73a", "#c92c2c"));
-
-        data.addChartDataSet(dataSet);
-        data.setLabels(Arrays.asList("Progress", "Remaining"));
-
-        model.setData(data);
-        return model;
-    }
 
     public double getKpiProgress(KPI kpi) {
         if(kpi != null){

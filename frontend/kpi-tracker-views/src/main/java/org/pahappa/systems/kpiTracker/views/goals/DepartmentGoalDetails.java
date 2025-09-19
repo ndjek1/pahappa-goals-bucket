@@ -16,6 +16,7 @@ import org.pahappa.systems.kpiTracker.models.goals.*;
 import org.pahappa.systems.kpiTracker.models.kpis.KPI;
 import org.pahappa.systems.kpiTracker.models.kpis.KpiUpdateHistory;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
+import org.pahappa.systems.kpiTracker.utils.GoalProgressUtil;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.donut.DonutChartDataSet;
 import org.primefaces.model.charts.donut.DonutChartModel;
@@ -51,6 +52,8 @@ public class DepartmentGoalDetails implements Serializable {
     private List<KPI> kpisList;
     private List<DepartmentActivity> departmentActivityList;
     private KpiUpdateHistoryService kpiUpdateHistoryService;
+    private String foregroundColor;
+    private int progress;
 
     @PostConstruct
     public void init() {
@@ -82,6 +85,7 @@ public class DepartmentGoalDetails implements Serializable {
         Search search = new Search();
         search.addFilterEqual("departmentGoal.id",this.selectedGoal.getId());
         this.teamGoalGoalList = this.teamGoalService.getInstances(search,0,0);
+        calculateProgress();
     }
 
     public void approveTeamGoal(TeamGoal teamGoal) throws ValidationFailedException, OperationFailedException {
@@ -121,7 +125,7 @@ public class DepartmentGoalDetails implements Serializable {
      * It sums the direct percentage contributions from its underlying team goals.
      * @return The progress of the department goal as a fraction (e.g., 0.25 for 25%).
      */
-    public double calculateProgress() {
+    public void calculateProgress() {
         double departmentProgress = 0.0;
 
         if (this.teamGoalGoalList != null && !this.teamGoalGoalList.isEmpty()) {
@@ -138,17 +142,12 @@ public class DepartmentGoalDetails implements Serializable {
             }
         }
 
-        // Note: We are not dividing by the sum of weights here.
-        return departmentProgress;
+        this.progress = (int) Math.round(departmentProgress*100); // Round to nearest int
+
+        // Update color
+        this.foregroundColor = new GoalProgressUtil().getProgressColor(this.progress);
     }
 
-    /**
-     * Helper method to calculate a single team goal’s progress based on the
-     * direct percentage contribution of its Individual Goals.
-     * This follows the exact same logic as the previous solution.
-     * @param teamGoal The TeamGoal to calculate progress for.
-     * @return The progress of the team goal as a fraction (e.g., 0.5 for 50%).
-     */
     private double calculateTeamGoalProgress(TeamGoal teamGoal) {
         // Load the approved individual goals for this specific team goal
         Search individualSearch = new Search(IndividualGoal.class);
@@ -190,28 +189,6 @@ public class DepartmentGoalDetails implements Serializable {
         }
 
         return teamProgress;
-    }
-
-    public DonutChartModel getProgressDonutModel() {
-        DonutChartModel model = new DonutChartModel();
-        ChartData data = new ChartData();
-
-        DonutChartDataSet dataSet = new DonutChartDataSet();
-
-        double preciseProgress = calculateProgress();
-        BigDecimal bd = new BigDecimal(Double.toString(preciseProgress));
-        bd = bd.setScale(1, RoundingMode.HALF_UP); // Set scale to 1 for one decimal place
-        double progress = bd.doubleValue();
-        double remaining = 100 - progress;
-
-        dataSet.setData(Arrays.asList(progress, remaining));
-        dataSet.setBackgroundColor(Arrays.asList("#58a73a", "#c92c2c"));
-
-        data.addChartDataSet(dataSet);
-        data.setLabels(Arrays.asList("Progress", "Remaining"));
-
-        model.setData(data);
-        return model;
     }
 
     public double getKpiProgress(KPI kpi) {
