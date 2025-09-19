@@ -1,0 +1,138 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
+/* Main container */
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Left Section with background image */
+.left {
+    flex: 1;
+    background: url("#{resource['materials:images/login-bg.jpg']}") no-repeat left center/cover;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.overlay h1 {
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Right Section */
+.right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 0.5rem;
+}
+
+.login-card h2 {
+    margin-bottom: 1.5rem;
+    color: #003366;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin: 0.5rem 0 0.3rem;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background: rgba(108, 117, 125, 0.3) !important;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.password-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.password-container label {
+    margin: 0;
+}
+
+.options-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    margin-left: 0.5rem;
+}
+
+.forgot {
+    font-size: 13px;
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}
+
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background: #0056b3;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #004090;
+}
