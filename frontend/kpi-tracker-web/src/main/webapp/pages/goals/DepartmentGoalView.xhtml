@@ -68,6 +68,10 @@
                     <h:outputText value="#{goal.name}"/>
                 </p:column>
 
+                <p:column headerText="Organozation goal">
+                    <h:outputText value="#{goal.organizationGoal.name}"/>
+                </p:column>
+
                 <p:column headerText="Weight" width="100">
                     <h:outputText value="#{goal.contributionWeight}%"/>
                 </p:column>

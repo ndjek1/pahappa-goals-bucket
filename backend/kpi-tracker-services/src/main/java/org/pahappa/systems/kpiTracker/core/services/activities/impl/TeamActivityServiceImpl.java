@@ -24,8 +24,4 @@ public class TeamActivityServiceImpl extends GenericServiceImpl<TeamActivity> im
         return true;
     }
 
-    @Override
-    public Object getObjectById(String id) {
-        return super.getInstanceByID(id);
-    }
 }

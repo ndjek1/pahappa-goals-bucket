@@ -40,6 +40,7 @@ public class KPI extends BaseEntity {
     // Review cycle relationship for KPI evaluation periods
 
     private ReviewCycle reviewCycle;
+    private double progress;
 
     // Constructors
     public KPI() {
@@ -160,13 +161,11 @@ public class KPI extends BaseEntity {
 
     @Transient
     public double getProgress() {
-        if (targetValue == null || targetValue <= 0) {
-            return 0;
-        }
-        if (currentValue == null) {
-            return 0;
-        }
-        return Math.round(((currentValue / targetValue) * 100) * 100.0) / 100.0;
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
     }
 
 

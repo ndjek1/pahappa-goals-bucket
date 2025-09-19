@@ -20,7 +20,7 @@
     </ui:define>
     <ui:define name="content">
         <h:form>
-            <h:panelGroup rendered="#{not empty goalDetailsView.selectedGoal}">
+
                 <!-- Back arrow + Title -->
                 <div class="p-d-flex p-ai-center p-gap-2">
                     <p:commandButton icon="pi pi-arrow-left"
@@ -29,43 +29,61 @@
                                      immediate="true"/>
                     <h2>Goal Details</h2>
                 </div>
-                <div class="p-grid">
-                    <!-- Left section -->
+            <h:panelGroup rendered="#{not empty goalDetailsView.selectedGoal}">
+                <div class="p-grid p-mb-4">
+
+                    <!-- LEFT: Goal Information -->
                     <div class="p-col-12 p-md-8">
-                        <div class="p-card p-p-3 p-mb-3">
-                            <h3>#{goalDetailsView.selectedGoal.name}</h3>
-                            <div class="p-d-flex p-flex-column">
-                                <span style="margin: 5px 0"><b>Level:</b> #{goalDetailsView.goalLevel}</span>
-                                <span style="margin: 5px 0"><b>Created On:</b>
+                        <div class="card p-p-4" style="border-radius:12px;">
+
+                            <!-- Title -->
+                            <h3 style="margin-bottom:1rem; font-weight:600; color:#1f2937;">
+                                #{goalDetailsView.selectedGoal.name}
+                            </h3>
+
+                            <!-- Info in 2-column layout -->
+                            <div class="p-grid p-mb-3">
+                                <div class="p-col-6">
+                                    <span class="p-d-block"><b>Created On:</b></span>
                                     <h:outputText value="#{goalDetailsView.selectedGoal.dateCreated}">
                                         <f:convertDateTime pattern="dd MMM yyyy"/>
                                     </h:outputText>
-                                </span>
+                                </div>
+                                <!-- Description -->
+                                <div style="margin-top:1rem;">
+                                    <span class="p-d-block" style="font-weight:600;">Description:</span>
+                                    <p style="margin:0; color:#374151;">
+                                        #{goalDetailsView.selectedGoal.description}
+                                    </p>
+                                </div>
                             </div>
-                            <hr/>
-                            <p><b>Description:</b> #{goalDetailsView.selectedGoal.description}</p>
+
+
                         </div>
                     </div>
 
-                    <!-- Right section: Donut Progress -->
+                    <!-- RIGHT: Knob Progress (matches individual goal) -->
                     <div class="p-col-12 p-md-4">
-                        <div class="p-card   p-d-flex p-flex-column p-ai-center p-jc-center">
-                            <h3>Overall Progress</h3>
+                        <div class="card p-p-4 p-d-flex p-flex-column p-ai-center p-jc-center"
+                             style="border-radius:12px; min-height:100%;">
 
-                            <p:donutChart id="goalDonut"
-                                          model="#{goalDetailsView.progressDonutModel}"
-                                          style="width:200px;height:200px;" />
+                            <p:knob value="#{goalDetailsView.progress}"
+                                    readonly="true"
+                                    showLabel="true"
+                                    labelTemplate="{value}%"
+                                    height="100"
+                                    width="100"
+                                    lineWidth="15"
+                                    foregroundColor="#{goalDetailsView.foregroundColor}"
+                                    backgroundColor="#e5e7eb"
+                                    lineCap="round">
+                                <f:convertNumber maxFractionDigits="1" />
+                            </p:knob>
 
-                            <div class="p-d-flex p-ai-center p-jc-center" style="margin-top:1rem;">
-                                <h:outputText value="#{goalDetailsView.calculateOrganizationGoalProgress()}"
-                                              style="font-weight:bold; font-size:1.4rem;">
-                                    <f:convertNumber maxFractionDigits="1" />
-                                </h:outputText>
-                                <h:outputText value="%"
-                                              style="margin-left:4px; font-weight:bold; font-size:1.4rem;" />
-                            </div>
-
-
+                            <!-- Label below -->
+                            <span style="margin-top:1.5rem; color:#6b7280; font-size:1.1rem; font-weight:500;">
+                Overall Progress
+            </span>
                         </div>
                     </div>
 
@@ -106,13 +124,13 @@
                         <p:commandButton icon="fa fa-check" styleClass="ui-button-primary"
                                          ajax="false"
                                          title="Approve"
-                                         rendered="#{model.status.toString()  eq 'PENDING'}"
+                                         disabled="#{model.status.toString()  ne 'PENDING'}"
                                          actionListener="#{goalDetailsView.approveDepartmentGoal(model)}">
                             <p:ajax event="dialogReturn" update="childGoals" />
                         </p:commandButton>
-                        <p:commandButton icon="fa fa-trash" title="Delete"
+                        <p:commandButton icon="fa fa-trash" title="Reject"
                                          styleClass="ui-button-danger" style="margin-left:5px" ajax="false"
-                                         rendered="#{model.status.toString()  eq 'PENDING'}"
+                                         disabled="#{model.status.toString()  ne 'PENDING'}"
                                          actionListener="#{usersView.deleteSelectedUser(model)}"
                                          update="childGoals">
                             <p:confirm header="Confirmation"
