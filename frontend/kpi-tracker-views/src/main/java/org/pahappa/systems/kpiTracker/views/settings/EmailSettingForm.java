@@ -1,5 +1,7 @@
 package org.pahappa.systems.kpiTracker.views.settings;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.pahappa.systems.kpiTracker.core.services.ApplicationSettingsService;
 import org.pahappa.systems.kpiTracker.models.settings.ApplicationSettings;
 import org.pahappa.systems.kpiTracker.security.UiUtils;
@@ -12,6 +14,8 @@ import javax.faces.bean.ViewScoped;
 
 @ManagedBean(name = "emailSettingForm")
 @ViewScoped
+@Getter
+@Setter
 public class EmailSettingForm extends WebFormView<ApplicationSettings, EmailSettingForm, EmailSettingForm> {
     private static final long serialVersionUID = 1L;
     private ApplicationSettingsService emailSettingsService;

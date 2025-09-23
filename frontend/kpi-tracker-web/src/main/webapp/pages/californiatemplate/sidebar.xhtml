@@ -155,6 +155,13 @@
                                     outcome="/pages/systemSetup/ThresholdTable" />
                     </p:submenu>
 
+
+                    <p:menuitem id="emailSettings" value="Settings"
+                                rendered="#{dashboard.loggedinUser.hasRole(roles.ROLE_CEO) or dashboard.loggedinUser.hasRole(roles.ROLE_HR) or dashboard.loggedinUser.hasRole(roles.ROLE_ADMINISTRATOR)}"
+                                icon="pi pi-fw pi-cog"
+                                styleClass="p-my-3 #{facesContext.viewRoot.viewId eq '/pages/settings/EmailSettingsView.xhtml' ? 'active-menuitem' : ''}"
+                                outcome="/pages/settings/EmailSettingsView" />
+
                     <p:menuitem id="logout" value="Logout" icon="pi pi-sign-out"
                                 url="#{request.contextPath}/ServiceLogout"
                                 style="margin-bottom: 0" />

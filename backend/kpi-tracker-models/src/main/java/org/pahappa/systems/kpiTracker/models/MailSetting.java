@@ -1,93 +1,57 @@
 package org.pahappa.systems.kpiTracker.models;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.pahappa.systems.kpiTracker.models.crypto.StringCryptoConverter;
 import org.sers.webutils.model.BaseEntity;
 
 import javax.persistence.*;
 
+
+/**
+ * Settings for configuring an email service, specifically AWS SES.
+ */
+
+@Getter
+@Setter
+@ToString(exclude={"accessKeyId", "secretAccessKey"}) // preventing sensitive info from being printed in the logs
 @Entity
 @Table(name = "mail_settings")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class MailSetting extends BaseEntity {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    
-    private String senderAddress = "fred@pahappa.com";
-    private String senderPassword = "fred";
-    private String senderSmtpHost = "smtp.gmail.com";
-    private String senderSmtpPort = "587";
-    
+	private static final long serialVersionUID = 1L;
 
-    /**
-	 * @return the senderAddress
-	 */
-    @Column(name = "sender_address", nullable = false, length = 100)
-	public String getSenderAddress() {
-		return senderAddress;
-	}
+	@Column(name = "from_email", nullable = false, length=100)
+	private String fromEmail;
+
+	@Column(name = "aws_region", nullable = false)
+	private String awsRegion;
 
 	/**
-	 * @param senderAddress the senderAddress to set
+	 * the access key id (AWS) is encrypted; at rest in the database
 	 */
-	public void setSenderAddress(String senderAddress) {
-		this.senderAddress = senderAddress;
-	}
+	@Column(name = "access_key_id", nullable = false, length=255)
+	@Convert(converter = StringCryptoConverter.class)
+	private String accessKeyId;
 
 	/**
-	 * @return the senderPassword
+	 * the secret access key (AWS) is encrypted; at rest in the database
 	 */
-    @Column(name = "sender_password", nullable = false, length = 100)
-	public String getSenderPassword() {
-		return senderPassword;
-	}
+	@Column(name="secret_access_key", nullable = false, length = 255)
+	@Convert(converter = StringCryptoConverter.class)
+	private String secretAccessKey;
 
-	/**
-	 * @param senderPassword the senderPassword to set
-	 */
-	public void setSenderPassword(String senderPassword) {
-		this.senderPassword = senderPassword;
-	}
 
-	/**
-	 * @return the senderSmtpHost
-	 */
-    @Column(name = "sender_host", nullable = false, length = 100)
-	public String getSenderSmtpHost() {
-		return senderSmtpHost;
-	}
 
-	/**
-	 * @param senderSmtpHost the senderSmtpHost to set
-	 */
-	public void setSenderSmtpHost(String senderSmtpHost) {
-		this.senderSmtpHost = senderSmtpHost;
-	}
-
-	/**
-	 * @return the senderSmtpPort
-	 */
-    @Column(name = "sender_port", nullable = false, length = 100)
-	public String getSenderSmtpPort() {
-		return senderSmtpPort;
-	}
-
-	/**
-	 * @param senderSmtpPort the senderSmtpPort to set
-	 */
-	public void setSenderSmtpPort(String senderSmtpPort) {
-		this.senderSmtpPort = senderSmtpPort;
+	@Override
+	public boolean equals(Object object) {
+		return object instanceof MailSetting && (super.getId() != null) ? super.getId().equals(((MailSetting) object).getId())
+				: (object == this);
 	}
 
 	@Override
-    public boolean equals(Object object) {
-        return object instanceof MailSetting && (super.getId() != null) ? super.getId().equals(((MailSetting) object).getId())
-                : (object == this);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.getId() != null ? this.getClass().hashCode() + super.getId().hashCode() : super.hashCode();
-    }
+	public int hashCode() {
+		return super.getId() != null ? this.getClass().hashCode() + super.getId().hashCode() : super.hashCode();
+	}
 }

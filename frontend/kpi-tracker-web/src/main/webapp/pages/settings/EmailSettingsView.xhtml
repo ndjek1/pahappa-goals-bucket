@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/californiatemplate/template.xhtml">
+
+    <ui:define name="title">Mail Settings</ui:define>
+    <ui:define name="viewname">Mail Settings</ui:define>
+
+    <ui:define name="content">
+        <h:form id="systemSettingsForm" prependId="false">
+            <div class="ui-g">
+
+                <div class="ui-g-12 p-shadow-2" style="margin-top:2em;">
+                    <h:panelGroup id="mailSettingsPanel" layout="block">
+                        <h4><b>Mail Settings</b></h4>
+
+                        <!-- The 'p-fluid' class makes inputs take 100% width of their column -->
+                        <div class="p-fluid p-formgrid p-grid">
+                            <div class="ui-col-12 ui-md-6">
+                                <h5>From Email</h5>
+                                <div class="ui-inputgroup">
+                                    <p:inputText id="fromEmail"
+                                                 value="#{systemSettingsView.editingMailSetting.fromEmail}"
+                                                 required="true"/>
+                                </div>
+                            </div>
+                            <!-- The 'p-field' class is the key: it stacks the label and input inside it -->
+
+                            <div class="ui-col-12 ui-md-6">
+                                <h5>AWS Region</h5>
+                                <div class="ui-inputgroup">
+                                    <p:inputText id="awsRegion"
+                                                 value="#{systemSettingsView.editingMailSetting.awsRegion}"
+                                                 required="true" label="AWS Region"/>
+                                </div>
+                            </div>
+
+                            <div class="ui-col-12 ui-md-6">
+                                <h5>Access Key ID</h5>
+                                <div class="ui-inputgroup">
+                                    <p:password id="accessKeyId"
+                                                value="#{systemSettingsView.editingMailSetting.accessKeyId}"
+                                                feedback="false" redisplay="true"
+                                                placeholder="Leave blank to keep current value"
+                                                label="Access Key ID"/>
+                                </div>
+                            </div>
+
+                            <div class="ui-col-12 ui-md-6">
+                                <h5>Secret Access Key</h5>
+                                <div class="ui-inputgroup">
+                                    <p:password id="secretAccessKey"
+                                                value="#{systemSettingsView.editingMailSetting.secretAccessKey}"
+                                                feedback="false" redisplay="true"
+
+                                                placeholder="Leave blank to keep current value"
+                                                label="Secret Access Key"/>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="p-d-flex p-jc-end p-mt-4">
+                            <p:commandButton value="Save Settings"
+                                             style="background: #2155A3"
+                                             styleClass="ui-button ui-button-info"
+                                             actionListener="#{systemSettingsView.saveMailSettings()}"
+                                             update="mailSettingsPanel :messages" />
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
