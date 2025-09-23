@@ -10,7 +10,7 @@ import org.sers.webutils.model.exception.ValidationFailedException;
 public interface MailSettingService {
 	/**
 	 * Adds a {@link MailSetting} to the database.
-	 * 
+	 *
 	 * @param mailSetting
 	 * @throws ValidationFailedException if the following attributes are blank:
 	 *               senderAddress, senderPassword, senderSmtpHost, senderSmtpPort
@@ -19,7 +19,7 @@ public interface MailSettingService {
 
 	/**
 	 * Gets mail settings
-	 * 
+	 *
 	 * @return
 	 */
 	MailSetting getMailSetting();

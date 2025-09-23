@@ -151,8 +151,21 @@
 			<artifactId>spring-web</artifactId>
 			<version>3.1.1.RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.42</version>
+            <scope>compile</scope>
+        </dependency>
 
-	</dependencies>
+		<!--jasypt (Java Simplified Encryption)-->
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt-spring31</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+
+    </dependencies>
 	<build>
 		<finalName>kpi-tracker-models</finalName>
 		<plugins>
